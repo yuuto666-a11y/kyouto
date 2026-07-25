@@ -307,146 +307,131 @@ body{
 
 #user-location{
     position:absolute;
-
     width:24px;
     height:24px;
-
     background:#1687ff;
-
     border:5px solid white;
     border-radius:50%;
-
-    transform:translate(-50%, -50%);
-
+    transform:translate(-50%,-50%);
     box-shadow:
-        0 0 0 8px rgba(22,135,255,0.25),
-        0 3px 10px rgba(0,0,0,0.4);
-
+        0 0 0 8px rgba(22,135,255,.25),
+        0 3px 10px rgba(0,0,0,.4);
     z-index:500;
-
     pointer-events:none;
 }
 
-
-/* GPSの精度範囲 */
-#user-accuracy{
-    position:absolute;
-
-    border-radius:50%;
-
-    background:rgba(22,135,255,0.15);
-
-    border:2px solid rgba(22,135,255,0.4);
-
-    transform:translate(-50%, -50%);
-
-    pointer-events:none;
-
-    z-index:400;
-}
-
-
-/* 現在地マーカーのアニメーション */
 #user-location::after{
-
     content:"";
-
     position:absolute;
-
     top:50%;
     left:50%;
-
     width:24px;
     height:24px;
-
     border-radius:50%;
-
-    background:rgba(22,135,255,0.3);
-
-    transform:translate(-50%, -50%);
-
+    background:rgba(22,135,255,.3);
+    transform:translate(-50%,-50%);
     animation:gpsPulse 2s infinite;
 }
 
+#user-accuracy{
+    position:absolute;
+    border-radius:50%;
+    background:rgba(22,135,255,.15);
+    border:2px solid rgba(22,135,255,.4);
+    transform:translate(-50%,-50%);
+    pointer-events:none;
+    z-index:400;
+}
 
 @keyframes gpsPulse{
-
     0%{
-        transform:
-            translate(-50%, -50%)
-            scale(1);
-
+        transform:translate(-50%,-50%) scale(1);
         opacity:1;
     }
-
     100%{
-        transform:
-            translate(-50%, -50%)
-            scale(2.5);
-
+        transform:translate(-50%,-50%) scale(2.5);
         opacity:0;
     }
 }
 
-
-/* ==========================
-   現在地ボタン
-========================== */
-
 .gps-btn{
-
     position:fixed;
-
     right:20px;
     bottom:30px;
-
     width:60px;
     height:60px;
-
     border:none;
     border-radius:50%;
-
     background:white;
-
     font-size:30px;
-
     cursor:pointer;
-
     z-index:2000;
-
-    box-shadow:
-        0 4px 15px rgba(0,0,0,0.35);
+    box-shadow:0 4px 15px rgba(0,0,0,.35);
 }
 
+.gps-btn.active{
+    box-shadow:
+        0 0 0 4px rgba(22,135,255,.25),
+        0 4px 15px rgba(0,0,0,.35);
+}
 
 .gps-btn:active{
-
-    transform:scale(0.9);
+    transform:scale(.9);
 }
 
-
-/* GPS取得中 */
-
 .gps-btn.loading{
-
     animation:gpsLoading 1s infinite;
 }
 
-
 @keyframes gpsLoading{
-
-    0%{
-        transform:scale(1);
-    }
-
-    50%{
-        transform:scale(0.85);
-    }
-
-    100%{
-        transform:scale(1);
-    }
+    0%{ transform:scale(1); }
+    50%{ transform:scale(.85); }
+    100%{ transform:scale(1); }
 }
+
+.gps-status{
+    position:fixed;
+    left:50%;
+    bottom:105px;
+    transform:translateX(-50%);
+    max-width:calc(100% - 40px);
+    box-sizing:border-box;
+    padding:10px 16px;
+    border-radius:20px;
+    background:rgba(0,0,0,.8);
+    color:white;
+    font-size:14px;
+    text-align:center;
+    z-index:2001;
+}
+
+.gps-calibration-panel{
+    position:fixed;
+    left:50%;
+    top:95px;
+    transform:translateX(-50%);
+    z-index:3000;
+    display:flex;
+    gap:10px;
+    align-items:center;
+    max-width:calc(100% - 30px);
+    box-sizing:border-box;
+    padding:10px 14px;
+    border-radius:12px;
+    background:white;
+    box-shadow:0 4px 15px rgba(0,0,0,.25);
+    font-size:14px;
+}
+
+.gps-calibration-panel button{
+    border:0;
+    border-radius:8px;
+    padding:8px 10px;
+    cursor:pointer;
+}
+
+.gps-calibration-mode #map{
+    cursor:crosshair;
 
 
 
