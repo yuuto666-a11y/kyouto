@@ -374,10 +374,15 @@ body{
    スマホ版ポップアップ
 ========================== */
 
+/* ==========================
+   スマホ版ポップアップ
+========================== */
+
 @media (max-width:768px){
 
     .popup-overlay{
         position:fixed;
+
         inset:0;
 
         width:100%;
@@ -392,6 +397,7 @@ body{
 
         z-index:20000;
 
+        /* 地図などを操作可能にする */
         pointer-events:none;
     }
 
@@ -399,14 +405,12 @@ body{
     .popup-card{
         position:relative;
 
-        /* 画面いっぱいにしない */
         width:94%;
         max-width:520px;
 
         height:50vh;
         max-height:50vh;
 
-        /* 下に少し隙間 */
         margin-bottom:10px;
 
         padding:20px 12px;
@@ -423,9 +427,101 @@ body{
 
         pointer-events:auto;
 
-        box-shadow:0 -5px 20px rgba(0,0,0,.25);
+        box-shadow:
+            0 -5px 20px rgba(0,0,0,.25);
 
         animation:slideUp .3s ease;
+    }
+
+
+    /* 建物名 */
+
+    #building-name{
+        font-size:22px;
+        font-weight:bold;
+
+        margin:25px 0 15px 0;
+    }
+
+
+    /* 写真 */
+
+    .photo-slider{
+        width:100%;
+
+        display:block;
+
+        overflow:hidden;
+    }
+
+
+    .building-photo{
+        width:100%;
+        max-width:none;
+
+        height:auto;
+
+        display:block;
+
+        object-fit:cover;
+
+        border-radius:0;
+
+        margin:0 0 15px 0;
+
+        touch-action:pan-y;
+    }
+
+
+    /* 説明 */
+
+    #building-description{
+        font-size:16px;
+
+        line-height:1.7;
+
+        margin-bottom:
+            calc(
+                20px +
+                env(safe-area-inset-bottom)
+            );
+    }
+
+
+    /* スマホだけ矢印非表示 */
+
+    .slide-btn{
+        display:none;
+    }
+
+
+    /* 閉じるボタン */
+
+    .close-btn{
+        position:absolute;
+
+        top:10px;
+        left:10px;
+
+        right:auto;
+
+        width:25px;
+        height:25px;
+
+        padding:0;
+
+        display:flex;
+        align-items:center;
+        justify-content:center;
+
+        background:white;
+
+        border:1px solid #ccc;
+        border-radius:4px;
+
+        font-size:16px;
+
+        z-index:100;
     }
 
 }
