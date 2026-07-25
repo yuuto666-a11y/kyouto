@@ -60,13 +60,59 @@ function createBuilding(name, x, y) {
 
     button.addEventListener("click", function (e) {
 
-        e.stopPropagation();
+    e.stopPropagation();
 
-        // クリックまたは検索されたピンだけ色を変更
-        highlightBuilding(building.shortName);
+    // クリックまたは検索されたピンだけ色を変更
+    highlightBuilding(building.shortName);
 
-        const info = BUILDING_INFO[building.shortName];
+    const info = BUILDING_INFO[building.shortName];
 
+
+    /* ==========================
+       バス判定
+    ========================== */
+
+    const isBus =
+
+        building.shortName === "バス"
+
+        ||
+
+        (
+            info &&
+            info.fullName &&
+            info.fullName.includes("バス")
+        );
+
+
+    if (isBus) {
+
+        startBusInformation();
+
+    } else {
+
+        stopBusInformation();
+
+    }
+
+
+    /* ここから元々の処理 */
+
+    if (!info) {
+
+        document.getElementById("building-name")
+            .textContent = building.shortName;
+
+        document.getElementById("building-description")
+            .textContent = "情報未登録";
+
+        document.getElementById("building-photo")
+            .src = "";
+
+        popupOverlay.style.display = "flex";
+
+        return;
+    }
         if (!info) {
 
             document.getElementById("building-name")
