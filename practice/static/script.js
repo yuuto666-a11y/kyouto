@@ -504,42 +504,49 @@ function clearBuildingHighlight() {
 
 
 //////////////////////////////////////////////////
-// GPS 現在地機能
+// GPS 現在地機能【全ユーザー共通・自動版】
 //////////////////////////////////////////////////
 
-const GPS_STORAGE_KEY = "campusGpsCalibrationV1";
-
 let gpsWatchId = null;
-let latestGpsPosition = null;
-let gpsCalibrationPoints = [];
 
 
-/* ================================
-   保存済みの校正データを読み込む
-================================ */
+/* =========================================
+   GPS基準点
+   青・緑・黄色（バス）の3地点
+========================================= */
 
-try {
+const GPS_POINTS = [
 
-    const saved =
-        JSON.parse(
-            localStorage.getItem(GPS_STORAGE_KEY) || "[]"
-        );
+    {
+        // 青丸
+        lat: 34.96832259108985,
+        lng: 135.82729111471667,
+        x: 265,
+        y: 184
+    },
 
-    if (Array.isArray(saved)) {
-        gpsCalibrationPoints = saved;
+    {
+        // 緑丸
+        lat: 34.968850,
+        lng: 135.826204,
+        x: 267,
+        y: 380
+    },
+
+    {
+        // 黄色丸：バス
+        lat: 34.968483,
+        lng: 135.823929,
+        x: 715,
+        y: 620
     }
 
-} catch (error) {
-
-    console.log(
-        "GPS校正データを読み込めませんでした"
-    );
-}
+];
 
 
-/* ================================
-   現在地マーカー作成
-================================ */
+/* =========================================
+   現在地マーカー
+========================================= */
 
 const userLocationMarker =
     document.createElement("div");
@@ -553,23 +560,9 @@ mapContainer.appendChild(
 );
 
 
-/* GPS精度の円 */
-
-const userAccuracyCircle =
-    document.createElement("div");
-
-userAccuracyCircle.id = "user-accuracy";
-
-userAccuracyCircle.style.display = "none";
-
-mapContainer.appendChild(
-    userAccuracyCircle
-);
-
-
-/* ================================
-   GPSボタン作成
-================================ */
+/* =========================================
+   GPSボタン
+========================================= */
 
 const gpsButton =
     document.createElement("button");
@@ -587,9 +580,9 @@ document.body.appendChild(
 );
 
 
-/* ================================
-   GPS状態表示
-================================ */
+/* =========================================
+   GPSメッセージ
+========================================= */
 
 const gpsStatus =
     document.createElement("div");
@@ -616,16 +609,15 @@ function showGpsStatus(message) {
     showGpsStatus.timer =
         setTimeout(function () {
 
-            gpsStatus.style.display =
-                "none";
+            gpsStatus.style.display = "none";
 
-        }, 3500);
+        }, 4000);
 }
 
 
-/* ================================
+/* =========================================
    3元連立方程式
-================================ */
+========================================= */
 
 function solve3x3(matrix, values) {
 
@@ -637,6 +629,7 @@ function solve3x3(matrix, values) {
                     ...row,
                     values[index]
                 ];
+
             }
         );
 
@@ -657,13 +650,9 @@ function solve3x3(matrix, values) {
         ) {
 
             if (
-                Math.abs(
-                    a[row][col]
-                )
+                Math.abs(a[row][col])
                 >
-                Math.abs(
-                    a[pivot][col]
-                )
+                Math.abs(a[pivot][col])
             ) {
 
                 pivot = row;
@@ -678,7 +667,7 @@ function solve3x3(matrix, values) {
         ) {
 
             throw new Error(
-                "校正点が近すぎます"
+                "GPS座標変換エラー"
             );
         }
 
@@ -691,6 +680,7 @@ function solve3x3(matrix, values) {
 
             a[pivot],
             a[col]
+
         ];
 
 
@@ -714,10 +704,7 @@ function solve3x3(matrix, values) {
             row++
         ) {
 
-            if (
-                row === col
-            ) {
-
+            if (row === col) {
                 continue;
             }
 
@@ -750,62 +737,49 @@ function solve3x3(matrix, values) {
 }
 
 
-/* ================================
-   GPS → 地図座標
-================================ */
+/* =========================================
+   GPS緯度経度 → キャンパスマップX・Y
+========================================= */
 
 function gpsToMap(lat, lng) {
 
-    if (
-        gpsCalibrationPoints.length < 3
-    ) {
-
-        return null;
-    }
-
-
-    const points =
-        gpsCalibrationPoints.slice(
-            0,
-            3
-        );
-
-
     const matrix =
-        points.map(
-            function (p) {
+        GPS_POINTS.map(
+            function (point) {
 
                 return [
-                    p.lng,
-                    p.lat,
+
+                    point.lng,
+                    point.lat,
                     1
+
                 ];
             }
         );
 
 
     const xValues =
-        points.map(
-            p => p.x
+        GPS_POINTS.map(
+            point => point.x
         );
 
 
     const yValues =
-        points.map(
-            p => p.y
+        GPS_POINTS.map(
+            point => point.y
         );
 
 
     try {
 
-        const xCoef =
+        const xCoefficient =
             solve3x3(
                 matrix,
                 xValues
             );
 
 
-        const yCoef =
+        const yCoefficient =
             solve3x3(
                 matrix,
                 yValues
@@ -814,52 +788,146 @@ function gpsToMap(lat, lng) {
 
         const x =
 
-            xCoef[0] * lng +
+            xCoefficient[0] * lng +
 
-            xCoef[1] * lat +
+            xCoefficient[1] * lat +
 
-            xCoef[2];
+            xCoefficient[2];
 
 
         const y =
 
-            yCoef[0] * lng +
+            yCoefficient[0] * lng +
 
-            yCoef[1] * lat +
+            yCoefficient[1] * lat +
 
-            yCoef[2];
+            yCoefficient[2];
 
 
         return {
 
             x: x,
             y: y
+
         };
 
 
     } catch (error) {
 
-        console.log(
+        console.error(
             "GPS変換エラー",
             error
         );
+
 
         return null;
     }
 }
 
 
-/* ================================
+/* =========================================
+   メインキャンパス範囲
+
+   サッカーコート側は除外
+========================================= */
+
+const MAIN_CAMPUS_AREA = [
+
+    { x: 25,  y: 330 },
+
+    { x: 90,  y: 150 },
+
+    { x: 220, y: 80 },
+
+    { x: 400, y: 65 },
+
+    { x: 620, y: 145 },
+
+    { x: 675, y: 300 },
+
+    { x: 850, y: 345 },
+
+    { x: 915, y: 520 },
+
+    { x: 790, y: 750 },
+
+    { x: 450, y: 595 },
+
+    { x: 215, y: 515 }
+
+];
+
+
+/* =========================================
+   座標がキャンパス内か判定
+========================================= */
+
+function isInsideMainCampus(x, y) {
+
+    let inside = false;
+
+
+    for (
+        let i = 0,
+            j = MAIN_CAMPUS_AREA.length - 1;
+
+        i < MAIN_CAMPUS_AREA.length;
+
+        j = i++
+    ) {
+
+        const xi =
+            MAIN_CAMPUS_AREA[i].x;
+
+        const yi =
+            MAIN_CAMPUS_AREA[i].y;
+
+
+        const xj =
+            MAIN_CAMPUS_AREA[j].x;
+
+        const yj =
+            MAIN_CAMPUS_AREA[j].y;
+
+
+        const intersect =
+
+            (
+                (yi > y) !==
+                (yj > y)
+            )
+
+            &&
+
+            (
+                x <
+                (
+                    (xj - xi) *
+                    (y - yi)
+                    /
+                    (yj - yi)
+                    +
+                    xi
+                )
+            );
+
+
+        if (intersect) {
+
+            inside = !inside;
+        }
+    }
+
+
+    return inside;
+}
+
+
+/* =========================================
    現在地更新
-================================ */
+========================================= */
 
-function updateUserLocation(
-    position
-) {
-
-    latestGpsPosition =
-        position;
-
+function updateUserLocation(position) {
 
     const lat =
         position.coords.latitude;
@@ -871,6 +939,11 @@ function updateUserLocation(
 
     const accuracy =
         position.coords.accuracy;
+
+
+    console.log(
+        "現在地"
+    );
 
 
     console.log(
@@ -887,34 +960,9 @@ function updateUserLocation(
 
     console.log(
         "精度:",
-        accuracy
+        accuracy,
+        "m"
     );
-
-
-    /* 校正がまだ */
-
-    if (
-        gpsCalibrationPoints.length < 3
-    ) {
-
-        userLocationMarker
-            .style.display =
-            "none";
-
-
-        showGpsStatus(
-
-            "GPS取得成功・校正 " +
-
-            gpsCalibrationPoints.length +
-
-            "/3"
-
-        );
-
-
-        return;
-    }
 
 
     const point =
@@ -926,85 +974,102 @@ function updateUserLocation(
 
     if (!point) {
 
+        userLocationMarker.style.display =
+            "none";
+
         return;
     }
 
 
-    /* 地図外判定 */
-
-    const width =
-        map.offsetWidth;
-
-
-    const height =
-        map.offsetHeight;
-
+    /* =================================
+       キャンパス外判定
+    ================================= */
 
     if (
-
-        point.x < 0 ||
-
-        point.x > width ||
-
-        point.y < 0 ||
-
-        point.y > height
-
+        !isInsideMainCampus(
+            point.x,
+            point.y
+        )
     ) {
 
-        userLocationMarker
-            .style.display =
+        userLocationMarker.style.display =
             "none";
 
 
-        userAccuracyCircle
-            .style.display =
-            "none";
-
-
-        showGpsStatus(
-            "キャンパス範囲外です"
-        );
-
-
-        return;
-    }
-
-
-    /* 現在地表示 */
-
-    userLocationMarker
-        .style.left =
-        point.x + "px";
-
-
-    userLocationMarker
-        .style.top =
-        point.y + "px";
-
-
-    userLocationMarker
-        .style.display =
-        "block";
-
-
-    gpsButton
-        .classList
-        .remove(
+        gpsButton.classList.remove(
             "loading"
         );
 
 
-    gpsButton
-        .classList
-        .add(
+        gpsButton.classList.remove(
             "active"
         );
 
 
+        showGpsStatus(
+            "現在地はキャンパス外です"
+        );
+
+
+        return;
+    }
+
+
+    /* =================================
+       GPS精度がかなり悪い場合
+    ================================= */
+
+    if (
+        accuracy > 100
+    ) {
+
+        userLocationMarker.style.display =
+            "none";
+
+
+        gpsButton.classList.remove(
+            "loading"
+        );
+
+
+        showGpsStatus(
+            "GPSの精度が低いため現在地を確認できません"
+        );
+
+
+        return;
+    }
+
+
+    /* =================================
+       現在地マーカー表示
+    ================================= */
+
+    userLocationMarker.style.left =
+        point.x + "px";
+
+
+    userLocationMarker.style.top =
+        point.y + "px";
+
+
+    userLocationMarker.style.display =
+        "block";
+
+
+    gpsButton.classList.remove(
+        "loading"
+    );
+
+
+    gpsButton.classList.add(
+        "active"
+    );
+
+
     showGpsStatus(
 
-        "現在地更新・精度 約" +
+        "現在地を表示中　精度：約" +
 
         Math.round(
             accuracy
@@ -1016,9 +1081,69 @@ function updateUserLocation(
 }
 
 
-/* ================================
+/* =========================================
+   GPSエラー
+========================================= */
+
+function gpsError(error) {
+
+    gpsButton.classList.remove(
+        "loading"
+    );
+
+
+    userLocationMarker.style.display =
+        "none";
+
+
+    if (
+        error.code ===
+        error.PERMISSION_DENIED
+    ) {
+
+        showGpsStatus(
+            "位置情報の使用を許可してください"
+        );
+
+        return;
+    }
+
+
+    if (
+        error.code ===
+        error.POSITION_UNAVAILABLE
+    ) {
+
+        showGpsStatus(
+            "現在地を取得できません"
+        );
+
+        return;
+    }
+
+
+    if (
+        error.code ===
+        error.TIMEOUT
+    ) {
+
+        showGpsStatus(
+            "GPSの取得がタイムアウトしました"
+        );
+
+        return;
+    }
+
+
+    showGpsStatus(
+        "GPSでエラーが発生しました"
+    );
+}
+
+
+/* =========================================
    GPS開始
-================================ */
+========================================= */
 
 function startGPS() {
 
@@ -1026,8 +1151,8 @@ function startGPS() {
         !navigator.geolocation
     ) {
 
-        alert(
-            "この端末ではGPSを利用できません"
+        showGpsStatus(
+            "この端末では位置情報を利用できません"
         );
 
         return;
@@ -1042,15 +1167,13 @@ function startGPS() {
     }
 
 
-    gpsButton
-        .classList
-        .add(
-            "loading"
-        );
+    gpsButton.classList.add(
+        "loading"
+    );
 
 
     showGpsStatus(
-        "現在地を取得しています"
+        "現在地を取得しています…"
     );
 
 
@@ -1061,57 +1184,7 @@ function startGPS() {
 
                 updateUserLocation,
 
-
-                function (error) {
-
-                    gpsButton
-                        .classList
-                        .remove(
-                            "loading"
-                        );
-
-
-                    if (
-                        error.code ===
-                        error.PERMISSION_DENIED
-                    ) {
-
-                        alert(
-                            "位置情報を許可してください"
-                        );
-
-                    }
-
-
-                    else if (
-
-                        error.code ===
-                        error.POSITION_UNAVAILABLE
-
-                    ) {
-
-                        alert(
-                            "現在地を取得できません"
-                        );
-
-                    }
-
-
-                    else if (
-
-                        error.code ===
-                        error.TIMEOUT
-
-                    ) {
-
-                        alert(
-                            "GPS取得がタイムアウトしました"
-                        );
-
-                    }
-
-                },
-
+                gpsError,
 
                 {
 
@@ -1123,15 +1196,16 @@ function startGPS() {
 
                     timeout:
                         15000
+
                 }
 
             );
 }
 
 
-/* ================================
+/* =========================================
    GPS停止
-================================ */
+========================================= */
 
 function stopGPS() {
 
@@ -1149,33 +1223,34 @@ function stopGPS() {
         );
 
 
-    gpsWatchId =
-        null;
+    gpsWatchId = null;
 
 
-    gpsButton
-        .classList
-        .remove(
-            "active"
-        );
+    userLocationMarker.style.display =
+        "none";
 
 
-    gpsButton
-        .classList
-        .remove(
-            "loading"
-        );
+    gpsButton.classList.remove(
+        "active"
+    );
+
+
+    gpsButton.classList.remove(
+        "loading"
+    );
 
 
     showGpsStatus(
-        "GPSを停止しました"
+        "現在地表示を停止しました"
     );
 }
 
 
-/* ================================
+/* =========================================
    GPSボタン
-================================ */
+
+   押すとON/OFF
+========================================= */
 
 gpsButton.addEventListener(
     "click",
@@ -1187,337 +1262,26 @@ gpsButton.addEventListener(
 
             startGPS();
 
-        } else {
+        }
+
+        else {
 
             stopGPS();
         }
+
     }
 );
 
 
-/* ================================
-   GPS校正モード
-================================ */
+/* =========================================
+   ページを開いたら自動でGPS開始
+========================================= */
 
-/*
+window.addEventListener(
+    "load",
+    function () {
 
-URLの最後に
+        startGPS();
 
-?gpscal=1
-
-を付ける。
-
-例
-
-https://○○.onrender.com/?gpscal=1
-
-*/
-
-
-const gpsParams =
-    new URLSearchParams(
-        window.location.search
-    );
-
-
-const gpsCalibrationMode =
-
-    gpsParams.get(
-        "gpscal"
-    ) === "1";
-
-
-if (
-    gpsCalibrationMode
-) {
-
-
-    /* 校正表示 */
-
-    const panel =
-        document.createElement(
-            "div"
-        );
-
-
-    panel.className =
-        "gps-calibration-panel";
-
-
-    const text =
-        document.createElement(
-            "span"
-        );
-
-
-    const resetButton =
-        document.createElement(
-            "button"
-        );
-
-
-    resetButton.textContent =
-        "リセット";
-
-
-    panel.appendChild(
-        text
-    );
-
-
-    panel.appendChild(
-        resetButton
-    );
-
-
-    document.body.appendChild(
-        panel
-    );
-
-
-    function updatePanel() {
-
-        text.textContent =
-
-            "GPS校正：" +
-
-            gpsCalibrationPoints.length +
-
-            "/3 点";
     }
-
-
-    updatePanel();
-
-
-    /* GPS自動開始 */
-
-    startGPS();
-
-
-    /* 地図を押して地点登録 */
-
-    map.addEventListener(
-        "click",
-        function (event) {
-
-
-            if (
-                !latestGpsPosition
-            ) {
-
-                alert(
-                    "GPS取得中です。少ししてからもう一度押してください"
-                );
-
-                return;
-            }
-
-
-            if (
-                gpsCalibrationPoints.length >= 3
-            ) {
-
-                alert(
-                    "3地点登録済みです"
-                );
-
-                return;
-            }
-
-
-            const rect =
-                map.getBoundingClientRect();
-
-
-            /*
-            スマホで地図が縮小されていても
-            1080px基準座標に戻す
-            */
-
-            const x =
-
-                (
-                    event.clientX -
-                    rect.left
-                )
-
-                *
-
-                (
-                    map.offsetWidth /
-                    rect.width
-                );
-
-
-            const y =
-
-                (
-                    event.clientY -
-                    rect.top
-                )
-
-                *
-
-                (
-                    map.offsetHeight /
-                    rect.height
-                );
-
-
-            const lat =
-
-                latestGpsPosition
-                    .coords
-                    .latitude;
-
-
-            const lng =
-
-                latestGpsPosition
-                    .coords
-                    .longitude;
-
-
-            const accuracy =
-
-                latestGpsPosition
-                    .coords
-                    .accuracy;
-
-
-            const number =
-
-                gpsCalibrationPoints
-                    .length + 1;
-
-
-            const result =
-                confirm(
-
-                    "地点" +
-
-                    number +
-
-                    "を登録しますか？\n\n" +
-
-                    "X：" +
-
-                    Math.round(x) +
-
-                    "\nY：" +
-
-                    Math.round(y) +
-
-                    "\nGPS精度：約" +
-
-                    Math.round(
-                        accuracy
-                    ) +
-
-                    "m"
-
-                );
-
-
-            if (
-                !result
-            ) {
-
-                return;
-            }
-
-
-            gpsCalibrationPoints.push({
-
-                lat: lat,
-
-                lng: lng,
-
-                x: Math.round(x),
-
-                y: Math.round(y)
-
-            });
-
-
-            localStorage.setItem(
-
-                GPS_STORAGE_KEY,
-
-                JSON.stringify(
-                    gpsCalibrationPoints
-                )
-
-            );
-
-
-            updatePanel();
-
-
-            if (
-                gpsCalibrationPoints.length === 3
-            ) {
-
-                alert(
-                    "GPS校正完了！\n通常のURLで開いて現在地ボタンを押してください。"
-                );
-
-
-                updateUserLocation(
-                    latestGpsPosition
-                );
-            }
-
-        }
-    );
-
-
-    /* 校正リセット */
-
-    resetButton.addEventListener(
-        "click",
-        function () {
-
-
-            const result =
-                confirm(
-                    "GPS校正をリセットしますか？"
-                );
-
-
-            if (!result) {
-
-                return;
-            }
-
-
-            gpsCalibrationPoints = [];
-
-
-            localStorage.removeItem(
-                GPS_STORAGE_KEY
-            );
-
-
-            userLocationMarker
-                .style.display =
-                "none";
-
-
-            userAccuracyCircle
-                .style.display =
-                "none";
-
-
-            updatePanel();
-
-
-            alert(
-                "校正データを削除しました"
-            );
-
-        }
-    );
-
-}
+);
