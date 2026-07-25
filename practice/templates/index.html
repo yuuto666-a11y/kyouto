@@ -123,15 +123,78 @@
      バス情報
 ========================== -->
 
+<!-- ==========================
+     バス運行情報
+========================== -->
+
 <div
     id="bus-live-info"
     class="bus-live-info"
     hidden>
 
+    <!-- 路線選択 -->
+    <div class="bus-route-buttons">
+
+        <button
+            type="button"
+            class="bus-route-btn active"
+            data-route="nagitsuji">
+            椥辻
+        </button>
+
+        <button
+            type="button"
+            class="bus-route-btn"
+            data-route="yamashina">
+            山科
+        </button>
+
+        <button
+            type="button"
+            class="bus-route-btn"
+            data-route="kyoto">
+            京都駅
+        </button>
+
+    </div>
+
+
+    <!-- 大学発 / 大学行き -->
+    <div class="bus-direction-buttons">
+
+        <button
+            type="button"
+            id="busFromUniversity"
+            class="bus-direction-btn active">
+            大学発
+        </button>
+
+        <button
+            type="button"
+            id="busToUniversity"
+            class="bus-direction-btn">
+            大学行き
+        </button>
+
+    </div>
+
+
+    <!-- 選択中の路線 -->
+    <div
+        id="bus-route-name"
+        class="bus-route-name">
+
+        京都橘大学 → 椥辻
+
+    </div>
+
+
     <div class="bus-live-title">
         次のバス
     </div>
 
+
+    <!-- 次の発車時刻 -->
     <div
         id="next-bus-time"
         class="next-bus-time">
@@ -140,12 +203,21 @@
 
     </div>
 
+
+    <!-- カウントダウン -->
     <div
         id="bus-countdown"
         class="bus-countdown">
 
         発車時刻を確認中...
 
+    </div>
+
+
+    <!-- 運行状態 -->
+    <div
+        id="bus-status"
+        class="bus-status">
     </div>
 
 </div>
