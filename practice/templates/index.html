@@ -74,99 +74,131 @@
                  バス運行情報
             =========================== -->
             <div
-                id="bus-live-info"
-                class="bus-live-info"
-                hidden>
+    id="bus-live-info"
+    class="bus-live-info"
+    hidden>
 
-                <!-- 上段：路線選択 -->
-                <div class="bus-route-buttons">
+    <!-- ==========================
+         ① 路線選択
+         3つのうち1つだけ
+    =========================== -->
 
-                    <button
-                        type="button"
-                        class="bus-route-btn active"
-                        data-route="nagitsuji">
-                        椥辻
-                    </button>
+    <div class="bus-route-buttons">
 
-                    <button
-                        type="button"
-                        class="bus-route-btn"
-                        data-route="yamashina">
-                        山科
-                    </button>
+        <button
+            type="button"
+            class="bus-route-btn active"
+            data-route="nagitsuji">
+            椥辻
+        </button>
 
-                    <button
-                        type="button"
-                        class="bus-route-btn"
-                        data-route="kyoto">
-                        京都駅
-                    </button>
+        <button
+            type="button"
+            class="bus-route-btn"
+            data-route="yamashina">
+            山科
+        </button>
 
-                </div>
+        <button
+            type="button"
+            class="bus-route-btn"
+            data-route="kyoto">
+            京都駅
+        </button>
 
-                <!--
-                    山科・京都駅を選択したとき、
-                    script.jsによって
+    </div>
 
-                    大学発着 / 大宅発着
 
-                    の選択ボタンがここに表示されます。
+    <!-- ==========================
+         ② 発着選択
+         4つのうち1つだけ
+    =========================== -->
 
-                    椥辻は大学発着のみです。
-                -->
+    <div class="bus-direction-buttons">
 
-                <!-- 発 / 行き -->
-                <div class="bus-direction-buttons">
+        <button
+            type="button"
+            class="bus-direction-btn active"
+            data-stop-mode="university"
+            data-direction="fromUniversity">
+            大学発
+        </button>
 
-                    <button
-                        type="button"
-                        id="busFromUniversity"
-                        class="bus-direction-btn active">
-                        大学発
-                    </button>
+        <button
+            type="button"
+            class="bus-direction-btn"
+            data-stop-mode="university"
+            data-direction="toUniversity">
+            大学着
+        </button>
 
-                    <button
-                        type="button"
-                        id="busToUniversity"
-                        class="bus-direction-btn">
-                        大学行き
-                    </button>
+        <button
+            type="button"
+            class="bus-direction-btn bus-oyake-direction"
+            data-stop-mode="oyake"
+            data-direction="fromUniversity"
+            hidden>
+            大宅発
+        </button>
 
-                </div>
+        <button
+            type="button"
+            class="bus-direction-btn bus-oyake-direction"
+            data-stop-mode="oyake"
+            data-direction="toUniversity"
+            hidden>
+            大宅着
+        </button>
 
-                <!-- 選択中の路線 -->
-                <div
-                    id="bus-route-name"
-                    class="bus-route-name">
-                    京都橘大学 → 椥辻
-                </div>
+    </div>
 
-                <div class="bus-live-title">
-                    次のバス
-                </div>
 
-                <!-- 次の発車時刻 -->
-                <div
-                    id="next-bus-time"
-                    class="next-bus-time">
-                    --:--
-                </div>
+    <!-- 選択中の路線 -->
 
-                <!-- カウントダウン -->
-                <div
-                    id="bus-countdown"
-                    class="bus-countdown">
-                    発車時刻を確認中...
-                </div>
+    <div
+        id="bus-route-name"
+        class="bus-route-name">
 
-                <!-- 運行状態 -->
-                <div
-                    id="bus-status"
-                    class="bus-status">
-                </div>
+        京都橘大学 → 椥辻
 
-            </div>
+    </div>
 
+
+    <div class="bus-live-title">
+        次のバス
+    </div>
+
+
+    <!-- 次の発車時刻 -->
+
+    <div
+        id="next-bus-time"
+        class="next-bus-time">
+
+        --:--
+
+    </div>
+
+
+    <!-- カウントダウン -->
+
+    <div
+        id="bus-countdown"
+        class="bus-countdown">
+
+        発車時刻を確認中...
+
+    </div>
+
+
+    <!-- 運行状態 -->
+
+    <div
+        id="bus-status"
+        class="bus-status">
+    </div>
+
+</div>
             <!-- ==========================
                  写真スライダー
             =========================== -->
