@@ -2,16 +2,37 @@
 <html lang="ja">
 
 <head>
+
     <meta charset="UTF-8">
+
+    <!-- ==========================
+         スマホ表示に必須
+    =========================== -->
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
     <title>大学マップ</title>
 
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
+
+    <!-- ==========================
+         CSS
+         ?v=3 はスマホの古いCSSキャッシュ対策
+    =========================== -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}?v=3">
+
 </head>
+
 
 <body>
 
-    <!-- 検索バー -->
+
+    <!-- ==========================
+         検索バー
+    =========================== -->
+
     <div class="search-bar">
 
         <input
@@ -24,75 +45,192 @@
 
     </div>
 
+
+
+    <!-- ==========================
+         メインコンテンツ
+    =========================== -->
+
     <div class="container">
 
-        <!-- 地図 -->
+
+        <!-- ==========================
+             地図エリア
+        =========================== -->
+
         <div class="map-area">
+
 
             <div class="map-container">
 
-              <picture>
-    <!-- スマホ版 -->
-    <source
-        media="(max-width: 768px) and (orientation: portrait)"
-        srcset="{{ url_for('static', filename='campusmap-mobile.png') }}">
 
-    <!-- PC版 -->
-    <img
-        src="{{ url_for('static', filename='campusmap.jpg') }}"
-        id="map"
-        class="map-image"
-        alt="京都橘大学キャンパスマップ">
-</picture>
+                <!-- ==========================
+                     PC・スマホ画像切替
+                =========================== -->
+
+                <picture>
+
+
+                    <!-- スマホ縦画面 -->
+
+                    <source
+                        media="(max-width: 768px) and (orientation: portrait)"
+                        srcset="{{ url_for('static', filename='campusmap-mobile.png') }}">
+
+
+                    <!-- PC・タブレット・横画面 -->
+
+                    <img
+                        src="{{ url_for('static', filename='campusmap.jpg') }}"
+                        id="map"
+                        class="map-image"
+                        alt="京都橘大学キャンパスマップ">
+
+
+                </picture>
+
+
+                <!--
+                    建物ピン
+                    GPS現在地マーカーは
+                    script.jsからここへ自動追加される
+                -->
+
+
             </div>
+
 
         </div>
 
+
     </div>
 
-    <!-- ==========================
-         建物情報ポップアップ
-    =========================== -->
 
-    <div id="popup-overlay" class="popup-overlay">
+
+    <!-- ==========================================
+         建物情報ポップアップ
+    =========================================== -->
+
+    <div
+        id="popup-overlay"
+        class="popup-overlay">
+
 
         <div class="popup-card">
 
-            <button id="close-popup" class="close-btn">
+
+            <!-- 閉じるボタン -->
+
+            <button
+                id="close-popup"
+                class="close-btn"
+                type="button">
+
                 ×
+
             </button>
 
+
+
+            <!-- 建物名 -->
+
             <h2 id="building-name">
+
                 建物名
+
             </h2>
 
- <div class="photo-slider">
 
-    <button id="prev-photo" class="slide-btn">
-        ◀
-    </button>
 
-    <img
-        id="building-photo"
-        class="building-photo"
-        src=""
-        alt="建物写真">
+            <!-- ==========================
+                 写真スライダー
+            =========================== -->
 
-    <button id="next-photo" class="slide-btn">
-        ▶
-    </button>
+            <div class="photo-slider">
 
-</div>
+
+                <!-- PC：前の写真 -->
+
+                <button
+                    id="prev-photo"
+                    class="slide-btn"
+                    type="button"
+                    aria-label="前の写真">
+
+                    ◀
+
+                </button>
+
+
+
+                <!-- 建物写真 -->
+
+                <img
+                    id="building-photo"
+                    class="building-photo"
+                    src=""
+                    alt="建物写真">
+
+
+
+                <!-- PC：次の写真 -->
+
+                <button
+                    id="next-photo"
+                    class="slide-btn"
+                    type="button"
+                    aria-label="次の写真">
+
+                    ▶
+
+                </button>
+
+
+            </div>
+
+
+
+            <!-- 建物説明 -->
+
             <p id="building-description">
+
                 建物説明
+
             </p>
+
 
         </div>
 
+
     </div>
 
-    <script src="{{ url_for('static', filename='buildingData.js') }}"></script>
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+
+    <!-- ==========================================
+         JavaScript
+    =========================================== -->
+
+
+    <!-- 建物情報 -->
+
+    <script
+        src="{{ url_for('static', filename='buildingData.js') }}?v=3">
+    </script>
+
+
+    <!--
+        建物ピン
+        検索
+        ポップアップ
+        写真スライド
+        GPS
+        スマホ地図サイズ調整
+    -->
+
+    <script
+        src="{{ url_for('static', filename='script.js') }}?v=3">
+    </script>
+
 
 </body>
 
