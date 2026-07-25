@@ -333,12 +333,37 @@ searchInput.addEventListener("keydown", function (e) {
 });
 
 //////////////////////////////////////////////////
-// 前の写真
+// 写真スライダー
+// PC・スマホ・タブレット共通
 //////////////////////////////////////////////////
 
-prevBtn.addEventListener("click", function (e) {
+function showCurrentPhoto() {
 
-    e.stopPropagation();
+    if (
+        !currentPhotos ||
+        currentPhotos.length === 0
+    ) {
+        return;
+    }
+
+    photo.src =
+        "/static/" +
+        currentPhotos[currentIndex];
+}
+
+
+/* ==========================
+   前の写真
+========================== */
+
+function showPreviousPhoto() {
+
+    if (
+        !currentPhotos ||
+        currentPhotos.length <= 1
+    ) {
+        return;
+    }
 
     currentIndex--;
 
@@ -348,80 +373,257 @@ prevBtn.addEventListener("click", function (e) {
             currentPhotos.length - 1;
     }
 
-    photo.src =
-        "/static/" + currentPhotos[currentIndex];
+    showCurrentPhoto();
+}
 
-});
 
-//////////////////////////////////////////////////
-// 次の写真
-//////////////////////////////////////////////////
+/* ==========================
+   次の写真
+========================== */
 
-nextBtn.addEventListener("click", function (e) {
+function showNextPhoto() {
 
-    e.stopPropagation();
+    if (
+        !currentPhotos ||
+        currentPhotos.length <= 1
+    ) {
+        return;
+    }
 
     currentIndex++;
 
-    if (currentIndex >= currentPhotos.length) {
+    if (
+        currentIndex >=
+        currentPhotos.length
+    ) {
 
         currentIndex = 0;
     }
 
-    photo.src =
-        "/static/" + currentPhotos[currentIndex];
+    showCurrentPhoto();
+}
 
-});
 
-//////////////////////////////////////////////////
-// 写真のスワイプ
-//////////////////////////////////////////////////
+/* ==========================
+   ◀ ボタン
+========================== */
 
-let startX = 0;
+prevBtn.addEventListener(
+    "click",
+    function (e) {
 
-photo.addEventListener("touchstart", function (e) {
+        e.stopPropagation();
 
-    if (currentPhotos.length <= 1) return;
+        showPreviousPhoto();
+    }
+);
 
-    startX = e.touches[0].clientX;
 
-});
+/* ==========================
+   ▶ ボタン
+========================== */
 
-photo.addEventListener("touchend", function (e) {
+nextBtn.addEventListener(
+    "click",
+    function (e) {
 
-    if (currentPhotos.length <= 1) return;
+        e.stopPropagation();
 
-    const endX = e.changedTouches[0].clientX;
+        showNextPhoto();
+    }
+);
 
-    // 左にスワイプ → 次の写真
-    if (startX - endX > 50) {
 
-        currentIndex++;
+/* ==========================
+   スワイプ・ドラッグ
+   スマホ / タブレット / PC共通
+========================== */
 
-        if (currentIndex >= currentPhotos.length) {
+let slideStartX = 0;
 
-            currentIndex = 0;
+let slideCurrentX = 0;
+
+let isSliding = false;
+
+
+/* 押した瞬間 */
+
+photo.addEventListener(
+    "pointerdown",
+    function (e) {
+
+        if (
+            currentPhotos.length <= 1
+        ) {
+            return;
         }
 
-        photo.src =
-            "/static/" + currentPhotos[currentIndex];
+        isSliding = true;
+
+        slideStartX =
+            e.clientX;
+
+        slideCurrentX =
+            e.clientX;
+
+        photo.setPointerCapture(
+            e.pointerId
+        );
+
+        photo.classList.add(
+            "dragging"
+        );
     }
+);
 
-    // 右にスワイプ → 前の写真
-    else if (endX - startX > 50) {
 
-        currentIndex--;
+/* 動かしている途中 */
 
-        if (currentIndex < 0) {
+photo.addEventListener(
+    "pointermove",
+    function (e) {
 
-            currentIndex =
-                currentPhotos.length - 1;
+        if (!isSliding) {
+            return;
         }
 
-        photo.src =
-            "/static/" + currentPhotos[currentIndex];
+        slideCurrentX =
+            e.clientX;
+
+        const moveX =
+            slideCurrentX -
+            slideStartX;
+
+        /*
+        指・マウスについてくるように
+        少しだけ画像を動かす
+        */
+
+        photo.style.transform =
+            `translateX(${moveX}px)`;
+
+        photo.style.transition =
+            "none";
     }
-});
+);
+
+
+/* 指・マウスを離した */
+
+photo.addEventListener(
+    "pointerup",
+    function (e) {
+
+        if (!isSliding) {
+            return;
+        }
+
+        isSliding = false;
+
+        const moveX =
+            slideCurrentX -
+            slideStartX;
+
+
+        /*
+        50px以上動かしたら
+        写真を切り替える
+        */
+
+        if (moveX < -50) {
+
+            // 左へスワイプ
+            showNextPhoto();
+
+        }
+
+        else if (moveX > 50) {
+
+            // 右へスワイプ
+            showPreviousPhoto();
+
+        }
+
+
+        /*
+        写真の位置を元に戻す
+        */
+
+        photo.style.transition =
+            "transform .2s ease";
+
+        photo.style.transform =
+            "translateX(0)";
+
+
+        photo.classList.remove(
+            "dragging"
+        );
+    }
+);
+
+
+/* ==========================
+   操作途中でキャンセルされた場合
+========================== */
+
+photo.addEventListener(
+    "pointercancel",
+    function () {
+
+        isSliding = false;
+
+        photo.style.transition =
+            "transform .2s ease";
+
+        photo.style.transform =
+            "translateX(0)";
+
+        photo.classList.remove(
+            "dragging"
+        );
+    }
+);
+
+
+/* ==========================
+   PCキーボード
+========================== */
+
+document.addEventListener(
+    "keydown",
+    function (e) {
+
+        /*
+        ポップアップが閉じていたら
+        写真を変更しない
+        */
+
+        if (
+            popupOverlay.style.display
+            !== "flex"
+        ) {
+            return;
+        }
+
+
+        if (
+            e.key === "ArrowLeft"
+        ) {
+
+            showPreviousPhoto();
+        }
+
+
+        if (
+            e.key === "ArrowRight"
+        ) {
+
+            showNextPhoto();
+        }
+
+    }
+);
 
 //////////////////////////////////////////////////
 // 地図サイズ調整
