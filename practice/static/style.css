@@ -221,7 +221,7 @@ body{
 }
 
 /* ==========================
-   ポップアップ
+   ポップアップ共通
 ========================== */
 
 .popup-overlay{
@@ -237,9 +237,8 @@ body{
 
     background:rgba(0,0,0,0.5);
 
-    z-index:9999;
+    z-index:20000;
 
-    /* PCは中央 */
     justify-content:center;
     align-items:center;
 }
@@ -253,7 +252,7 @@ body{
     position:relative;
 
     width:90%;
-    max-width:500px;
+    max-width:600px;
 
     max-height:80vh;
 
@@ -263,7 +262,7 @@ body{
 
     border-radius:15px;
 
-    padding:20px;
+    padding:25px;
 
     font-size:18px;
 
@@ -280,14 +279,79 @@ body{
     right:15px;
 
     border:none;
-
     background:none;
 
     font-size:28px;
 
     cursor:pointer;
 
-    z-index:20;
+    z-index:50;
+}
+
+
+/* ==========================
+   写真スライダー
+========================== */
+
+.photo-slider{
+    width:100%;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    gap:15px;
+}
+
+
+/* 写真 */
+
+.building-photo{
+    width:100%;
+    max-width:450px;
+
+    border-radius:10px;
+
+    object-fit:cover;
+
+    margin-bottom:15px;
+}
+
+
+/* ==========================
+   PCの左右スライドボタン
+========================== */
+
+.slide-btn{
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    flex:0 0 48px;
+
+    width:48px;
+    height:48px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:#eeeeee;
+
+    font-size:30px;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+
+.slide-btn:hover{
+    background:#dddddd;
+
+    transform:scale(1.1);
 }
 
 
@@ -299,26 +363,26 @@ body{
 
     .popup-overlay{
 
-        /* 横は中央 */
+        /* スマホは下側 */
         justify-content:center;
-
-        /* 縦は下 */
         align-items:flex-end;
     }
 
 
     .popup-card{
 
+        /* 左右にも少し余白 */
         width:calc(100% - 20px);
 
         max-width:none;
 
-        max-height:45vh;
+        /* 画面の半分くらいまで */
+        max-height:48vh;
 
-        /* 左右と下に少し余白 */
+        /* 画面下にも余白 */
         margin:
             0 10px
-            calc(10px + env(safe-area-inset-bottom));
+            calc(15px + env(safe-area-inset-bottom));
 
         padding:20px;
 
@@ -337,21 +401,58 @@ body{
     }
 
 
+    /* ==========================
+       スマホは写真を指でスライド
+    ========================== */
+
+    .photo-slider{
+        width:100%;
+
+        display:block;
+
+        overflow:hidden;
+    }
+
+
+    .building-photo{
+        width:100%;
+
+        max-width:none;
+
+        display:block;
+
+        margin:0 auto 15px;
+
+        touch-action:pan-y;
+    }
+
+
+    /* スマホでは左右ボタンを消す */
+
     .slide-btn{
         display:none;
+    }
+
+
+    .close-btn{
+        font-size:32px;
+
+        top:8px;
+        right:12px;
     }
 
 }
 
 
 /* ==========================
-   スマホ出現アニメーション
+   スマホ
+   下からスライド表示
 ========================== */
 
 @keyframes slideUp{
 
     from{
-        transform:translateY(100%);
+        transform:translateY(110%);
     }
 
     to{
@@ -359,6 +460,7 @@ body{
     }
 
 }
+
 /* ==========================
    GPS 現在地
 ========================== */
