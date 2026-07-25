@@ -19,25 +19,58 @@ body{
     z-index:1000;
 }
 
-.map-wrapper{
+
+
+/* ==========================
+   キャンパスマップ
+========================== */
+
+.container{
     width:100%;
-    display:flex;
-    justify-content:center;
+
+    display:block;
+
+    /* 固定検索バーの分だけ下げる */
+    padding-top:90px;
+
+    box-sizing:border-box;
+}
+
+
+.map-area{
+    width:100%;
+
+    position:relative;
+
     overflow:hidden;
 }
 
+
 .map-container{
     position:relative;
+
+    /* 建物ピン・GPSの基準サイズ */
     width:1080px;
-    flex:0 0 1080px;
-    transform-origin:top center;
+    height:auto;
+
+    /*
+    スマホ縮小時に左上を基準にする
+    ここが重要
+    */
+    transform-origin:top left;
 }
+
 
 .map-image{
     width:1080px;
+    max-width:none;
+
     height:auto;
+
     display:block;
+
     border:3px solid black;
+
     box-sizing:border-box;
 }
 .building{
@@ -155,13 +188,7 @@ body{
     }
 }
 
-.container{
-    display:flex;
-}
 
-.map-area{
-    flex:3;
-}
 
 .building-photo{
     width:100%;
@@ -207,18 +234,6 @@ body{
     box-sizing: border-box;
 }
 
-.map-wrapper{
-    width:100%;
-
-    display:flex;
-    justify-content:center;
-
-    overflow:hidden;
-
-    padding-top:90px;
-
-    box-sizing:border-box;
-}
 
 /* ==========================
    ポップアップ共通
