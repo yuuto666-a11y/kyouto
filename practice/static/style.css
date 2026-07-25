@@ -174,23 +174,50 @@ body{
 }
 
 .search-bar {
-    position: sticky;
+    position: fixed;
+
     top: 0;
-    z-index: 1000;
+    left: 0;
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    z-index: 10000;
 
     background: white;
+
     padding: 10px;
 
     border-bottom: 1px solid #ccc;
+
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
 #searchInput {
     width: 100%;
-    height:70px;
-    font-size:25px;
-    padding:0 15px;
-    border-radius:30px;
+    height: 70px;
+
+    font-size: 25px;
+
+    padding: 0 20px;
+
+    border-radius: 30px;
+
     box-sizing: border-box;
+}
+
+.map-wrapper{
+    width:100%;
+
+    display:flex;
+    justify-content:center;
+
+    overflow:hidden;
+
+    padding-top:90px;
+
+    box-sizing:border-box;
 }
 
 /* ==========================
