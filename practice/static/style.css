@@ -725,6 +725,72 @@ body{
     cursor:crosshair;
 }
 
+/* ==========================
+   バス時刻情報
+========================== */
+
+.bus-live-info{
+    margin:10px 0 20px;
+
+    padding:15px;
+
+    background:#f5f8ff;
+
+    border-radius:12px;
+
+    text-align:center;
+
+    box-sizing:border-box;
+}
+
+
+.bus-live-title{
+    font-size:15px;
+    font-weight:bold;
+
+    color:#555;
+}
+
+
+.next-bus-time{
+    margin-top:3px;
+
+    font-size:36px;
+    font-weight:bold;
+}
+
+
+.bus-countdown{
+    margin-top:5px;
+
+    font-size:18px;
+    font-weight:bold;
+}
+
+
+/* スマホ */
+
+@media (max-width:768px){
+
+    .bus-live-info{
+        padding:12px;
+
+        margin:
+            5px 0
+            15px;
+    }
+
+
+    .next-bus-time{
+        font-size:32px;
+    }
+
+
+    .bus-countdown{
+        font-size:17px;
+    }
+
+}
 
 
 
