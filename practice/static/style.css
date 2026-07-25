@@ -726,58 +726,197 @@ body{
 }
 
 /* ==========================
-   バス時刻情報
+   バス運行情報
 ========================== */
 
 .bus-live-info{
     margin:10px 0 20px;
-
     padding:15px;
 
     background:#f5f8ff;
 
-    border-radius:12px;
-
-    text-align:center;
+    border-radius:15px;
 
     box-sizing:border-box;
 }
 
+
+/* ==========================
+   路線ボタン
+========================== */
+
+.bus-route-buttons{
+    display:flex;
+
+    gap:8px;
+
+    margin-bottom:10px;
+}
+
+
+.bus-route-btn{
+    flex:1;
+
+    padding:10px 5px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#e8e8e8;
+
+    color:#333;
+
+    font-size:15px;
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+
+.bus-route-btn.active{
+    background:#8e24aa;
+
+    color:white;
+}
+
+
+/* ==========================
+   大学発・大学行き
+========================== */
+
+.bus-direction-buttons{
+    display:flex;
+
+    gap:8px;
+
+    margin-bottom:15px;
+}
+
+
+.bus-direction-btn{
+    flex:1;
+
+    padding:9px 5px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#e8e8e8;
+
+    color:#333;
+
+    font-size:14px;
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+
+.bus-direction-btn.active{
+    background:#1687ff;
+
+    color:white;
+}
+
+
+/* ==========================
+   路線名
+========================== */
+
+.bus-route-name{
+    margin:10px 0 15px;
+
+    font-size:17px;
+    font-weight:bold;
+
+    text-align:center;
+}
+
+
+/* ==========================
+   次のバス
+========================== */
 
 .bus-live-title{
     font-size:15px;
     font-weight:bold;
 
     color:#555;
+
+    text-align:center;
 }
 
 
 .next-bus-time{
     margin-top:3px;
 
-    font-size:36px;
+    font-size:38px;
     font-weight:bold;
+
+    text-align:center;
 }
 
+
+/* ==========================
+   カウントダウン
+========================== */
 
 .bus-countdown{
     margin-top:5px;
 
     font-size:18px;
     font-weight:bold;
+
+    text-align:center;
 }
 
 
-/* スマホ */
+/* ==========================
+   運行状態
+========================== */
+
+.bus-status{
+    margin-top:8px;
+
+    font-size:12px;
+
+    color:#777;
+
+    text-align:center;
+}
+
+
+/* ==========================
+   スマホ
+========================== */
 
 @media (max-width:768px){
 
     .bus-live-info{
-        padding:12px;
+        margin:5px 0 15px;
 
-        margin:
-            5px 0
-            15px;
+        padding:12px;
+    }
+
+
+    .bus-route-btn{
+        padding:9px 3px;
+
+        font-size:14px;
+    }
+
+
+    .bus-direction-btn{
+        padding:8px 3px;
+
+        font-size:13px;
+    }
+
+
+    .bus-route-name{
+        font-size:16px;
     }
 
 
@@ -791,6 +930,3 @@ body{
     }
 
 }
-
-
-
