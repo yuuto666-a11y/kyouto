@@ -5,23 +5,17 @@
 
     <meta charset="UTF-8">
 
-    <!-- ==========================
-         スマホ表示に必須
-    =========================== -->
+    <!-- スマホ表示対応 -->
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0">
 
     <title>大学マップ</title>
 
-
-    <!-- ==========================
-         CSS
-         ?v=3 はスマホの古いCSSキャッシュ対策
-    =========================== -->
+    <!-- CSS -->
     <link
         rel="stylesheet"
-        href="{{ url_for('static', filename='style.css') }}?v=3">
+        href="{{ url_for('static', filename='style.css') }}">
 
 </head>
 
@@ -55,7 +49,7 @@
 
 
         <!-- ==========================
-             地図エリア
+             地図
         =========================== -->
 
         <div class="map-area">
@@ -64,36 +58,21 @@
             <div class="map-container">
 
 
-                <!-- ==========================
-                     PC・スマホ画像切替
-                =========================== -->
+                <!--
+                    PC・スマホ共通の地図画像
+                -->
 
-                <picture>
-
-
-                    <!-- スマホ縦画面 -->
-
-                    <source
-                        media="(max-width: 768px) and (orientation: portrait)"
-                        srcset="{{ url_for('static', filename='campusmap-mobile.png') }}">
-
-
-                    <!-- PC・タブレット・横画面 -->
-
-                    <img
-                        src="{{ url_for('static', filename='campusmap.jpg') }}"
-                        id="map"
-                        class="map-image"
-                        alt="京都橘大学キャンパスマップ">
-
-
-                </picture>
+                <img
+                    src="{{ url_for('static', filename='campusmap.jpg') }}"
+                    id="map"
+                    class="map-image"
+                    alt="京都橘大学キャンパスマップ">
 
 
                 <!--
-                    建物ピン
-                    GPS現在地マーカーは
-                    script.jsからここへ自動追加される
+                    建物ピンとGPS現在地は
+                    script.jsから
+                    map-container内に自動追加されます
                 -->
 
 
@@ -107,9 +86,9 @@
 
 
 
-    <!-- ==========================================
+    <!-- ==========================
          建物情報ポップアップ
-    =========================================== -->
+    =========================== -->
 
     <div
         id="popup-overlay"
@@ -149,7 +128,7 @@
             <div class="photo-slider">
 
 
-                <!-- PC：前の写真 -->
+                <!-- 前の写真 -->
 
                 <button
                     id="prev-photo"
@@ -173,7 +152,7 @@
 
 
 
-                <!-- PC：次の写真 -->
+                <!-- 次の写真 -->
 
                 <button
                     id="next-photo"
@@ -206,29 +185,30 @@
 
 
 
-    <!-- ==========================================
+    <!-- ==========================
          JavaScript
-    =========================================== -->
+    =========================== -->
 
 
-    <!-- 建物情報 -->
+    <!-- 建物データ -->
 
     <script
-        src="{{ url_for('static', filename='buildingData.js') }}?v=3">
+        src="{{ url_for('static', filename='buildingData.js') }}">
     </script>
 
 
     <!--
-        建物ピン
         検索
+        建物ピン
         ポップアップ
-        写真スライド
+        写真切替
+        スワイプ
+        地図サイズ調整
         GPS
-        スマホ地図サイズ調整
     -->
 
     <script
-        src="{{ url_for('static', filename='script.js') }}?v=3">
+        src="{{ url_for('static', filename='script.js') }}">
     </script>
 
 
