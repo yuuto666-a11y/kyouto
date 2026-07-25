@@ -1,36 +1,127 @@
+/* =========================================
+   基本設定
+========================================= */
+
 html,
 body{
     margin:0;
     padding:0;
+
     width:100%;
+
     background:#ddd;
-    font-family:sans-serif;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Hiragino Kaku Gothic ProN",
+        "Yu Gothic",
+        sans-serif;
+
     overflow-x:hidden;
 }
 
+
+/* =========================================
+   ツールバー
+========================================= */
+
 .toolbar{
     width:min(1080px, 100%);
+
     box-sizing:border-box;
+
     margin:0 auto;
+
     padding:10px;
+
     background:white;
+
     position:sticky;
+
     top:0;
+
     z-index:1000;
 }
 
 
+/* =========================================
+   検索バー
+========================================= */
 
-/* ==========================
+.search-bar{
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    width:100%;
+
+    box-sizing:border-box;
+
+    z-index:10000;
+
+    background:rgba(255,255,255,.96);
+
+    padding:10px;
+
+    border-bottom:1px solid #ddd;
+
+    box-shadow:
+        0 2px 10px
+        rgba(0,0,0,.12);
+
+    backdrop-filter:blur(8px);
+}
+
+
+#searchInput{
+    width:100%;
+
+    height:70px;
+
+    box-sizing:border-box;
+
+    padding:0 20px;
+
+    border:1px solid #ccc;
+
+    border-radius:30px;
+
+    outline:none;
+
+    background:#f7f7f7;
+
+    font-size:25px;
+
+    transition:
+        border-color .2s,
+        box-shadow .2s,
+        background .2s;
+}
+
+
+#searchInput:focus{
+    background:white;
+
+    border-color:#8e24aa;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(142,36,170,.12);
+}
+
+
+/* =========================================
    キャンパスマップ
-========================== */
+========================================= */
 
 .container{
     width:100%;
 
     display:block;
 
-    /* 固定検索バーの分だけ下げる */
     padding-top:90px;
 
     box-sizing:border-box;
@@ -39,6 +130,8 @@ body{
 
 .map-area{
     width:100%;
+
+    min-width:0;
 
     position:relative;
 
@@ -49,55 +142,63 @@ body{
 .map-container{
     position:relative;
 
-    /* 建物ピン・GPSの基準サイズ */
     width:1080px;
-    height:auto;
 
-    /*
-    スマホ縮小時に左上を基準にする
-    ここが重要
-    */
+    margin:0 auto;
+
     transform-origin:top left;
 }
 
 
 .map-image{
     width:1080px;
+
     max-width:none;
 
     height:auto;
 
     display:block;
 
-    border:3px solid black;
-
     box-sizing:border-box;
+
+    border:3px solid black;
 }
+
+
+/* =========================================
+   建物ピン
+========================================= */
+
 .building{
     position:absolute;
 
-    transform:translate(-50%,-50%);
+    transform:
+        translate(-50%,-50%);
 
     width:48px;
     height:48px;
 
-    font-size:16px;
-    font-weight:bold;
-
-    border:none;
-    border-radius:50%;
-
-    background:#8e24aa;
-    color:white;
-
-    cursor:pointer;
-
     display:flex;
+
     align-items:center;
     justify-content:center;
 
+    border:none;
+
+    border-radius:50%;
+
+    background:#8e24aa;
+
+    color:white;
+
+    font-size:16px;
+    font-weight:bold;
+
+    cursor:pointer;
+
     box-shadow:
-        0 4px 10px rgba(0,0,0,.35);
+        0 4px 10px
+        rgba(0,0,0,.35);
 
     transition:
         transform .15s ease,
@@ -108,7 +209,7 @@ body{
 }
 
 
-/* ピンの先端 */
+/* ピン先端 */
 
 .building::after{
     content:"";
@@ -118,24 +219,28 @@ body{
     left:50%;
     bottom:-7px;
 
-    transform:translateX(-50%);
+    transform:
+        translateX(-50%);
 
     width:0;
     height:0;
 
-    border-left:8px solid transparent;
-    border-right:8px solid transparent;
-    border-top:10px solid #8e24aa;
+    border-left:
+        8px solid transparent;
+
+    border-right:
+        8px solid transparent;
+
+    border-top:
+        10px solid #8e24aa;
 }
 
 
-/* ==========================
-   選択されたピン
-========================== */
+/* 選択された建物 */
 
 .building.selected{
-
     background:#e53935;
+
     color:white;
 
     transform:
@@ -144,8 +249,10 @@ body{
 
     box-shadow:
         0 0 0 4px white,
-        0 0 0 7px rgba(229,57,53,.25),
-        0 5px 15px rgba(0,0,0,.4);
+        0 0 0 7px
+        rgba(229,57,53,.25),
+        0 5px 15px
+        rgba(0,0,0,.4);
 
     z-index:100;
 }
@@ -156,25 +263,22 @@ body{
 }
 
 
-/* ==========================
-   PCでマウスを乗せた時
-========================== */
+/* PCホバー */
 
 @media (hover:hover){
 
     .building:hover{
-
         transform:
             translate(-50%,-50%)
             scale(1.12);
 
         box-shadow:
-            0 6px 14px rgba(0,0,0,.45);
+            0 6px 14px
+            rgba(0,0,0,.45);
     }
 
 
     .building.selected:hover{
-
         background:#e53935;
 
         transform:
@@ -183,74 +287,31 @@ body{
 
         box-shadow:
             0 0 0 4px white,
-            0 0 0 7px rgba(229,57,53,.25),
-            0 7px 18px rgba(0,0,0,.45);
+            0 0 0 7px
+            rgba(229,57,53,.25),
+            0 7px 18px
+            rgba(0,0,0,.45);
     }
+
 }
 
 
-
-.building-photo{
-    width:100%;
-
-    max-width:300px;
-
-    border-radius:10px;
-
-    margin-bottom:15px;
-}
-
-.search-bar {
-    position: fixed;
-
-    top: 0;
-    left: 0;
-
-    width: 100%;
-
-    box-sizing: border-box;
-
-    z-index: 10000;
-
-    background: white;
-
-    padding: 10px;
-
-    border-bottom: 1px solid #ccc;
-
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-}
-
-#searchInput {
-    width: 100%;
-    height: 70px;
-
-    font-size: 25px;
-
-    padding: 0 20px;
-
-    border-radius: 30px;
-
-    box-sizing: border-box;
-}
-
-
-/* ==========================
-   ポップアップ共通
-========================== */
+/* =========================================
+   ポップアップ背景
+========================================= */
 
 .popup-overlay{
     display:none;
 
     position:fixed;
 
-    top:0;
-    left:0;
+    inset:0;
 
     width:100%;
     height:100%;
 
-    background:rgba(0,0,0,0.5);
+    background:
+        rgba(0,0,0,.5);
 
     z-index:20000;
 
@@ -259,54 +320,101 @@ body{
 }
 
 
-/* ==========================
-   PC版
-========================== */
+/* =========================================
+   PC版ポップアップ
+========================================= */
 
 .popup-card{
     position:relative;
 
     width:90%;
-    max-width:600px;
 
+    max-width:600px;
     max-height:80vh;
 
-    overflow-y:auto;
-
-    background:white;
-
-    border-radius:15px;
+    box-sizing:border-box;
 
     padding:25px;
 
+    background:white;
+
+    border-radius:18px;
+
+    overflow-y:auto;
+
     font-size:18px;
 
-    box-sizing:border-box;
+    box-shadow:
+        0 15px 45px
+        rgba(0,0,0,.28);
 }
 
 
-/* 閉じるボタン */
+/* 建物名 */
+
+#building-name{
+    margin:
+        5px 45px
+        20px 0;
+
+    font-size:26px;
+
+    line-height:1.3;
+}
+
+
+/* =========================================
+   閉じるボタン
+========================================= */
 
 .close-btn{
     position:absolute;
 
-    top:10px;
-    right:15px;
+    top:12px;
+    right:12px;
+
+    width:40px;
+    height:40px;
+
+    padding:0;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
 
     border:none;
-    background:none;
 
-    font-size:28px;
+    border-radius:50%;
+
+    background:#f1f1f1;
+
+    color:#333;
+
+    font-size:24px;
+
+    line-height:1;
 
     cursor:pointer;
 
-    z-index:50;
+    z-index:100;
+
+    transition:
+        background .2s,
+        transform .2s;
 }
 
 
-/* ==========================
+.close-btn:hover{
+    background:#ddd;
+
+    transform:scale(1.05);
+}
+
+
+/* =========================================
    写真スライダー
-========================== */
+========================================= */
 
 .photo-slider{
     width:100%;
@@ -316,38 +424,68 @@ body{
     align-items:center;
     justify-content:center;
 
-    gap:15px;
+    gap:10px;
+
+    box-sizing:border-box;
+
+    overflow:hidden;
 }
 
-
-/* 写真 */
 
 .building-photo{
+    flex:1 1 auto;
+
+    min-width:0;
+
     width:100%;
-    max-width:450px;
 
-    border-radius:10px;
+    max-width:430px;
 
-    object-fit:cover;
+    height:auto;
 
-    margin-bottom:15px;
+    display:block;
+
+    border-radius:12px;
+
+    object-fit:contain;
+
+    margin:0;
+
+    user-select:none;
+
+    -webkit-user-select:none;
+
+    touch-action:pan-y;
+
+    cursor:grab;
+
+    transition:
+        transform .2s ease;
 }
 
 
-/* ==========================
-   PCの左右スライドボタン
-========================== */
+.building-photo.dragging{
+    cursor:grabbing;
+}
+
+
+/* =========================================
+   PC左右スライドボタン
+========================================= */
 
 .slide-btn{
+    flex:
+        0 0 46px;
+
+    width:46px;
+    height:46px;
+
     display:flex;
 
     align-items:center;
     justify-content:center;
 
-    flex:0 0 48px;
-
-    width:48px;
-    height:48px;
+    padding:0;
 
     border:none;
 
@@ -355,30 +493,89 @@ body{
 
     background:#eeeeee;
 
-    font-size:30px;
+    color:#333;
+
+    font-size:26px;
 
     cursor:pointer;
 
-    transition:.2s;
+    z-index:20;
+
+    transition:
+        background .2s,
+        transform .2s;
 }
 
 
 .slide-btn:hover{
-    background:#dddddd;
+    background:#ddd;
 
-    transform:scale(1.1);
+    transform:scale(1.08);
 }
 
 
-/* ==========================
-   スマホ版ポップアップ
-========================== */
+/* PCでは必ず矢印表示 */
 
-/* ==========================
-   スマホ版ポップアップ
-========================== */
+@media (min-width:769px){
+
+    .slide-btn{
+        display:flex !important;
+    }
+
+}
+
+
+/* =========================================
+   建物説明
+========================================= */
+
+#building-description{
+    margin:
+        18px 0 0;
+
+    line-height:1.7;
+
+    font-size:16px;
+
+    color:#333;
+}
+
+
+/* =========================================
+   スマホ版
+========================================= */
 
 @media (max-width:768px){
+
+    /* -------------------------
+       検索バー
+    ------------------------- */
+
+    .search-bar{
+        padding:8px;
+    }
+
+
+    #searchInput{
+        height:52px;
+
+        padding:
+            0 16px;
+
+        border-radius:26px;
+
+        font-size:18px;
+    }
+
+
+    .container{
+        padding-top:68px;
+    }
+
+
+    /* -------------------------
+       ポップアップ
+    ------------------------- */
 
     .popup-overlay{
         position:fixed;
@@ -391,13 +588,20 @@ body{
         display:none;
 
         justify-content:center;
+
         align-items:flex-end;
 
+        /*
+        地図を暗くしない
+        */
         background:transparent;
 
         z-index:20000;
 
-        /* 地図などを操作可能にする */
+        /*
+        ポップアップ外の
+        地図・検索・GPSを操作可能
+        */
         pointer-events:none;
     }
 
@@ -406,45 +610,119 @@ body{
         position:relative;
 
         width:94%;
+
         max-width:520px;
 
         height:50vh;
+
         max-height:50vh;
-
-        margin-bottom:10px;
-
-        padding:20px 12px;
 
         box-sizing:border-box;
 
+        margin-bottom:
+            calc(
+                10px +
+                env(safe-area-inset-bottom)
+            );
+
+        padding:
+            12px 12px
+            20px;
+
         background:white;
 
-        border-radius:18px;
-
-        font-size:18px;
+        border-radius:20px;
 
         overflow-y:auto;
+
+        font-size:18px;
 
         pointer-events:auto;
 
         box-shadow:
-            0 -5px 20px rgba(0,0,0,.25);
+            0 -4px 25px
+            rgba(0,0,0,.25);
 
-        animation:slideUp .3s ease;
+        animation:
+            slideUp .3s ease;
     }
 
 
-    /* 建物名 */
+    /*
+    ポップアップ上部のつまみ
+    */
+
+    .popup-card::before{
+        content:"";
+
+        display:block;
+
+        width:44px;
+        height:5px;
+
+        margin:
+            0 auto
+            10px;
+
+        background:#ccc;
+
+        border-radius:10px;
+    }
+
+
+    /* -------------------------
+       建物名
+    ------------------------- */
 
     #building-name{
+        margin:
+            8px 48px
+            15px 4px;
+
         font-size:22px;
+
         font-weight:bold;
 
-        margin:25px 0 15px 0;
+        line-height:1.3;
     }
 
 
-    /* 写真 */
+    /* -------------------------
+       閉じるボタン
+    ------------------------- */
+
+    .close-btn{
+        top:12px;
+        left:12px;
+
+        right:auto;
+
+        width:40px;
+        height:40px;
+
+        border:none;
+
+        border-radius:50%;
+
+        background:#f1f1f1;
+
+        font-size:22px;
+    }
+
+
+    /*
+    ×ボタンのぶん
+    建物名を少し右へ
+    */
+
+    #building-name{
+        padding-left:45px;
+    }
+
+
+    /* -------------------------
+       写真
+    ------------------------- */
 
     .photo-slider{
         width:100%;
@@ -457,245 +735,366 @@ body{
 
     .building-photo{
         width:100%;
+
         max-width:none;
 
-        height:auto;
+        height:180px;
 
         display:block;
 
         object-fit:cover;
 
-        border-radius:0;
+        border-radius:12px;
 
-        margin:0 0 15px 0;
+        margin:0;
+
+        cursor:default;
 
         touch-action:pan-y;
     }
 
 
-    /* 説明 */
+    /*
+    スマホは矢印なし
+    スワイプで切替
+    */
+
+    .slide-btn{
+        display:none !important;
+    }
+
+
+    /* -------------------------
+       建物説明
+    ------------------------- */
 
     #building-description{
-        font-size:16px;
-
-        line-height:1.7;
-
-        margin-bottom:
+        margin:
+            15px 4px
             calc(
                 20px +
                 env(safe-area-inset-bottom)
             );
-    }
-
-
-    /* スマホだけ矢印非表示 */
-
-    .slide-btn{
-        display:none;
-    }
-
-
-    /* 閉じるボタン */
-
-    .close-btn{
-        position:absolute;
-
-        top:10px;
-        left:10px;
-
-        right:auto;
-
-        width:25px;
-        height:25px;
-
-        padding:0;
-
-        display:flex;
-        align-items:center;
-        justify-content:center;
-
-        background:white;
-
-        border:1px solid #ccc;
-        border-radius:4px;
 
         font-size:16px;
 
-        z-index:100;
+        line-height:1.7;
     }
 
 }
 
- 
 
-
-/* ==========================
-   下から出てくる
-========================== */
+/* =========================================
+   スマホポップアップアニメーション
+========================================= */
 
 @keyframes slideUp{
 
     from{
-        transform:translateY(100%);
+        transform:
+            translateY(100%);
     }
 
     to{
-        transform:translateY(0);
+        transform:
+            translateY(0);
     }
 
 }
-/* ==========================
+
+
+/* =========================================
    GPS 現在地
-========================== */
+========================================= */
 
 #user-location{
     position:absolute;
+
     width:24px;
     height:24px;
+
     background:#1687ff;
-    border:5px solid white;
+
+    border:
+        5px solid white;
+
     border-radius:50%;
-    transform:translate(-50%,-50%);
+
+    transform:
+        translate(-50%,-50%);
+
     box-shadow:
-        0 0 0 8px rgba(22,135,255,.25),
-        0 3px 10px rgba(0,0,0,.4);
+        0 0 0 8px
+        rgba(22,135,255,.25),
+        0 3px 10px
+        rgba(0,0,0,.4);
+
     z-index:500;
+
     pointer-events:none;
 }
+
 
 #user-location::after{
     content:"";
+
     position:absolute;
+
     top:50%;
     left:50%;
+
     width:24px;
     height:24px;
+
     border-radius:50%;
-    background:rgba(22,135,255,.3);
-    transform:translate(-50%,-50%);
-    animation:gpsPulse 2s infinite;
+
+    background:
+        rgba(22,135,255,.3);
+
+    transform:
+        translate(-50%,-50%);
+
+    animation:
+        gpsPulse 2s infinite;
 }
+
 
 #user-accuracy{
     position:absolute;
+
     border-radius:50%;
-    background:rgba(22,135,255,.15);
-    border:2px solid rgba(22,135,255,.4);
-    transform:translate(-50%,-50%);
+
+    background:
+        rgba(22,135,255,.15);
+
+    border:
+        2px solid
+        rgba(22,135,255,.4);
+
+    transform:
+        translate(-50%,-50%);
+
     pointer-events:none;
+
     z-index:400;
 }
 
+
 @keyframes gpsPulse{
+
     0%{
-        transform:translate(-50%,-50%) scale(1);
+        transform:
+            translate(-50%,-50%)
+            scale(1);
+
         opacity:1;
     }
+
     100%{
-        transform:translate(-50%,-50%) scale(2.5);
+        transform:
+            translate(-50%,-50%)
+            scale(2.5);
+
         opacity:0;
     }
+
 }
+
+
+/* =========================================
+   GPSボタン
+========================================= */
 
 .gps-btn{
     position:fixed;
+
     right:20px;
     bottom:30px;
+
     width:60px;
     height:60px;
+
     border:none;
+
     border-radius:50%;
+
     background:white;
+
     font-size:30px;
+
     cursor:pointer;
+
     z-index:2000;
-    box-shadow:0 4px 15px rgba(0,0,0,.35);
+
+    box-shadow:
+        0 4px 15px
+        rgba(0,0,0,.35);
+
+    transition:
+        transform .15s,
+        box-shadow .15s;
 }
+
 
 .gps-btn.active{
     box-shadow:
-        0 0 0 4px rgba(22,135,255,.25),
-        0 4px 15px rgba(0,0,0,.35);
+        0 0 0 4px
+        rgba(22,135,255,.25),
+        0 4px 15px
+        rgba(0,0,0,.35);
 }
+
 
 .gps-btn:active{
     transform:scale(.9);
 }
 
+
 .gps-btn.loading{
-    animation:gpsLoading 1s infinite;
+    animation:
+        gpsLoading 1s infinite;
 }
 
+
 @keyframes gpsLoading{
-    0%{ transform:scale(1); }
-    50%{ transform:scale(.85); }
-    100%{ transform:scale(1); }
+
+    0%{
+        transform:scale(1);
+    }
+
+    50%{
+        transform:scale(.85);
+    }
+
+    100%{
+        transform:scale(1);
+    }
+
 }
+
+
+/* =========================================
+   GPSメッセージ
+========================================= */
 
 .gps-status{
     position:fixed;
+
     left:50%;
     bottom:105px;
-    transform:translateX(-50%);
-    max-width:calc(100% - 40px);
+
+    transform:
+        translateX(-50%);
+
+    max-width:
+        calc(100% - 40px);
+
     box-sizing:border-box;
-    padding:10px 16px;
+
+    padding:
+        10px 16px;
+
     border-radius:20px;
-    background:rgba(0,0,0,.8);
+
+    background:
+        rgba(0,0,0,.8);
+
     color:white;
+
     font-size:14px;
+
     text-align:center;
+
     z-index:2001;
 }
 
+
+/* =========================================
+   GPSキャリブレーション
+   ※残しておいて問題なし
+========================================= */
+
 .gps-calibration-panel{
     position:fixed;
+
     left:50%;
     top:95px;
-    transform:translateX(-50%);
+
+    transform:
+        translateX(-50%);
+
     z-index:3000;
+
     display:flex;
+
     gap:10px;
+
     align-items:center;
-    max-width:calc(100% - 30px);
+
+    max-width:
+        calc(100% - 30px);
+
     box-sizing:border-box;
-    padding:10px 14px;
+
+    padding:
+        10px 14px;
+
     border-radius:12px;
+
     background:white;
-    box-shadow:0 4px 15px rgba(0,0,0,.25);
+
+    box-shadow:
+        0 4px 15px
+        rgba(0,0,0,.25);
+
     font-size:14px;
 }
 
+
 .gps-calibration-panel button{
     border:0;
+
     border-radius:8px;
-    padding:8px 10px;
+
+    padding:
+        8px 10px;
+
     cursor:pointer;
 }
+
 
 .gps-calibration-mode #map{
     cursor:crosshair;
 }
 
-/* ==========================
+
+/* =========================================
    バス運行情報
-========================== */
+========================================= */
 
 .bus-live-info{
-    margin:10px 0 20px;
+    width:100%;
+
+    box-sizing:border-box;
+
+    margin:
+        10px 0 20px;
+
     padding:15px;
 
     background:#f5f8ff;
 
-    border-radius:15px;
+    border:
+        1px solid
+        #e3e9f5;
 
-    box-sizing:border-box;
+    border-radius:16px;
 }
 
 
-/* ==========================
-   路線ボタン
-========================== */
+/* =========================================
+   バス路線選択
+========================================= */
 
 .bus-route-buttons{
     display:flex;
@@ -709,7 +1108,10 @@ body{
 .bus-route-btn{
     flex:1;
 
-    padding:10px 5px;
+    min-width:0;
+
+    padding:
+        10px 5px;
 
     border:none;
 
@@ -723,6 +1125,16 @@ body{
     font-weight:bold;
 
     cursor:pointer;
+
+    transition:
+        background .2s,
+        color .2s,
+        transform .1s;
+}
+
+
+.bus-route-btn:active{
+    transform:scale(.97);
 }
 
 
@@ -733,9 +1145,9 @@ body{
 }
 
 
-/* ==========================
-   大学発・大学行き
-========================== */
+/* =========================================
+   大学発 / 大学行き
+========================================= */
 
 .bus-direction-buttons{
     display:flex;
@@ -749,7 +1161,10 @@ body{
 .bus-direction-btn{
     flex:1;
 
-    padding:9px 5px;
+    min-width:0;
+
+    padding:
+        9px 5px;
 
     border:none;
 
@@ -763,6 +1178,16 @@ body{
     font-weight:bold;
 
     cursor:pointer;
+
+    transition:
+        background .2s,
+        color .2s,
+        transform .1s;
+}
+
+
+.bus-direction-btn:active{
+    transform:scale(.97);
 }
 
 
@@ -773,64 +1198,92 @@ body{
 }
 
 
-/* ==========================
-   路線名
-========================== */
+/* =========================================
+   バス路線名
+========================================= */
 
 .bus-route-name{
-    margin:10px 0 15px;
+    margin:
+        10px 0 15px;
 
     font-size:17px;
+
     font-weight:bold;
 
     text-align:center;
+
+    color:#333;
 }
 
 
-/* ==========================
+/* =========================================
    次のバス
-========================== */
+========================================= */
 
 .bus-live-title{
-    font-size:15px;
+    font-size:14px;
+
     font-weight:bold;
 
-    color:#555;
+    color:#666;
 
     text-align:center;
 }
 
 
 .next-bus-time{
-    margin-top:3px;
+    margin:
+        5px 0 8px;
 
-    font-size:38px;
-    font-weight:bold;
+    font-size:42px;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+
+    line-height:1.1;
 
     text-align:center;
+
+    color:#222;
 }
 
 
-/* ==========================
-   カウントダウン
-========================== */
+/* =========================================
+   バスカウントダウン
+========================================= */
 
 .bus-countdown{
-    margin-top:5px;
+    width:max-content;
 
-    font-size:18px;
+    max-width:100%;
+
+    box-sizing:border-box;
+
+    margin:
+        0 auto;
+
+    padding:
+        7px 14px;
+
+    border-radius:20px;
+
+    background:white;
+
+    font-size:16px;
+
     font-weight:bold;
 
     text-align:center;
 }
 
 
-/* ==========================
-   運行状態
-========================== */
+/* =========================================
+   バス運行状態
+========================================= */
 
 .bus-status{
-    margin-top:8px;
+    margin-top:10px;
 
     font-size:12px;
 
@@ -840,45 +1293,84 @@ body{
 }
 
 
-/* ==========================
-   スマホ
-========================== */
+/* =========================================
+   スマホ バスUI
+========================================= */
 
 @media (max-width:768px){
 
     .bus-live-info{
-        margin:5px 0 15px;
+        margin:
+            5px 0 15px;
 
         padding:12px;
+
+        border-radius:14px;
+    }
+
+
+    .bus-route-buttons,
+    .bus-direction-buttons{
+        gap:6px;
     }
 
 
     .bus-route-btn{
-        padding:9px 3px;
+        padding:
+            9px 3px;
 
         font-size:14px;
     }
 
 
     .bus-direction-btn{
-        padding:8px 3px;
+        padding:
+            8px 3px;
 
         font-size:13px;
     }
 
 
     .bus-route-name{
-        font-size:16px;
+        margin:
+            10px 0 12px;
+
+        font-size:15px;
     }
 
 
     .next-bus-time{
-        font-size:32px;
+        font-size:36px;
     }
 
 
     .bus-countdown{
-        font-size:17px;
+        padding:
+            6px 12px;
+
+        font-size:15px;
+    }
+
+
+    .bus-status{
+        font-size:11px;
+    }
+
+
+    /*
+    ポップアップが出ていても
+    GPSボタンを少し上に表示
+    */
+
+    .gps-btn{
+        right:14px;
+
+        bottom:20px;
+
+        width:54px;
+        height:54px;
+
+        font-size:27px;
     }
 
 }
