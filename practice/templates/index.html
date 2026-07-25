@@ -2,7 +2,6 @@
 <html lang="ja">
 
 <head>
-
     <meta charset="UTF-8">
 
     <!-- スマホ表示対応 -->
@@ -16,19 +15,14 @@
     <link
         rel="stylesheet"
         href="{{ url_for('static', filename='style.css') }}">
-
 </head>
 
-
 <body>
-
 
     <!-- ==========================
          検索バー
     =========================== -->
-
     <div class="search-bar">
-
         <input
             type="text"
             id="searchInput"
@@ -36,285 +30,206 @@
             placeholder="🔍建物コードを入力">
 
         <datalist id="buildingList"></datalist>
-
     </div>
-
-
 
     <!-- ==========================
          メインコンテンツ
     =========================== -->
-
     <div class="container">
 
-
-        <!-- ==========================
-             地図
-        =========================== -->
-
+        <!-- 地図 -->
         <div class="map-area">
-
-
             <div class="map-container">
-
-
-                <!--
-                    PC・スマホ共通の地図画像
-                -->
-
                 <img
                     src="{{ url_for('static', filename='campusmap.jpg') }}"
                     id="map"
                     class="map-image"
                     alt="京都橘大学キャンパスマップ">
-
-
-                <!--
-                    建物ピンとGPS現在地は
-                    script.jsから
-                    map-container内に自動追加されます
-                -->
-
-
             </div>
-
-
         </div>
 
-
     </div>
-
-
 
     <!-- ==========================
          建物情報ポップアップ
     =========================== -->
-
     <div
         id="popup-overlay"
         class="popup-overlay">
 
-
         <div class="popup-card">
-
-
-            <!-- 閉じるボタン -->
 
             <button
                 id="close-popup"
                 class="close-btn"
                 type="button">
-
                 ×
-
             </button>
 
-
-
-            <!-- 建物名 -->
-
             <h2 id="building-name">
-
                 建物名
-
             </h2>
 
-<!-- ==========================
-     バス情報
-========================== -->
+            <!-- ==========================
+                 バス運行情報
+            =========================== -->
+            <div
+                id="bus-live-info"
+                class="bus-live-info"
+                hidden>
 
-<!-- ==========================
-     バス運行情報
-========================== -->
+                <!-- 上段：路線選択 -->
+                <div class="bus-route-buttons">
 
-<div
-    id="bus-live-info"
-    class="bus-live-info"
-    hidden>
+                    <button
+                        type="button"
+                        class="bus-route-btn active"
+                        data-route="nagitsuji">
+                        椥辻
+                    </button>
 
-    <!-- 路線選択 -->
-    <div class="bus-route-buttons">
+                    <button
+                        type="button"
+                        class="bus-route-btn"
+                        data-route="yamashina">
+                        山科
+                    </button>
 
-        <button
-            type="button"
-            class="bus-route-btn active"
-            data-route="nagitsuji">
-            椥辻
-        </button>
+                    <button
+                        type="button"
+                        class="bus-route-btn"
+                        data-route="kyoto">
+                        京都駅
+                    </button>
 
-        <button
-            type="button"
-            class="bus-route-btn"
-            data-route="yamashina">
-            山科
-        </button>
+                </div>
 
-        <button
-            type="button"
-            class="bus-route-btn"
-            data-route="kyoto">
-            京都駅
-        </button>
+                <!--
+                    山科・京都駅を選択したとき、
+                    script.jsによって
 
-    </div>
+                    大学発着 / 大宅発着
 
+                    の選択ボタンがここに表示されます。
 
-    <!-- 大学発 / 大学行き -->
-    <div class="bus-direction-buttons">
+                    椥辻は大学発着のみです。
+                -->
 
-        <button
-            type="button"
-            id="busFromUniversity"
-            class="bus-direction-btn active">
-            大学発
-        </button>
+                <!-- 発 / 行き -->
+                <div class="bus-direction-buttons">
 
-        <button
-            type="button"
-            id="busToUniversity"
-            class="bus-direction-btn">
-            大学行き
-        </button>
+                    <button
+                        type="button"
+                        id="busFromUniversity"
+                        class="bus-direction-btn active">
+                        大学発
+                    </button>
 
-    </div>
+                    <button
+                        type="button"
+                        id="busToUniversity"
+                        class="bus-direction-btn">
+                        大学行き
+                    </button>
 
+                </div>
 
-    <!-- 選択中の路線 -->
-    <div
-        id="bus-route-name"
-        class="bus-route-name">
+                <!-- 選択中の路線 -->
+                <div
+                    id="bus-route-name"
+                    class="bus-route-name">
+                    京都橘大学 → 椥辻
+                </div>
 
-        京都橘大学 → 椥辻
+                <div class="bus-live-title">
+                    次のバス
+                </div>
 
-    </div>
+                <!-- 次の発車時刻 -->
+                <div
+                    id="next-bus-time"
+                    class="next-bus-time">
+                    --:--
+                </div>
 
+                <!-- カウントダウン -->
+                <div
+                    id="bus-countdown"
+                    class="bus-countdown">
+                    発車時刻を確認中...
+                </div>
 
-    <div class="bus-live-title">
-        次のバス
-    </div>
+                <!-- 運行状態 -->
+                <div
+                    id="bus-status"
+                    class="bus-status">
+                </div>
 
-
-    <!-- 次の発車時刻 -->
-    <div
-        id="next-bus-time"
-        class="next-bus-time">
-
-        --:--
-
-    </div>
-
-
-    <!-- カウントダウン -->
-    <div
-        id="bus-countdown"
-        class="bus-countdown">
-
-        発車時刻を確認中...
-
-    </div>
-
-
-    <!-- 運行状態 -->
-    <div
-        id="bus-status"
-        class="bus-status">
-    </div>
-
-</div>
-
+            </div>
 
             <!-- ==========================
                  写真スライダー
             =========================== -->
-
             <div class="photo-slider">
 
-
                 <!-- 前の写真 -->
-
                 <button
                     id="prev-photo"
                     class="slide-btn"
                     type="button"
                     aria-label="前の写真">
-
                     ◀
-
                 </button>
 
-
-
                 <!-- 建物写真 -->
-
-               <img
-                 id="building-photo"
-                 class="building-photo"
-                 src=""
-                 alt="建物写真"
-                 loading="lazy"
-                 decoding="async"
-                 draggable="false">
-
+                <img
+                    id="building-photo"
+                    class="building-photo"
+                    src=""
+                    alt="建物写真"
+                    loading="lazy"
+                    decoding="async"
+                    draggable="false">
 
                 <!-- 次の写真 -->
-
                 <button
                     id="next-photo"
                     class="slide-btn"
                     type="button"
                     aria-label="次の写真">
-
                     ▶
-
                 </button>
-
 
             </div>
 
-
-
             <!-- 建物説明 -->
-
             <p id="building-description">
-
                 建物説明
-
             </p>
 
-
         </div>
-
-
     </div>
-
-
 
     <!-- ==========================
          JavaScript
     =========================== -->
 
-
     <!-- 建物データ -->
-
     <script
         src="{{ url_for('static', filename='buildingData.js') }}">
     </script>
-
 
     <!--
         検索
         建物ピン
         ポップアップ
         写真切替
-        スワイプ
-        地図サイズ調整
         GPS
+        バス
     -->
-
     <script
         src="{{ url_for('static', filename='script.js') }}">
     </script>
-
 
 </body>
 
