@@ -346,9 +346,52 @@ function showCurrentPhoto() {
         return;
     }
 
-    photo.src =
+    const newSrc =
         "/static/" +
         currentPhotos[currentIndex];
+
+    if (
+        photo.getAttribute("src") === newSrc
+    ) {
+        return;
+    }
+
+    const img = new Image();
+
+    img.decoding = "async";
+
+    img.src = newSrc;
+
+    img.onload = function () {
+
+        photo.src = newSrc;
+
+        preloadNextPhoto();
+    };
+}
+
+
+function preloadNextPhoto() {
+
+    if (
+        !currentPhotos ||
+        currentPhotos.length <= 1
+    ) {
+        return;
+    }
+
+    const nextIndex =
+        (currentIndex + 1) %
+        currentPhotos.length;
+
+    const img =
+        new Image();
+
+    img.decoding = "async";
+
+    img.src =
+        "/static/" +
+        currentPhotos[nextIndex];
 }
 
 
