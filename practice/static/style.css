@@ -224,7 +224,7 @@ body{
    ポップアップ
 ========================== */
 
-.popup-overlay {
+.popup-overlay{
     display:none;
 
     position:fixed;
@@ -239,14 +239,14 @@ body{
 
     z-index:9999;
 
-    /* PCは常に画面中央 */
+    /* PCは中央 */
     justify-content:center;
     align-items:center;
 }
 
 
 /* ==========================
-   PC版ポップアップ
+   PC版
 ========================== */
 
 .popup-card{
@@ -273,7 +273,7 @@ body{
 
 /* 閉じるボタン */
 
-.close-btn {
+.close-btn{
     position:absolute;
 
     top:10px;
@@ -287,109 +287,46 @@ body{
 
     cursor:pointer;
 
-    z-index:10;
-}
-
-
-/* 建物写真 */
-
-.building-photo {
-    width:100%;
-
-    border-radius:10px;
-
-    object-fit:cover;
-
-    margin-bottom:15px;
+    z-index:20;
 }
 
 
 /* ==========================
-   写真スライダー
+   スマホ版
 ========================== */
 
-.photo-slider{
-    display:flex;
+@media (max-width:768px){
 
-    align-items:center;
-    justify-content:center;
+    .popup-overlay{
 
-    gap:20px;
-}
-
-
-.slide-btn{
-    font-size:30px;
-
-    cursor:pointer;
-
-    border:none;
-
-    background:none;
-}
-
-
-/* ==========================
-   スマホ対応
-========================== */
-
-@media (max-width:768px) {
-
-    /* 地図 */
-
-    .map-container {
-        width:1080px;
-        flex:0 0 1080px;
-    }
-
-
-    .map-image {
-        width:1080px;
-        height:auto;
-    }
-
-
-    .building {
-        width:40px;
-        height:40px;
-
-        font-size:16px;
-    }
-
-
-    #searchInput {
-        width:100%;
-    }
-
-
-    /* ==========================
-       スマホだけ下から表示
-    ========================== */
-
-    .popup-overlay {
+        /* 横は中央 */
         justify-content:center;
 
-        /* スマホだけ下側 */
+        /* 縦は下 */
         align-items:flex-end;
     }
 
 
-    .popup-card {
-        width:100%;
+    .popup-card{
+
+        width:calc(100% - 20px);
+
         max-width:none;
 
         max-height:45vh;
 
-        margin:0;
+        /* 左右と下に少し余白 */
+        margin:
+            0 10px
+            calc(10px + env(safe-area-inset-bottom));
 
         padding:20px;
 
         background:white;
 
-        border-radius:
-            20px 20px 0 0;
+        border-radius:20px;
 
-        font-size:25px;
+        font-size:22px;
 
         overflow-y:auto;
 
@@ -400,9 +337,7 @@ body{
     }
 
 
-    /* スマホでは左右ボタン非表示 */
-
-    .slide-btn {
+    .slide-btn{
         display:none;
     }
 
@@ -410,21 +345,20 @@ body{
 
 
 /* ==========================
-   スマホのポップアップアニメーション
+   スマホ出現アニメーション
 ========================== */
 
-@keyframes slideUp {
+@keyframes slideUp{
 
-    from {
+    from{
         transform:translateY(100%);
     }
 
-    to {
+    to{
         transform:translateY(0);
     }
 
 }
-
 /* ==========================
    GPS 現在地
 ========================== */
