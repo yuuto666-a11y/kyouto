@@ -222,14 +222,46 @@ body{
 @media (orientation: portrait) {
 
     .map-container {
-
-        width: 100%;
+        width:1080px;
+        flex:0 0 1080px;
     }
 
     .map-image {
-
-        width: 100%;
+        width:1080px;
+        height:auto;
     }
+
+    .building {
+        width:40px;
+        height:40px;
+        font-size:16px;
+    }
+
+    #searchInput {
+        width:100%;
+    }
+
+    .popup-overlay {
+        align-items:flex-end;
+    }
+
+    .popup-card {
+        width:100%;
+        max-width:none;
+        background:white;
+        overflow-y:auto;
+        font-size:25px;
+        max-height:45vh;
+        margin:0;
+        border-radius:20px 20px 0 0;
+        padding:20px;
+        animation:slideUp .3s ease;
+    }
+
+    .slide-btn {
+        display:none;
+    }
+}
 
     .building {
 
