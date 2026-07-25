@@ -1102,7 +1102,7 @@ body{
     display:grid;
 
     grid-template-columns:
-        repeat(4, minmax(0, 1fr));
+        repeat(3, minmax(0, 1fr));
 
     gap:8px;
 
@@ -1316,7 +1316,7 @@ body{
 
     .bus-route-buttons{
         grid-template-columns:
-            repeat(2, minmax(0, 1fr));
+            repeat(3, minmax(0, 1fr));
 
         gap:6px;
     }
@@ -1389,7 +1389,7 @@ body{
 
 /* =========================================
    バス発着地点選択
-   山科のみ「大学発着 / 大宅発着」を表示
+   山科・京都駅で「大学発着 / 大宅発着」を表示
 ========================================= */
 
 .bus-stop-mode-buttons{
