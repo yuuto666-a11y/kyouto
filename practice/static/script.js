@@ -1589,11 +1589,8 @@ const busRouteName =
 const busStatus =
     document.getElementById("bus-status");
 
-const busFromUniversity =
-    document.getElementById("busFromUniversity");
-
-const busToUniversity =
-    document.getElementById("busToUniversity");
+const busDirectionButtons =
+    document.querySelectorAll(".bus-direction-btn");
 
 
 let busCountdownTimer = null;
@@ -2476,178 +2473,35 @@ function syncBusRouteButtons() {
 }
 
 
-function ensureBusStopModeUI() {
+function syncBusDirectionButtons() {
 
-    const routeButtons =
-        document.querySelector(".bus-route-buttons");
+    busDirectionButtons.forEach(function (button) {
 
-    const directionButtons =
-        document.querySelector(".bus-direction-buttons");
+        const isOyake =
+            button.dataset.stopMode === "oyake";
 
-    if (!routeButtons || !directionButtons) {
-        return;
-    }
+        /*
+        椥辻は大学 ↔ 椥辻のみなので
+        大宅発・大宅着は表示しない
+        */
+        if (
+            selectedBusRoute === "nagitsuji" &&
+            isOyake
+        ) {
+            button.hidden = true;
+        } else {
+            button.hidden = false;
+        }
 
-    /*
-    上段は3路線のみ
-    椥辻 / 山科 / 京都駅
-    */
+        const isSelected =
+            button.dataset.stopMode === selectedBusStopMode &&
+            button.dataset.direction === selectedBusDirection;
 
-    const labels = {
-        nagitsuji:"椥辻",
-        yamashina:"山科",
-        kyoto:"京都駅"
-    };
-
-    routeButtons
-        .querySelectorAll(".bus-route-btn")
-        .forEach(function (button) {
-
-            const label =
-                labels[button.dataset.route];
-
-            if (label) {
-                button.textContent = label;
-            }
-        });
-
-    let stopModeBox =
-        document.getElementById("bus-stop-mode-buttons");
-
-    if (!stopModeBox) {
-
-        stopModeBox =
-            document.createElement("div");
-
-        stopModeBox.id =
-            "bus-stop-mode-buttons";
-
-        stopModeBox.className =
-            "bus-stop-mode-buttons";
-
-        stopModeBox.innerHTML = `
-            <button
-                type="button"
-                class="bus-stop-mode-btn active"
-                data-stop-mode="university">
-                大学発着
-            </button>
-
-            <button
-                type="button"
-                class="bus-stop-mode-btn"
-                data-stop-mode="oyake">
-                大宅発着
-            </button>
-        `;
-
-        directionButtons.parentNode.insertBefore(
-            stopModeBox,
-            directionButtons
+        button.classList.toggle(
+            "active",
+            isSelected
         );
-
-        stopModeBox
-            .querySelectorAll(".bus-stop-mode-btn")
-            .forEach(function (button) {
-
-                button.addEventListener(
-                    "click",
-                    function () {
-
-                        if (
-                            this.dataset.stopMode === "oyake" &&
-                            selectedBusRoute !== "yamashina" &&
-                            selectedBusRoute !== "kyoto"
-                        ) {
-                            return;
-                        }
-
-                        selectedBusStopMode =
-                            this.dataset.stopMode;
-
-                        updateBusCountdown();
-                    }
-                );
-            });
-    }
-
-    updateBusStopModeUI();
-}
-
-
-function updateBusStopModeUI() {
-
-    const stopModeBox =
-        document.getElementById("bus-stop-mode-buttons");
-
-    if (!stopModeBox) {
-        return;
-    }
-
-    const universityButton =
-        stopModeBox.querySelector(
-            '[data-stop-mode="university"]'
-        );
-
-    const oyakeButton =
-        stopModeBox.querySelector(
-            '[data-stop-mode="oyake"]'
-        );
-
-    /*
-    椥辻は大学発着のみなので、この段を隠す。
-    山科・京都駅では「大学発着 / 大宅発着」を表示する。
-    */
-
-    if (selectedBusRoute === "nagitsuji") {
-
-        selectedBusStopMode =
-            "university";
-
-        stopModeBox.hidden = true;
-
-    } else {
-
-        stopModeBox.hidden = false;
-        oyakeButton.hidden = false;
-    }
-
-    universityButton.classList.toggle(
-        "active",
-        selectedBusStopMode === "university"
-    );
-
-    oyakeButton.classList.toggle(
-        "active",
-        selectedBusStopMode === "oyake"
-    );
-}
-
-
-function updateBusDirectionLabels() {
-
-    const effectiveRouteKey =
-        getEffectiveBusRouteKey();
-
-    if (
-        effectiveRouteKey === "oyake" ||
-        effectiveRouteKey === "yamashinaOyake"
-    ) {
-
-        busFromUniversity.textContent =
-            "大宅発";
-
-        busToUniversity.textContent =
-            "大宅行き";
-
-    } else {
-
-        busFromUniversity.textContent =
-            "大学発";
-
-        busToUniversity.textContent =
-            "大学行き";
-    }
+    });
 }
 
 
@@ -2879,8 +2733,7 @@ function updateBusCountdown() {
         getEffectiveBusRouteKey(now);
 
     syncBusRouteButtons();
-    updateBusStopModeUI();
-    updateBusDirectionLabels();
+    syncBusDirectionButtons();
     updateBusRouteName();
 
     /*
@@ -2977,7 +2830,7 @@ function updateBusCountdown() {
 
 
 //////////////////////////////////////////////////
-// 路線切替
+// 路線切替：3つのうち1つだけ選択
 //////////////////////////////////////////////////
 
 document
@@ -2992,14 +2845,17 @@ document
                     this.dataset.route;
 
                 /*
-                路線を切り替えたら、まず大学発着を表示。
-                椥辻は大学発着固定。
+                路線を切り替えたら大学発を初期選択。
+                activeはsync関数で必ず1つだけになる。
                 */
                 selectedBusStopMode =
                     "university";
 
+                selectedBusDirection =
+                    "fromUniversity";
+
                 syncBusRouteButtons();
-                updateBusStopModeUI();
+                syncBusDirectionButtons();
                 updateBusCountdown();
             }
         );
@@ -3007,47 +2863,36 @@ document
 
 
 //////////////////////////////////////////////////
-// 大学 / 大宅 発
+// 発着切替：4つのうち1つだけ選択
 //////////////////////////////////////////////////
 
-busFromUniversity.addEventListener(
-    "click",
-    function () {
+busDirectionButtons.forEach(function (button) {
 
-        selectedBusDirection =
-            "fromUniversity";
+    button.addEventListener(
+        "click",
+        function () {
 
-        busFromUniversity
-            .classList.add("active");
+            /*
+            椥辻では大宅発・大宅着を選択不可
+            */
+            if (
+                selectedBusRoute === "nagitsuji" &&
+                this.dataset.stopMode === "oyake"
+            ) {
+                return;
+            }
 
-        busToUniversity
-            .classList.remove("active");
+            selectedBusStopMode =
+                this.dataset.stopMode;
 
-        updateBusCountdown();
-    }
-);
+            selectedBusDirection =
+                this.dataset.direction;
 
-
-//////////////////////////////////////////////////
-// 大学 / 大宅 行き
-//////////////////////////////////////////////////
-
-busToUniversity.addEventListener(
-    "click",
-    function () {
-
-        selectedBusDirection =
-            "toUniversity";
-
-        busToUniversity
-            .classList.add("active");
-
-        busFromUniversity
-            .classList.remove("active");
-
-        updateBusCountdown();
-    }
-);
+            syncBusDirectionButtons();
+            updateBusCountdown();
+        }
+    );
+});
 
 
 //////////////////////////////////////////////////
@@ -3060,9 +2905,8 @@ function startBusInformation() {
 
     busLiveInfo.hidden = false;
 
-    ensureBusStopModeUI();
     syncBusRouteButtons();
-    updateBusStopModeUI();
+    syncBusDirectionButtons();
     updateBusCountdown();
 
     /*
