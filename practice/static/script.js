@@ -1607,7 +1607,6 @@ route:
 nagitsuji
 yamashina
 kyoto
-oyake
 
 direction:
 fromUniversity = 大学発
@@ -1622,9 +1621,10 @@ let selectedBusDirection =
     "fromUniversity";
 
 /*
-山科だけ発着地点を切替
+山科・京都駅は発着地点を切替
 university = 京都橘大学発着
 oyake      = 大宅発着
+椥辻は大学発着のみ
 */
 let selectedBusStopMode =
     "university";
@@ -2435,17 +2435,10 @@ function getBusDayType(date) {
 
 
 //////////////////////////////////////////////////
-// 京都駅便の自動フォールバック
+// 選択中の発着地点から実際の時刻表キーを決定
 //////////////////////////////////////////////////
 
-function getEffectiveBusRouteKey(date = new Date()) {
-
-    const dayType =
-        getBusDayType(date);
-
-    /*
-    山科で「大宅発着」を選んだ場合
-    */
+function getEffectiveBusRouteKey() {
 
     if (
         selectedBusRoute === "yamashina" &&
@@ -2454,18 +2447,9 @@ function getEffectiveBusRouteKey(date = new Date()) {
         return "yamashinaOyake";
     }
 
-    /*
-    京都駅便は、
-    土日祝の場合、
-    大宅中学校（京都橘大学下）発着へ自動切替
-    */
-
     if (
         selectedBusRoute === "kyoto" &&
-        (
-            dayType === "saturday" ||
-            dayType === "sunday"
-        )
+        selectedBusStopMode === "oyake"
     ) {
         return "oyake";
     }
@@ -2505,15 +2489,14 @@ function ensureBusStopModeUI() {
     }
 
     /*
-    既存4ボタンはそのまま残し、
-    表示名だけ整理
+    上段は3路線のみ
+    椥辻 / 山科 / 京都駅
     */
 
     const labels = {
         nagitsuji:"椥辻",
         yamashina:"山科",
-        kyoto:"京都駅",
-        oyake:"大宅発着"
+        kyoto:"京都駅"
     };
 
     routeButtons
@@ -2573,7 +2556,8 @@ function ensureBusStopModeUI() {
 
                         if (
                             this.dataset.stopMode === "oyake" &&
-                            selectedBusRoute !== "yamashina"
+                            selectedBusRoute !== "yamashina" &&
+                            selectedBusRoute !== "kyoto"
                         ) {
                             return;
                         }
@@ -2611,29 +2595,21 @@ function updateBusStopModeUI() {
         );
 
     /*
-    山科だけ2択。
-    椥辻・京都駅は大学発着のみ。
-    独立した「大宅発着」タブではこの段を隠す。
+    椥辻は大学発着のみなので、この段を隠す。
+    山科・京都駅では「大学発着 / 大宅発着」を表示する。
     */
 
-    if (selectedBusRoute === "oyake") {
-
-        stopModeBox.hidden = true;
-        return;
-    }
-
-    stopModeBox.hidden = false;
-
-    if (selectedBusRoute === "yamashina") {
-
-        oyakeButton.hidden = false;
-
-    } else {
+    if (selectedBusRoute === "nagitsuji") {
 
         selectedBusStopMode =
             "university";
 
-        oyakeButton.hidden = true;
+        stopModeBox.hidden = true;
+
+    } else {
+
+        stopModeBox.hidden = false;
+        oyakeButton.hidden = false;
     }
 
     universityButton.classList.toggle(
@@ -2936,11 +2912,32 @@ function updateBusCountdown() {
         nextBusTime.textContent =
             "--:--";
 
-        busCountdown.textContent =
-            "本日の運行は終了しました";
+        const dayType =
+            getBusDayType(now);
 
-        busStatus.textContent =
-            "";
+        if (
+            selectedBusRoute === "kyoto" &&
+            selectedBusStopMode === "university" &&
+            (
+                dayType === "saturday" ||
+                dayType === "sunday"
+            )
+        ) {
+
+            busCountdown.textContent =
+                "本日は大学発着便がありません";
+
+            busStatus.textContent =
+                "「大宅発着」を選ぶと通常便を確認できます";
+
+        } else {
+
+            busCountdown.textContent =
+                "本日の運行は終了しました";
+
+            busStatus.textContent =
+                "";
+        }
 
         return;
     }
@@ -2952,31 +2949,24 @@ function updateBusCountdown() {
         "発車まで " +
         getCountdownText(nextBus.date);
 
-    if (
-        selectedBusRoute === "kyoto" &&
-        effectiveRouteKey === "oyake"
-    ) {
+    if (effectiveRouteKey === "yamashinaOyake") {
 
         busStatus.textContent =
-            "土日祝は大学発着便がないため大宅中学校発着を表示中";
-
-    } else if (
-        selectedBusRoute === "kyoto" &&
-        isUniversityRecess(now)
-    ) {
-
-        busStatus.textContent =
-            "学休期です。大宅タブの通常便も利用できます";
-
-    } else if (effectiveRouteKey === "yamashinaOyake") {
-
-        busStatus.textContent =
-            "山科駅 ↔ 大宅の大宅発着便を表示中";
+            "山科駅 ↔ 大宅の便を表示中";
 
     } else if (effectiveRouteKey === "oyake") {
 
         busStatus.textContent =
-            "大宅中学校（京都橘大学下）発着を表示中";
+            "京都駅八条口 ↔ 大宅の便を表示中";
+
+    } else if (
+        selectedBusRoute === "kyoto" &&
+        selectedBusStopMode === "university" &&
+        isUniversityRecess(now)
+    ) {
+
+        busStatus.textContent =
+            "学休期は大宅発着も確認できます";
 
     } else {
 
@@ -3001,12 +2991,12 @@ document
                 selectedBusRoute =
                     this.dataset.route;
 
-                if (
-                    selectedBusRoute !== "yamashina"
-                ) {
-                    selectedBusStopMode =
-                        "university";
-                }
+                /*
+                路線を切り替えたら、まず大学発着を表示。
+                椥辻は大学発着固定。
+                */
+                selectedBusStopMode =
+                    "university";
 
                 syncBusRouteButtons();
                 updateBusStopModeUI();
@@ -3061,33 +3051,12 @@ busToUniversity.addEventListener(
 
 
 //////////////////////////////////////////////////
-// 初回表示時の学休期おすすめ
-//////////////////////////////////////////////////
-
-let busOpenedOnce = false;
-
-
-//////////////////////////////////////////////////
 // バスポップアップ開始
 //////////////////////////////////////////////////
 
 function startBusInformation() {
 
     clearInterval(busCountdownTimer);
-
-    /*
-    学休期に初めてバスを開いた場合は
-    大宅中学校を最初に表示
-    */
-
-    if (
-        !busOpenedOnce &&
-        isUniversityRecess(new Date())
-    ) {
-        selectedBusRoute = "oyake";
-    }
-
-    busOpenedOnce = true;
 
     busLiveInfo.hidden = false;
 
