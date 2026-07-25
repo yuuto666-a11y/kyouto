@@ -734,19 +734,21 @@ body{
 
 
     .building-photo{
+        /* スマホでも写真を切らずに全体表示 */
         width:100%;
-
-        max-width:none;
-
-        height:180px;
+        max-width:100%;
+        height:auto;
+        max-height:none;
 
         display:block;
 
-        object-fit:cover;
+        object-fit:contain;
 
         border-radius:12px;
 
-        margin:0;
+        margin:0 auto;
+
+        background:#f3f3f3;
 
         cursor:default;
 
@@ -1097,7 +1099,10 @@ body{
 ========================================= */
 
 .bus-route-buttons{
-    display:flex;
+    display:grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
 
     gap:8px;
 
@@ -1309,7 +1314,14 @@ body{
     }
 
 
-    .bus-route-buttons,
+    .bus-route-buttons{
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap:6px;
+    }
+
+
     .bus-direction-buttons{
         gap:6px;
     }
