@@ -1386,3 +1386,57 @@ body{
     }
 
 }
+
+/* =========================================
+   バス発着地点選択
+   山科のみ「大学発着 / 大宅発着」を表示
+========================================= */
+
+.bus-stop-mode-buttons{
+    display:flex;
+    gap:8px;
+    margin:0 0 12px;
+}
+
+.bus-stop-mode-buttons[hidden]{
+    display:none !important;
+}
+
+.bus-stop-mode-btn{
+    flex:1;
+    min-width:0;
+    padding:9px 5px;
+    border:none;
+    border-radius:10px;
+    background:#eeeeee;
+    color:#333;
+    font-size:14px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:
+        background .2s,
+        color .2s,
+        transform .1s;
+}
+
+.bus-stop-mode-btn:active{
+    transform:scale(.97);
+}
+
+.bus-stop-mode-btn.active{
+    background:#6a1b9a;
+    color:white;
+}
+
+@media (max-width:768px){
+
+    .bus-stop-mode-buttons{
+        gap:6px;
+        margin-bottom:10px;
+    }
+
+    .bus-stop-mode-btn{
+        padding:8px 3px;
+        font-size:13px;
+    }
+}
