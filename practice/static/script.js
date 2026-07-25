@@ -794,6 +794,9 @@ function clearBuildingHighlight() {
 }
 
 
+
+
+
 //////////////////////////////////////////////////
 // GPS 現在地機能【全ユーザー共通・自動版】
 //////////////////////////////////////////////////
@@ -1576,3 +1579,1021 @@ window.addEventListener(
 
     }
 );
+
+//////////////////////////////////////////////////
+// バス時刻・カウントダウン
+// 椥辻・山科・京都駅
+//////////////////////////////////////////////////
+
+const busLiveInfo =
+    document.getElementById("bus-live-info");
+
+const nextBusTime =
+    document.getElementById("next-bus-time");
+
+const busCountdown =
+    document.getElementById("bus-countdown");
+
+const busRouteName =
+    document.getElementById("bus-route-name");
+
+const busStatus =
+    document.getElementById("bus-status");
+
+const busFromUniversity =
+    document.getElementById("busFromUniversity");
+
+const busToUniversity =
+    document.getElementById("busToUniversity");
+
+
+let busCountdownTimer = null;
+
+
+/*
+=========================================
+現在選択中
+
+route:
+nagitsuji
+yamashina
+kyoto
+
+direction:
+fromUniversity = 大学発
+toUniversity   = 大学行き
+=========================================
+*/
+
+let selectedBusRoute =
+    "nagitsuji";
+
+let selectedBusDirection =
+    "fromUniversity";
+
+
+//////////////////////////////////////////////////
+// バス時刻表
+//////////////////////////////////////////////////
+
+const BUS_TIMETABLE = {
+
+
+    //////////////////////////////////////////////////
+    // 椥辻
+    //////////////////////////////////////////////////
+
+    nagitsuji: {
+
+        name:"椥辻",
+
+        fromUniversity: {
+
+            weekday: [
+
+                "07:20",
+                "07:30",
+                "07:35",
+                "07:55",
+
+                "08:00",
+                "08:05",
+                "08:20",
+                "08:25",
+                "08:30",
+                "08:35",
+                "08:45",
+                "08:55",
+
+                "09:05",
+                "09:10",
+                "09:25",
+                "09:35",
+                "09:45",
+                "09:50",
+                "09:55",
+
+                "10:05",
+                "10:15",
+                "10:20",
+                "10:25",
+                "10:35",
+                "10:45",
+                "10:50",
+
+                "11:05",
+                "11:45",
+
+                "12:15",
+                "12:40",
+                "12:50",
+
+                "13:05",
+                "13:20",
+                "13:35",
+                "13:50",
+
+                "14:00",
+                "14:15",
+                "14:30",
+
+                "15:10",
+                "15:15",
+                "15:45",
+
+                "16:00",
+                "16:15",
+                "16:30",
+                "16:45",
+
+                "17:00",
+                "17:15",
+                "17:30",
+                "17:45",
+
+                "18:10",
+                "18:35",
+
+                "19:10",
+                "19:40",
+
+                "20:10",
+                "20:40"
+            ],
+
+            saturday:[],
+
+            sunday:[]
+        },
+
+
+        toUniversity: {
+
+            weekday: [
+
+                "07:45",
+                "07:50",
+                "07:55",
+
+                "08:10",
+                "08:15",
+                "08:20",
+                "08:25",
+                "08:35",
+                "08:40",
+                "08:45",
+                "08:50",
+
+                "09:05",
+                "09:15",
+                "09:20",
+                "09:25",
+                "09:45",
+                "09:55",
+
+                "10:05",
+                "10:10",
+                "10:15",
+                "10:25",
+                "10:35",
+                "10:40",
+                "10:45",
+                "10:55",
+
+                "11:05",
+                "11:10",
+                "11:20",
+
+                "12:05",
+                "12:35",
+                "12:55",
+
+                "13:10",
+                "13:25",
+                "13:40",
+                "13:50",
+
+                "14:05",
+                "14:20",
+                "14:30",
+                "14:45",
+
+                "15:25",
+                "15:30",
+
+                "16:00",
+                "16:15",
+                "16:30",
+                "16:45",
+
+                "17:00",
+                "17:15",
+                "17:30",
+                "17:45",
+
+                "18:00",
+                "18:25",
+                "18:50",
+
+                "19:25",
+                "19:55",
+
+                "20:25",
+                "20:55"
+            ],
+
+            saturday:[],
+
+            sunday:[]
+        }
+
+    },
+
+
+    //////////////////////////////////////////////////
+    // 山科
+    //////////////////////////////////////////////////
+
+    yamashina: {
+
+        name:"山科駅",
+
+        fromUniversity: {
+
+            weekday: [
+
+                "09:48",
+
+                "10:18",
+                "10:48",
+
+                "11:18",
+                "11:48",
+
+                "12:18",
+                "12:45",
+                "12:48",
+                "12:55",
+
+                "13:18",
+                "13:48",
+
+                "14:18",
+                "14:48",
+
+                "15:10",
+                "15:13",
+                "15:18",
+                "15:21",
+                "15:24",
+                "15:47",
+
+                "16:18",
+                "16:47",
+
+                "17:00",
+                "17:03",
+                "17:06",
+                "17:10",
+                "17:14",
+                "17:16",
+                "17:35",
+
+                "18:13",
+                "18:53",
+
+                "19:00",
+                "19:03",
+                "19:06",
+                "19:10",
+                "19:55",
+
+                "20:50",
+                "20:55",
+
+                "21:05"
+            ],
+
+            saturday: [
+
+                "12:48",
+                "14:48",
+                "16:08",
+                "16:48"
+
+            ],
+
+            sunday:[]
+        },
+
+
+        toUniversity: {
+
+            weekday: [
+
+                "07:53",
+
+                "08:04",
+                "08:09",
+                "08:12",
+                "08:15",
+                "08:17",
+                "08:20",
+                "08:22",
+                "08:25",
+                "08:27",
+                "08:30",
+                "08:32",
+                "08:35",
+                "08:37",
+                "08:40",
+                "08:58",
+
+                "09:25",
+                "09:55",
+
+                "10:12",
+                "10:15",
+                "10:18",
+                "10:21",
+                "10:24",
+                "10:27",
+                "10:30",
+                "10:55",
+
+                "11:25",
+                "11:55",
+
+                "12:25",
+                "12:45",
+                "12:53",
+                "12:55",
+
+                "13:25",
+                "13:55",
+
+                "14:25",
+                "14:55",
+
+                "15:25",
+                "15:55",
+
+                "16:25",
+                "16:55"
+            ],
+
+            saturday: [
+
+                "08:31",
+                "09:45",
+                "12:25",
+                "14:25"
+
+            ],
+
+            sunday:[]
+        }
+
+    },
+
+
+    //////////////////////////////////////////////////
+    // 京都駅
+    //
+    // 京都橘大学へ直接乗り入れる便を表示
+    //////////////////////////////////////////////////
+
+    kyoto: {
+
+        name:"京都駅八条口",
+
+        fromUniversity: {
+
+            weekday: [
+
+                "11:08",
+                "13:08",
+                "15:11",
+                "17:11",
+                "19:00",
+                "19:50",
+                "21:15"
+
+            ],
+
+            saturday:[],
+
+            sunday:[]
+        },
+
+
+        toUniversity: {
+
+            weekday: [
+
+                "08:16",
+
+                "10:18",
+
+                "12:21",
+
+                "14:21",
+
+                "16:21"
+
+            ],
+
+            saturday:[],
+
+            sunday:[]
+        }
+
+    }
+
+};
+
+
+//////////////////////////////////////////////////
+// 学休期判定
+//////////////////////////////////////////////////
+
+function isUniversityRecess(date) {
+
+    const year =
+        date.getFullYear();
+
+
+    /*
+    2026年度 夏季学休期
+
+    7/30 ～ 9/23
+    */
+
+    if (year === 2026) {
+
+        const start =
+            new Date(
+                2026,
+                6,
+                30,
+                0,
+                0,
+                0
+            );
+
+
+        const end =
+            new Date(
+                2026,
+                8,
+                23,
+                23,
+                59,
+                59
+            );
+
+
+        if (
+            date >= start &&
+            date <= end
+        ) {
+
+            return true;
+        }
+    }
+
+
+    return false;
+}
+
+
+//////////////////////////////////////////////////
+// 今日の曜日
+//////////////////////////////////////////////////
+
+function getBusDayType(date) {
+
+    const day =
+        date.getDay();
+
+
+    if (day === 0) {
+
+        return "sunday";
+    }
+
+
+    if (day === 6) {
+
+        return "saturday";
+    }
+
+
+    return "weekday";
+}
+
+
+//////////////////////////////////////////////////
+// 時刻表取得
+//////////////////////////////////////////////////
+
+function getTodayBusTimetable() {
+
+    const now =
+        new Date();
+
+
+    /*
+    椥辻シャトルは
+    学休期間原則運休
+    */
+
+    if (
+        selectedBusRoute ===
+            "nagitsuji"
+
+        &&
+
+        isUniversityRecess(now)
+    ) {
+
+        return [];
+    }
+
+
+    const route =
+        BUS_TIMETABLE[
+            selectedBusRoute
+        ];
+
+
+    const direction =
+        route[
+            selectedBusDirection
+        ];
+
+
+    const dayType =
+        getBusDayType(now);
+
+
+    return (
+        direction[dayType]
+        || []
+    );
+}
+
+
+//////////////////////////////////////////////////
+// 次のバス
+//////////////////////////////////////////////////
+
+function getNextBus() {
+
+    const timetable =
+        getTodayBusTimetable();
+
+
+    if (
+        timetable.length === 0
+    ) {
+
+        return null;
+    }
+
+
+    const now =
+        new Date();
+
+
+    for (
+        const time of timetable
+    ) {
+
+        const [
+            hour,
+            minute
+        ] =
+            time
+                .split(":")
+                .map(Number);
+
+
+        const departure =
+            new Date(now);
+
+
+        departure.setHours(
+            hour,
+            minute,
+            0,
+            0
+        );
+
+
+        if (
+            departure >
+            now
+        ) {
+
+            return {
+
+                time:time,
+
+                date:departure
+
+            };
+        }
+
+    }
+
+
+    return null;
+}
+
+
+//////////////////////////////////////////////////
+// 残り時間
+//////////////////////////////////////////////////
+
+function getCountdownText(
+    departure
+) {
+
+    const now =
+        new Date();
+
+
+    let remaining =
+
+        departure.getTime()
+
+        -
+
+        now.getTime();
+
+
+    remaining =
+        Math.max(
+            remaining,
+            0
+        );
+
+
+    const totalSeconds =
+        Math.floor(
+            remaining / 1000
+        );
+
+
+    const hours =
+        Math.floor(
+            totalSeconds /
+            3600
+        );
+
+
+    const minutes =
+        Math.floor(
+
+            (
+                totalSeconds %
+                3600
+            )
+
+            /
+
+            60
+
+        );
+
+
+    const seconds =
+        totalSeconds % 60;
+
+
+    let text = "";
+
+
+    if (
+        hours > 0
+    ) {
+
+        text +=
+            hours +
+            "時間 ";
+    }
+
+
+    text +=
+
+        String(minutes)
+            .padStart(
+                2,
+                "0"
+            )
+
+        +
+
+        "分 "
+
+        +
+
+        String(seconds)
+            .padStart(
+                2,
+                "0"
+            )
+
+        +
+
+        "秒";
+
+
+    return text;
+}
+
+
+//////////////////////////////////////////////////
+// 表示更新
+//////////////////////////////////////////////////
+
+function updateBusCountdown() {
+
+    const route =
+        BUS_TIMETABLE[
+            selectedBusRoute
+        ];
+
+
+    /*
+    路線名
+    */
+
+    if (
+        selectedBusDirection ===
+        "fromUniversity"
+    ) {
+
+        busRouteName.textContent =
+
+            "京都橘大学 → "
+
+            +
+
+            route.name;
+
+    }
+
+    else {
+
+        busRouteName.textContent =
+
+            route.name
+
+            +
+
+            " → 京都橘大学";
+
+    }
+
+
+    /*
+    学休期 椥辻
+    */
+
+    if (
+        selectedBusRoute ===
+            "nagitsuji"
+
+        &&
+
+        isUniversityRecess(
+            new Date()
+        )
+    ) {
+
+        nextBusTime.textContent =
+            "--:--";
+
+
+        busCountdown.textContent =
+            "学休期は原則運休";
+
+
+        busStatus.textContent =
+            "臨時運行日は大学案内をご確認ください";
+
+
+        return;
+    }
+
+
+    const nextBus =
+        getNextBus();
+
+
+    if (!nextBus) {
+
+        nextBusTime.textContent =
+            "--:--";
+
+
+        busCountdown.textContent =
+            "本日の運行は終了しました";
+
+
+        busStatus.textContent =
+            "";
+
+
+        return;
+    }
+
+
+    nextBusTime.textContent =
+        nextBus.time;
+
+
+    busCountdown.textContent =
+
+        "発車まで "
+
+        +
+
+        getCountdownText(
+            nextBus.date
+        );
+
+
+    busStatus.textContent =
+        "時刻表を自動更新中";
+
+}
+
+
+//////////////////////////////////////////////////
+// 路線切替
+//////////////////////////////////////////////////
+
+document
+    .querySelectorAll(
+        ".bus-route-btn"
+    )
+    .forEach(
+        function (button) {
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    selectedBusRoute =
+                        this.dataset.route;
+
+
+                    document
+                        .querySelectorAll(
+                            ".bus-route-btn"
+                        )
+                        .forEach(
+                            btn =>
+                                btn.classList
+                                    .remove(
+                                        "active"
+                                    )
+                        );
+
+
+                    this.classList.add(
+                        "active"
+                    );
+
+
+                    updateBusCountdown();
+                }
+            );
+
+        }
+    );
+
+
+//////////////////////////////////////////////////
+// 大学発
+//////////////////////////////////////////////////
+
+busFromUniversity
+    .addEventListener(
+        "click",
+        function () {
+
+            selectedBusDirection =
+                "fromUniversity";
+
+
+            busFromUniversity
+                .classList
+                .add(
+                    "active"
+                );
+
+
+            busToUniversity
+                .classList
+                .remove(
+                    "active"
+                );
+
+
+            updateBusCountdown();
+        }
+    );
+
+
+//////////////////////////////////////////////////
+// 大学行き
+//////////////////////////////////////////////////
+
+busToUniversity
+    .addEventListener(
+        "click",
+        function () {
+
+            selectedBusDirection =
+                "toUniversity";
+
+
+            busToUniversity
+                .classList
+                .add(
+                    "active"
+                );
+
+
+            busFromUniversity
+                .classList
+                .remove(
+                    "active"
+                );
+
+
+            updateBusCountdown();
+        }
+    );
+
+
+//////////////////////////////////////////////////
+// バスポップアップ開始
+//////////////////////////////////////////////////
+
+function startBusInformation() {
+
+    clearInterval(
+        busCountdownTimer
+    );
+
+
+    busLiveInfo.hidden =
+        false;
+
+
+    updateBusCountdown();
+
+
+    /*
+    1秒ごとに更新
+
+    発車時刻を過ぎれば
+    自動的に次のバスになる
+    */
+
+    busCountdownTimer =
+        setInterval(
+
+            updateBusCountdown,
+
+            1000
+
+        );
+}
+
+
+//////////////////////////////////////////////////
+// バス以外
+//////////////////////////////////////////////////
+
+function stopBusInformation() {
+
+    clearInterval(
+        busCountdownTimer
+    );
+
+
+    busCountdownTimer =
+        null;
+
+
+    busLiveInfo.hidden =
+        true;
+
+}
+
