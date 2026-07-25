@@ -113,22 +113,7 @@ function createBuilding(name, x, y) {
 
         return;
     }
-        if (!info) {
-
-            document.getElementById("building-name")
-                .textContent = building.shortName;
-
-            document.getElementById("building-description")
-                .textContent = "情報未登録";
-
-            document.getElementById("building-photo")
-                .src = "";
-
-            popupOverlay.style.display = "flex";
-
-            return;
-        }
-
+        
         document.getElementById("building-name")
             .textContent = info.fullName;
 
