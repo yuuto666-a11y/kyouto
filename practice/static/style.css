@@ -1151,11 +1151,14 @@ body{
 
 
 /* =========================================
-   大学発 / 大学行き
+   大学発 / 大学着 / 大宅発 / 大宅着
 ========================================= */
 
 .bus-direction-buttons{
-    display:flex;
+    display:grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
 
     gap:8px;
 
