@@ -378,9 +378,7 @@ body{
 
     .popup-overlay{
         position:fixed;
-
-        top:0;
-        left:0;
+        inset:0;
 
         width:100%;
         height:100%;
@@ -390,15 +388,10 @@ body{
         justify-content:center;
         align-items:flex-end;
 
-        /* スマホでは背景を暗くしない */
         background:transparent;
 
         z-index:20000;
 
-        /*
-        重要：
-        ポップアップ以外の地図・検索バーを操作可能にする
-        */
         pointer-events:none;
     }
 
@@ -406,68 +399,36 @@ body{
     .popup-card{
         position:relative;
 
-        width:100%;
-        max-width:none;
+        /* 画面いっぱいにしない */
+        width:94%;
+        max-width:520px;
 
         height:50vh;
         max-height:50vh;
 
-        margin:0;
+        /* 下に少し隙間 */
+        margin-bottom:10px;
 
-        padding:20px 10px;
+        padding:20px 12px;
 
         box-sizing:border-box;
 
         background:white;
 
-        border-radius:15px 15px 0 0;
+        border-radius:18px;
 
         font-size:18px;
 
         overflow-y:auto;
 
-        /* カードそのものは操作可能 */
         pointer-events:auto;
 
-        box-shadow:
-            0 -5px 20px rgba(0,0,0,.25);
+        box-shadow:0 -5px 20px rgba(0,0,0,.25);
 
         animation:slideUp .3s ease;
     }
 
 }
-
-    .popup-card{
-        position:relative;
-
-        /* 横いっぱい */
-        width:100%;
-        max-width:none;
-
-        /* 画面の下半分くらい */
-        height:50vh;
-        max-height:50vh;
-
-        /* 下端に密着 */
-        margin:0;
-
-        padding:20px 10px;
-
-        box-sizing:border-box;
-
-        background:white;
-
-        /* 上だけ丸く */
-        border-radius:15px 15px 0 0;
-
-        font-size:18px;
-
-        overflow-y:auto;
-
-        /* 下から登場 */
-        animation:slideUp .3s ease;
-    }
-
 
     /* ==========================
        建物名
