@@ -1443,3 +1443,174 @@ body{
         font-size:13px;
     }
 }
+
+
+/* =========================================
+   次の便以降：横スワイプ表示
+========================================= */
+
+.next-bus-time{
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.bus-main-time-item{
+    display:inline-flex;
+    align-items:baseline;
+    gap:5px;
+}
+
+.bus-main-time-item small{
+    font-size:13px;
+    font-weight:700;
+    color:#666;
+    letter-spacing:0;
+}
+
+.bus-main-time-arrow{
+    font-size:24px;
+    color:#888;
+    line-height:1.25;
+}
+
+.bus-upcoming-wrap{
+    width:100%;
+    box-sizing:border-box;
+    margin-top:16px;
+}
+
+.bus-upcoming-wrap[hidden]{
+    display:none !important;
+}
+
+.bus-upcoming-title{
+    margin:0 0 8px;
+    font-size:14px;
+    font-weight:700;
+    color:#555;
+}
+
+.bus-upcoming-slider{
+    display:flex;
+    gap:10px;
+    width:100%;
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding:2px 2px 10px;
+    box-sizing:border-box;
+    scroll-snap-type:x mandatory;
+    scroll-behavior:smooth;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior-x:contain;
+    touch-action:pan-x pan-y;
+    scrollbar-width:thin;
+}
+
+.bus-upcoming-card{
+    flex:0 0 min(82%, 300px);
+    scroll-snap-align:start;
+    box-sizing:border-box;
+    padding:13px;
+    border:1px solid #dfe5ef;
+    border-radius:14px;
+    background:white;
+    box-shadow:0 3px 10px rgba(0,0,0,.07);
+}
+
+.bus-upcoming-card.is-next{
+    border:2px solid #1687ff;
+}
+
+.bus-upcoming-number{
+    margin-bottom:8px;
+    font-size:12px;
+    font-weight:700;
+    color:#666;
+}
+
+.bus-upcoming-card.is-next .bus-upcoming-number{
+    color:#1687ff;
+}
+
+.bus-upcoming-times{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+}
+
+.bus-upcoming-time-box{
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    flex:1;
+}
+
+.bus-upcoming-time-label{
+    margin-bottom:2px;
+    font-size:11px;
+    color:#777;
+}
+
+.bus-upcoming-time-box strong{
+    font-size:25px;
+    line-height:1.15;
+    color:#222;
+}
+
+.bus-upcoming-arrow{
+    flex:0 0 auto;
+    color:#999;
+    font-size:18px;
+}
+
+.bus-upcoming-countdown{
+    margin-top:10px;
+    padding:6px 8px;
+    border-radius:10px;
+    background:#f5f8ff;
+    font-size:13px;
+    font-weight:700;
+    text-align:center;
+    color:#333;
+}
+
+.bus-upcoming-hint{
+    margin-top:2px;
+    font-size:11px;
+    color:#888;
+    text-align:center;
+}
+
+@media (max-width:768px){
+
+    .next-bus-time{
+        gap:7px;
+        font-size:31px;
+    }
+
+    .bus-main-time-item small{
+        font-size:11px;
+    }
+
+    .bus-main-time-arrow{
+        font-size:20px;
+    }
+
+    .bus-upcoming-wrap{
+        margin-top:13px;
+    }
+
+    .bus-upcoming-card{
+        flex-basis:88%;
+        padding:12px;
+    }
+
+    .bus-upcoming-time-box strong{
+        font-size:24px;
+    }
+}
