@@ -1598,6 +1598,98 @@ let busCountdownTimer = null;
 
 /*
 =========================================
+到着予定時刻の計算に使う標準所要時間（分）
+道路状況で前後するため画面では「着目安」と表示
+=========================================
+*/
+const BUS_TRAVEL_MINUTES = {
+    nagitsuji: {
+        fromUniversity: 10,
+        toUniversity: 10
+    },
+    yamashina: {
+        fromUniversity: 18,
+        toUniversity: 18
+    },
+    yamashinaOyake: {
+        fromUniversity: 13,
+        toUniversity: 13
+    },
+    kyoto: {
+        fromUniversity: 26,
+        toUniversity: 26
+    },
+    oyake: {
+        fromUniversity: 37,
+        toUniversity: 37
+    }
+};
+
+let busUpcomingWrap = null;
+let busUpcomingSlider = null;
+let busUpcomingSignature = "";
+
+
+//////////////////////////////////////////////////
+// 次の便以降のスライダーをHTMLへ自動追加
+//////////////////////////////////////////////////
+
+function ensureBusUpcomingSlider() {
+
+    if (busUpcomingWrap) {
+        return;
+    }
+
+    busUpcomingWrap =
+        document.createElement("div");
+
+    busUpcomingWrap.className =
+        "bus-upcoming-wrap";
+
+    const title =
+        document.createElement("div");
+
+    title.className =
+        "bus-upcoming-title";
+
+    title.textContent =
+        "次の便以降";
+
+    busUpcomingSlider =
+        document.createElement("div");
+
+    busUpcomingSlider.id =
+        "bus-upcoming-slider";
+
+    busUpcomingSlider.className =
+        "bus-upcoming-slider";
+
+    const hint =
+        document.createElement("div");
+
+    hint.className =
+        "bus-upcoming-hint";
+
+    hint.textContent =
+        "← 横にスワイプして先の便を確認 →";
+
+    busUpcomingWrap.appendChild(title);
+    busUpcomingWrap.appendChild(busUpcomingSlider);
+    busUpcomingWrap.appendChild(hint);
+
+    if (busCountdown) {
+        busCountdown.insertAdjacentElement(
+            "afterend",
+            busUpcomingWrap
+        );
+    } else if (busLiveInfo) {
+        busLiveInfo.appendChild(busUpcomingWrap);
+    }
+}
+
+
+/*
+=========================================
 現在選択中
 
 route:
@@ -1967,6 +2059,7 @@ const BUS_TIMETABLE = {
         */
         fromUniversity: {
 
+            // 26系統 + 26A系統（同じ「大宅」停留所）
             weekday: [
                 "06:23",
                 "06:53",
@@ -1977,6 +2070,27 @@ const BUS_TIMETABLE = {
                 "08:22",
                 "08:49",
                 "09:20",
+                "09:52",
+                "10:22",
+                "10:52",
+                "11:22",
+                "11:52",
+                "12:22",
+                "12:52",
+                "13:22",
+                "13:52",
+                "14:22",
+                "14:52",
+                "15:22",
+                "15:51",
+                "16:22",
+                "16:51",
+                "17:20",
+                "17:39",
+                "18:17",
+                "18:57",
+                "19:59",
+                "20:59",
                 "21:40"
             ],
 
@@ -1991,12 +2105,16 @@ const BUS_TIMETABLE = {
                 "11:25",
                 "12:05",
                 "12:45",
+                "12:52",
                 "13:25",
                 "14:05",
                 "14:45",
+                "14:52",
                 "15:25",
                 "16:05",
+                "16:12",
                 "16:44",
+                "16:52",
                 "17:24",
                 "18:05",
                 "18:45",
@@ -2033,11 +2151,32 @@ const BUS_TIMETABLE = {
         */
         toUniversity: {
 
+            // 26系統 + 26A系統（山科駅発、同じ「大宅」停留所まで）
             weekday: [
                 "06:50",
                 "07:38",
+                "07:53",
+                "08:09",
+                "08:58",
+                "09:25",
+                "09:55",
+                "10:18",
+                "10:55",
+                "11:25",
+                "11:55",
+                "12:25",
+                "12:55",
+                "13:25",
+                "13:55",
+                "14:25",
+                "14:55",
+                "15:25",
+                "15:55",
+                "16:25",
+                "16:55",
                 "17:25",
                 "17:55",
+                "18:25",
                 "18:55",
                 "19:25",
                 "20:25",
@@ -2514,7 +2653,7 @@ function getTodayBusTimetable() {
     }
 
     const effectiveRouteKey =
-        getEffectiveBusRouteKey(now);
+        getEffectiveBusRouteKey();
 
     const route =
         BUS_TIMETABLE[effectiveRouteKey];
@@ -2538,10 +2677,77 @@ function getTodayBusTimetable() {
 
 
 //////////////////////////////////////////////////
-// 次のバス
+// HH:MM を今日の日付のDateへ変換
 //////////////////////////////////////////////////
 
-function getNextBus() {
+function busTimeToDate(time, baseDate = new Date()) {
+
+    const [hour, minute] =
+        time.split(":").map(Number);
+
+    const date =
+        new Date(baseDate);
+
+    date.setHours(
+        hour,
+        minute,
+        0,
+        0
+    );
+
+    return date;
+}
+
+
+//////////////////////////////////////////////////
+// 到着予定時刻
+//////////////////////////////////////////////////
+
+function getBusTravelMinutes() {
+
+    const effectiveRouteKey =
+        getEffectiveBusRouteKey();
+
+    const routeMinutes =
+        BUS_TRAVEL_MINUTES[effectiveRouteKey];
+
+    if (!routeMinutes) {
+        return 0;
+    }
+
+    return routeMinutes[selectedBusDirection] || 0;
+}
+
+
+function getBusArrivalDate(departureDate) {
+
+    const arrival =
+        new Date(departureDate);
+
+    arrival.setMinutes(
+        arrival.getMinutes() +
+        getBusTravelMinutes()
+    );
+
+    return arrival;
+}
+
+
+function formatBusClock(date) {
+
+    return (
+        String(date.getHours()).padStart(2, "0") +
+        ":" +
+        String(date.getMinutes()).padStart(2, "0")
+    );
+}
+
+
+//////////////////////////////////////////////////
+// この先のバスを最大8便取得
+//////////////////////////////////////////////////
+
+function getUpcomingBuses(limit = 8) {
 
     const timetable =
         getTodayBusTimetable();
@@ -2550,37 +2756,54 @@ function getNextBus() {
         !timetable ||
         timetable.length === 0
     ) {
-        return null;
+        return [];
     }
 
     const now =
         new Date();
 
+    const buses = [];
+
     for (const time of timetable) {
 
-        const [hour, minute] =
-            time.split(":").map(Number);
-
         const departure =
-            new Date(now);
+            busTimeToDate(time, now);
 
-        departure.setHours(
-            hour,
-            minute,
-            0,
-            0
-        );
+        if (departure <= now) {
+            continue;
+        }
 
-        if (departure > now) {
+        const arrival =
+            getBusArrivalDate(departure);
 
-            return {
-                time: time,
-                date: departure
-            };
+        buses.push({
+            time: time,
+            date: departure,
+            arrivalDate: arrival,
+            arrivalTime: formatBusClock(arrival)
+        });
+
+        if (buses.length >= limit) {
+            break;
         }
     }
 
-    return null;
+    return buses;
+}
+
+
+//////////////////////////////////////////////////
+// 次のバス
+//////////////////////////////////////////////////
+
+function getNextBus() {
+
+    const buses =
+        getUpcomingBuses(1);
+
+    return buses.length > 0
+        ? buses[0]
+        : null;
 }
 
 
@@ -2627,6 +2850,145 @@ function getCountdownText(departure) {
         "秒";
 
     return text;
+}
+
+
+//////////////////////////////////////////////////
+// 次の便以降スライダー
+//////////////////////////////////////////////////
+
+function clearUpcomingBusSlider() {
+
+    ensureBusUpcomingSlider();
+
+    busUpcomingSignature = "";
+
+    if (busUpcomingSlider) {
+        busUpcomingSlider.innerHTML = "";
+    }
+
+    if (busUpcomingWrap) {
+        busUpcomingWrap.hidden = true;
+    }
+}
+
+
+function updateUpcomingCountdownTexts() {
+
+    if (!busUpcomingSlider) {
+        return;
+    }
+
+    busUpcomingSlider
+        .querySelectorAll(".bus-upcoming-countdown")
+        .forEach(function (element) {
+
+            const timestamp =
+                Number(element.dataset.departureTime);
+
+            if (!Number.isFinite(timestamp)) {
+                return;
+            }
+
+            element.textContent =
+                "発車まで " +
+                getCountdownText(
+                    new Date(timestamp)
+                );
+        });
+}
+
+
+function renderUpcomingBusSlider(buses) {
+
+    ensureBusUpcomingSlider();
+
+    if (
+        !buses ||
+        buses.length === 0
+    ) {
+        clearUpcomingBusSlider();
+        return;
+    }
+
+    busUpcomingWrap.hidden = false;
+
+    const effectiveRouteKey =
+        getEffectiveBusRouteKey();
+
+    const signature = [
+        effectiveRouteKey,
+        selectedBusDirection,
+        ...buses.map(bus => bus.time)
+    ].join("|");
+
+    /*
+    同じ便一覧ならDOMを作り直さない。
+    これによりスワイプ中でも1秒更新で位置が戻らない。
+    */
+    if (signature !== busUpcomingSignature) {
+
+        busUpcomingSignature = signature;
+        busUpcomingSlider.innerHTML = "";
+
+        buses.forEach(function (bus, index) {
+
+            const card =
+                document.createElement("article");
+
+            card.className =
+                "bus-upcoming-card" +
+                (index === 0 ? " is-next" : "");
+
+            const number =
+                document.createElement("div");
+
+            number.className =
+                "bus-upcoming-number";
+
+            number.textContent =
+                index === 0
+                    ? "次のバス"
+                    : (index + 1) + "本目";
+
+            const times =
+                document.createElement("div");
+
+            times.className =
+                "bus-upcoming-times";
+
+            times.innerHTML =
+                '<div class="bus-upcoming-time-box">' +
+                    '<span class="bus-upcoming-time-label">発</span>' +
+                    '<strong>' + bus.time + '</strong>' +
+                '</div>' +
+                '<span class="bus-upcoming-arrow">→</span>' +
+                '<div class="bus-upcoming-time-box">' +
+                    '<span class="bus-upcoming-time-label">着目安</span>' +
+                    '<strong>' + bus.arrivalTime + '</strong>' +
+                '</div>';
+
+            const countdown =
+                document.createElement("div");
+
+            countdown.className =
+                "bus-upcoming-countdown";
+
+            countdown.dataset.departureTime =
+                String(bus.date.getTime());
+
+            card.appendChild(number);
+            card.appendChild(times);
+            card.appendChild(countdown);
+
+            busUpcomingSlider.appendChild(card);
+        });
+
+        /* 路線切替時は必ず先頭の次便から表示 */
+        busUpcomingSlider.scrollLeft = 0;
+    }
+
+    updateUpcomingCountdownTexts();
 }
 
 
@@ -2718,7 +3080,7 @@ function updateBusCountdown() {
         new Date();
 
     const effectiveRouteKey =
-        getEffectiveBusRouteKey(now);
+        getEffectiveBusRouteKey();
 
     syncBusRouteButtons();
     syncBusDirectionButtons();
@@ -2742,16 +3104,20 @@ function updateBusCountdown() {
         busStatus.textContent =
             "臨時運行日は大学案内をご確認ください";
 
+        clearUpcomingBusSlider();
+
         return;
     }
 
-    const nextBus =
-        getNextBus();
+    const upcomingBuses =
+        getUpcomingBuses(8);
 
-    if (!nextBus) {
+    if (upcomingBuses.length === 0) {
 
         nextBusTime.textContent =
             "--:--";
+
+        clearUpcomingBusSlider();
 
         const dayType =
             getBusDayType(now);
@@ -2769,7 +3135,7 @@ function updateBusCountdown() {
                 "本日は大学発着便がありません";
 
             busStatus.textContent =
-                "「大宅発着」を選ぶと通常便を確認できます";
+                "大宅発・大宅着を選ぶと通常便を確認できます";
 
         } else {
 
@@ -2783,22 +3149,37 @@ function updateBusCountdown() {
         return;
     }
 
-    nextBusTime.textContent =
-        nextBus.time;
+    const nextBus =
+        upcomingBuses[0];
+
+    nextBusTime.innerHTML =
+        '<span class="bus-main-time-item">' +
+            '<small>発</small>' +
+            nextBus.time +
+        '</span>' +
+        '<span class="bus-main-time-arrow">→</span>' +
+        '<span class="bus-main-time-item">' +
+            '<small>着目安</small>' +
+            nextBus.arrivalTime +
+        '</span>';
 
     busCountdown.textContent =
         "発車まで " +
         getCountdownText(nextBus.date);
 
+    renderUpcomingBusSlider(
+        upcomingBuses
+    );
+
     if (effectiveRouteKey === "yamashinaOyake") {
 
         busStatus.textContent =
-            "山科駅 ↔ 大宅の便を表示中";
+            "山科駅 ↔ 大宅（26・26A）の便を表示中 ※到着は目安";
 
     } else if (effectiveRouteKey === "oyake") {
 
         busStatus.textContent =
-            "京都駅八条口 ↔ 大宅の便を表示中";
+            "京都駅八条口 ↔ 大宅（311）の便を表示中 ※到着は目安";
 
     } else if (
         selectedBusRoute === "kyoto" &&
@@ -2807,12 +3188,12 @@ function updateBusCountdown() {
     ) {
 
         busStatus.textContent =
-            "学休期は大宅発着も確認できます";
+            "学休期は大宅発・大宅着も確認できます ※到着は目安";
 
     } else {
 
         busStatus.textContent =
-            "時刻表を自動更新中";
+            "時刻表を自動更新中 ※到着は道路状況により前後します";
     }
 }
 
@@ -2841,6 +3222,8 @@ document
 
                 selectedBusDirection =
                     "fromUniversity";
+
+                busUpcomingSignature = "";
 
                 syncBusRouteButtons();
                 syncBusDirectionButtons();
@@ -2876,6 +3259,8 @@ busDirectionButtons.forEach(function (button) {
             selectedBusDirection =
                 this.dataset.direction;
 
+            busUpcomingSignature = "";
+
             syncBusDirectionButtons();
             updateBusCountdown();
         }
@@ -2892,6 +3277,8 @@ function startBusInformation() {
     clearInterval(busCountdownTimer);
 
     busLiveInfo.hidden = false;
+
+    ensureBusUpcomingSlider();
 
     syncBusRouteButtons();
     syncBusDirectionButtons();
