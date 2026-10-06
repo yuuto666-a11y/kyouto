@@ -92,93 +92,24 @@ function createBuilding(name, x, y) {
         photo.removeAttribute("src");
     }
 
-    if (
-        typeof startBusInfo === "function" &&
-        typeof stopBusInfo === "function"
-    ) {
-        if (
-            building.shortName === "バス" ||
-            (info.fullName && info.fullName.includes("バス"))
-        ) {
-            startBusInfo();
-        } else {
-            stopBusInfo();
-        }
-    }
-
-    popupOverlay.style.display = "flex";
-});
-
-    /* ==========================
-       バス判定
-    ========================== */
-
+    // ==========================
+    // バス判定
+    // ==========================
     const isBus =
-
-        building.shortName === "バス"
-
-        ||
-
+        building.shortName === "バス" ||
         (
-            info &&
             info.fullName &&
             info.fullName.includes("バス")
         );
 
-
     if (isBus) {
-
         startBusInformation();
-
     } else {
-
         stopBusInformation();
-
     }
 
-
-    /* ここから元々の処理 */
-
-    if (!info) {
-
-        document.getElementById("building-name")
-            .textContent = building.shortName;
-
-        document.getElementById("building-description")
-            .textContent = "情報未登録";
-
-        document.getElementById("building-photo")
-            .src = "";
-
-        popupOverlay.style.display = "flex";
-
-        return;
-    }
-
-        document.getElementById("building-name")
-            .textContent = info.fullName;
-
-        document.getElementById("building-description")
-            .textContent = info.description;
-
-        if (info.photos) {
-
-            currentPhotos = info.photos;
-
-        } else {
-
-            currentPhotos = [info.photo];
-
-        }
-
-        currentIndex = 0;
-
-        photo.src =
-            "/static/" + currentPhotos[currentIndex];
-
-        popupOverlay.style.display = "flex";
-    });
-
+    popupOverlay.style.display = "flex";
+});
     //////////////////////////////////////////////////
     // 編集モード時のみ
     //////////////////////////////////////////////////
