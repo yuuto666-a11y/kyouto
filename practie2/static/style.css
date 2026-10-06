@@ -1993,3 +1993,14 @@ body{
         padding: 10px;
     }
 }
+
+
+
+
+.timetable-overlay {
+    display: none !important;
+}
+
+.timetable-overlay.active {
+    display: flex !important;
+}
