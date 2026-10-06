@@ -2130,6 +2130,10 @@ body{
     }
 }
 ```
+/* 時間割はJSから開くまで絶対に表示しない */
+#timetable-overlay[hidden] {
+    display: none !important;
+}
 
 
 
