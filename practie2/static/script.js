@@ -3516,9 +3516,8 @@ if (
             closeMenu();
 
             // そのあと時間割を表示
-            timetableOverlay.classList.add(
-                "active"
-            );
+            timetableOverlay.hidden = false;
+            timetableOverlay.classList.add("active");
         }
     );
 }
@@ -3537,9 +3536,8 @@ if (
         "click",
         function () {
 
-            timetableOverlay.classList.remove(
-                "active"
-            );
+            timetableOverlay.classList.remove("active");
+            timetableOverlay.hidden = true;
         }
     );
 }
