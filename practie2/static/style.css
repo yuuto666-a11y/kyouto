@@ -2135,5 +2135,23 @@ body{
     display: none !important;
 }
 
+.timetable-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 31000;
 
+    background: rgba(0, 0, 0, .45);
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 18px;
+    box-sizing: border-box;
+}
+
+.timetable-overlay.active {
+    display: flex;
+}
 
