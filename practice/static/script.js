@@ -3108,7 +3108,6 @@ function updateBusCountdown() {
 
         return;
     }
-
 /* =========================================
    サイドメニュー
 ========================================= */
@@ -3126,77 +3125,116 @@ const menuOverlay =
     document.getElementById("menu-overlay");
 
 
-/* メニューを開く */
+/* =========================================
+   メニューを開く
+========================================= */
 
-function openMenu(){
+function openMenu() {
+
+    if (!sideMenu || !menuOverlay) {
+        return;
+    }
 
     sideMenu.classList.add("active");
 
     menuOverlay.classList.add("active");
-
 }
 
 
-/* メニューを閉じる */
+/* =========================================
+   メニューを閉じる
+========================================= */
 
-function closeMenu(){
+function closeMenu() {
+
+    if (!sideMenu || !menuOverlay) {
+        return;
+    }
 
     sideMenu.classList.remove("active");
 
     menuOverlay.classList.remove("active");
+}
+
+
+/* =========================================
+   三本線ボタン
+========================================= */
+
+if (menuButton) {
+
+    menuButton.addEventListener(
+        "click",
+        function () {
+
+            openMenu();
+
+        }
+    );
 
 }
 
 
-/* 三本線 */
+/* =========================================
+   ×ボタン
+========================================= */
 
-menuButton.addEventListener(
-    "click",
-    function(){
+if (menuClose) {
 
-        openMenu();
-
-    }
-);
-
-
-/* × */
-
-menuClose.addEventListener(
-    "click",
-    function(){
-
-        closeMenu();
-
-    }
-);
-
-
-/* 背景 */
-
-menuOverlay.addEventListener(
-    "click",
-    function(){
-
-        closeMenu();
-
-    }
-);
-
-
-/* ESC */
-
-document.addEventListener(
-    "keydown",
-    function(e){
-
-        if(e.key === "Escape"){
+    menuClose.addEventListener(
+        "click",
+        function () {
 
             closeMenu();
 
-            document
-                .getElementById("timetable-overlay")
-                .classList.remove("active");
+        }
+    );
+
+}
+
+
+/* =========================================
+   メニュー外側をクリック
+========================================= */
+
+if (menuOverlay) {
+
+    menuOverlay.addEventListener(
+        "click",
+        function () {
+
+            closeMenu();
+
+        }
+    );
+
+}
+
+
+/* =========================================
+   ESCキー
+========================================= */
+
+document.addEventListener(
+    "keydown",
+    function (e) {
+
+        if (e.key !== "Escape") {
+            return;
+        }
+
+        closeMenu();
+
+        const timetableOverlay =
+            document.getElementById(
+                "timetable-overlay"
+            );
+
+        if (timetableOverlay) {
+
+            timetableOverlay.classList.remove(
+                "active"
+            );
 
         }
 
@@ -3208,11 +3246,14 @@ document.addEventListener(
    キャンパスマップ
 ========================================= */
 
-document
-    .getElementById("menu-map")
-    .addEventListener(
+const menuMap =
+    document.getElementById("menu-map");
+
+if (menuMap) {
+
+    menuMap.addEventListener(
         "click",
-        function(){
+        function () {
 
             closeMenu();
 
@@ -3224,10 +3265,15 @@ document
         }
     );
 
+}
+
 
 /* =========================================
    時間割
 ========================================= */
+
+const menuTimetable =
+    document.getElementById("menu-timetable");
 
 const timetableOverlay =
     document.getElementById("timetable-overlay");
@@ -3236,86 +3282,120 @@ const timetableClose =
     document.getElementById("timetable-close");
 
 
-document
-    .getElementById("menu-timetable")
-    .addEventListener(
+/* 時間割を開く */
+
+if (
+    menuTimetable &&
+    timetableOverlay
+) {
+
+    menuTimetable.addEventListener(
         "click",
-        function(){
+        function () {
 
             closeMenu();
 
-            timetableOverlay.classList.add("active");
+            timetableOverlay.classList.add(
+                "active"
+            );
 
         }
     );
 
+}
+
 
 /* 時間割を閉じる */
 
-timetableClose.addEventListener(
-    "click",
-    function(){
+if (
+    timetableClose &&
+    timetableOverlay
+) {
 
-        timetableOverlay.classList.remove("active");
+    timetableClose.addEventListener(
+        "click",
+        function () {
 
-    }
-);
-
-
-/* 時間割の外側 */
-
-timetableOverlay.addEventListener(
-    "click",
-    function(e){
-
-        if(e.target === timetableOverlay){
-
-            timetableOverlay.classList.remove("active");
+            timetableOverlay.classList.remove(
+                "active"
+            );
 
         }
+    );
 
-    }
-);
+}
+
+
+/* =========================================
+   時間割の外側をクリック
+========================================= */
+
+if (timetableOverlay) {
+
+    timetableOverlay.addEventListener(
+        "click",
+        function (e) {
+
+            if (
+                e.target ===
+                timetableOverlay
+            ) {
+
+                timetableOverlay.classList.remove(
+                    "active"
+                );
+
+            }
+
+        }
+    );
+
+}
 
 
 /* =========================================
    トイレ
 ========================================= */
 
-document
-    .getElementById("menu-toilet")
-    .addEventListener(
+const menuToilet =
+    document.getElementById("menu-toilet");
+
+if (menuToilet) {
+
+    menuToilet.addEventListener(
         "click",
-        function(){
+        function () {
 
             closeMenu();
 
-            /*
-             * 今後ここに
-             * トイレの場所を表示する処理を追加
-             */
-
-            alert("トイレの場所を表示する機能は今後追加予定です。");
+            alert(
+                "トイレの場所を表示する機能は今後追加予定です。"
+            );
 
         }
     );
+
+}
 
 
 /* =========================================
    現在地
 ========================================= */
 
-document
-    .getElementById("menu-gps")
-    .addEventListener(
+const menuGps =
+    document.getElementById("menu-gps");
+
+if (menuGps) {
+
+    menuGps.addEventListener(
         "click",
-        function(){
+        function () {
 
             closeMenu();
 
-            if(
+            if (
                 typeof startGPS === "function"
-            ){
+            ) {
 
                 startGPS();
 
@@ -3324,43 +3404,66 @@ document
         }
     );
 
+}
+
 
 /* =========================================
    バス情報
 ========================================= */
 
-document
-    .getElementById("menu-bus")
-    .addEventListener(
+const menuBus =
+    document.getElementById("menu-bus");
+
+if (menuBus) {
+
+    menuBus.addEventListener(
         "click",
-        function(){
+        function () {
 
             closeMenu();
 
             const bus =
                 buildings.find(
-                    b => b.shortName === "バス"
+                    function (building) {
+
+                        return (
+                            building.shortName ===
+                            "バス"
+                        );
+
+                    }
                 );
 
-            if(bus){
+            if (bus) {
 
                 bus.element.click();
+
+            } else {
+
+                alert(
+                    "バス情報を表示できませんでした。"
+                );
 
             }
 
         }
     );
 
+}
+
 
 /* =========================================
    設定
 ========================================= */
 
-document
-    .getElementById("menu-settings")
-    .addEventListener(
+const menuSettings =
+    document.getElementById("menu-settings");
+
+if (menuSettings) {
+
+    menuSettings.addEventListener(
         "click",
-        function(){
+        function () {
 
             closeMenu();
 
@@ -3370,3 +3473,5 @@ document
 
         }
     );
+
+}
