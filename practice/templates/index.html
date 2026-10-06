@@ -652,6 +652,178 @@
 </script>
 
 
+
+<script>
+/* =========================================================
+   建物ピン・ポップアップ修正版
+   既存のscript.jsが作るピンのクラス名に依存しないよう、
+   地図上の建物要素を幅広く検出してポップアップを開きます。
+========================================================= */
+(function () {
+  "use strict";
+
+  function openBuildingPopup(pin) {
+    const overlay = document.getElementById("popup-overlay");
+    const nameEl = document.getElementById("building-name");
+    const descEl = document.getElementById("building-description");
+    const photoEl = document.getElementById("building-photo");
+    if (!overlay || !nameEl || !descEl) return;
+
+    const attrs = [
+      "data-building-name",
+      "data-building",
+      "data-code",
+      "data-id",
+      "data-building-code"
+    ];
+
+    let code = "";
+    for (const a of attrs) {
+      if (pin.dataset && pin.dataset[a.slice(5)]) {
+        code = pin.dataset[a.slice(5)];
+        break;
+      }
+    }
+
+    if (!code) code =
+      pin.getAttribute("title") ||
+      pin.getAttribute("aria-label") ||
+      pin.textContent.trim();
+
+    const db =
+      window.BUILDING_INFO ||
+      window.buildingData ||
+      window.buildings ||
+      window.BUILDINGS ||
+      {};
+
+    let info = db[code];
+
+    // コードがキーと完全一致しない場合にも対応
+    if (!info && code) {
+      const key = Object.keys(db).find(k =>
+        String(k).toLowerCase() === String(code).toLowerCase()
+      );
+      if (key) info = db[key];
+    }
+
+    nameEl.textContent =
+      (info && (info.fullName || info.name || info.title)) || code || "建物情報";
+
+    descEl.textContent =
+      (info && (info.description || info.desc || info.detail)) ||
+      "この建物の詳細情報は登録されていません。";
+
+    if (photoEl) {
+      let photos = [];
+      if (info) {
+        if (Array.isArray(info.photos)) photos = info.photos;
+        else if (info.photo) photos = [info.photo];
+        else if (info.image) photos = [info.image];
+      }
+
+      if (photos.length) {
+        let p = String(photos[0]);
+        if (!/^(https?:|data:|\/)/.test(p)) p = "/static/" + p;
+        photoEl.src = p;
+        photoEl.style.display = "";
+      } else {
+        photoEl.removeAttribute("src");
+        photoEl.style.display = "none";
+      }
+    }
+
+    overlay.style.display = "flex";
+    overlay.classList.add("show");
+    document.body.classList.add("popup-open");
+  }
+
+  function isPin(el) {
+    if (!el || el === document.body || el === document.documentElement) return false;
+    if (el.id === "map") return false;
+
+    const cls = String(el.className || "").toLowerCase();
+    const role = String(el.getAttribute("role") || "").toLowerCase();
+    const hasData =
+      el.hasAttribute("data-building-name") ||
+      el.hasAttribute("data-building") ||
+      el.hasAttribute("data-building-code") ||
+      el.hasAttribute("data-code");
+
+    return hasData ||
+      /building|pin|marker/.test(cls) ||
+      role === "button";
+  }
+
+  document.addEventListener("click", function (e) {
+    const close = e.target.closest("#close-popup");
+    if (close) {
+      const overlay = document.getElementById("popup-overlay");
+      if (overlay) {
+        overlay.style.display = "none";
+        overlay.classList.remove("show");
+      }
+      document.body.classList.remove("popup-open");
+      return;
+    }
+
+    const overlay = document.getElementById("popup-overlay");
+    if (overlay && e.target === overlay) {
+      overlay.style.display = "none";
+      overlay.classList.remove("show");
+      document.body.classList.remove("popup-open");
+      return;
+    }
+
+    let el = e.target;
+    let pin = null;
+
+    // 地図エリア内でクリックされた建物要素を上方向に探す
+    while (el && el !== document.body) {
+      if (isPin(el)) {
+        const mapArea = el.closest(".map-container, .map-area, #map-wrapper");
+        if (mapArea || el.parentElement && el.parentElement.closest(".map-container, .map-area")) {
+          pin = el;
+          break;
+        }
+      }
+      el = el.parentElement;
+    }
+
+    if (pin) {
+      e.stopPropagation();
+      openBuildingPopup(pin);
+    }
+  }, true);
+
+  // ポップアップがCSSでdisplay:none固定でも確実に表示できるようにする
+  const style = document.createElement("style");
+  style.textContent = `
+    #popup-overlay.show { display:flex !important; }
+    #popup-overlay { z-index:99999; }
+    #close-popup { cursor:pointer; }
+    .popup-open { overflow:hidden; }
+  `;
+  document.head.appendChild(style);
+
+  // メニューボタンも外部JSが失敗した場合に最低限開けるようにする
+  document.addEventListener("click", function (e) {
+    if (e.target.closest("#menu-button")) {
+      const menu = document.getElementById("side-menu");
+      const overlay = document.getElementById("menu-overlay");
+      if (menu) menu.classList.add("open", "active", "show");
+      if (overlay) overlay.classList.add("open", "active", "show");
+    }
+    if (e.target.closest("#menu-close, #menu-overlay")) {
+      const menu = document.getElementById("side-menu");
+      const overlay = document.getElementById("menu-overlay");
+      if (menu) menu.classList.remove("open", "active", "show");
+      if (overlay) overlay.classList.remove("open", "active", "show");
+    }
+  }, true);
+})();
+</script>
+
 </body>
 
 </html>
