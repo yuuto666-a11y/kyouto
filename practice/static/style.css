@@ -1614,3 +1614,228 @@ body{
         font-size:24px;
     }
 }
+
+/* =========================================
+   検索バー＋メニューボタン
+========================================= */
+
+.search-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+
+/* 検索欄 */
+
+.search-row #searchInput{
+    flex:1;
+    width:auto;
+}
+
+
+/* =========================================
+   三本線メニューボタン
+========================================= */
+
+.menu-button{
+    flex:0 0 60px;
+
+    width:60px;
+    height:60px;
+
+    border:none;
+    border-radius:16px;
+
+    background:#8e24aa;
+    color:white;
+
+    font-size:30px;
+    line-height:1;
+
+    cursor:pointer;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    box-shadow:
+        0 3px 10px
+        rgba(0,0,0,.2);
+
+    transition:
+        transform .15s,
+        background .2s;
+}
+
+.menu-button:active{
+    transform:scale(.92);
+}
+
+
+/* =========================================
+   メニュー背景
+========================================= */
+
+.menu-overlay{
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.4);
+
+    z-index:30000;
+
+    display:none;
+}
+
+.menu-overlay.active{
+    display:block;
+}
+
+
+/* =========================================
+   サイドメニュー
+========================================= */
+
+.side-menu{
+    position:fixed;
+
+    top:0;
+    right:0;
+
+    width:320px;
+    max-width:85vw;
+    height:100vh;
+
+    background:white;
+
+    z-index:30001;
+
+    box-shadow:
+        -5px 0 20px
+        rgba(0,0,0,.25);
+
+    transform:translateX(100%);
+
+    transition:
+        transform .25s ease;
+
+    box-sizing:border-box;
+}
+
+
+.side-menu.active{
+    transform:translateX(0);
+}
+
+
+/* =========================================
+   メニューヘッダー
+========================================= */
+
+.side-menu-header{
+    height:80px;
+
+    padding:0 18px;
+
+    box-sizing:border-box;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    border-bottom:1px solid #ddd;
+}
+
+
+.side-menu-header h2{
+    margin:0;
+
+    font-size:24px;
+}
+
+
+/* 閉じるボタン */
+
+.menu-close{
+    width:44px;
+    height:44px;
+
+    border:none;
+    border-radius:50%;
+
+    background:#f1f1f1;
+
+    font-size:28px;
+
+    cursor:pointer;
+}
+
+
+/* =========================================
+   メニュー項目
+========================================= */
+
+.menu-content{
+    padding:15px;
+}
+
+
+.menu-item{
+    width:100%;
+
+    padding:18px 15px;
+
+    margin-bottom:10px;
+
+    border:none;
+    border-radius:12px;
+
+    background:#f5f5f5;
+
+    text-align:left;
+
+    font-size:18px;
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:
+        background .2s,
+        transform .1s;
+}
+
+
+.menu-item:hover{
+    background:#e8e8e8;
+}
+
+
+.menu-item:active{
+    transform:scale(.98);
+}
+
+
+/* =========================================
+   スマホ
+========================================= */
+
+@media (max-width:768px){
+
+    .search-bar{
+        padding:8px;
+    }
+
+    .menu-button{
+        flex:0 0 52px;
+
+        width:52px;
+        height:52px;
+
+        border-radius:14px;
+
+        font-size:26px;
+    }
+
+}
