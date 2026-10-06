@@ -69,6 +69,37 @@ function createBuilding(name, x, y) {
     ? BUILDING_INFO[building.shortName]
     : null;
 
+if (info) {
+    // 建物名
+    document.getElementById("building-name").textContent =
+        info.fullName || building.name || building.shortName;
+
+    // 説明
+    document.getElementById("building-description").textContent =
+        info.description || "";
+
+    // 写真を配列化
+    const photos = Array.isArray(info.photos)
+        ? info.photos
+        : info.photo
+            ? [info.photo]
+            : [];
+
+    // 写真表示
+    if (photos.length > 0) {
+        currentPhotoIndex = 0;
+        currentPhotos = photos;
+
+        document.getElementById("building-photo").src =
+            "/static/" + photos[0];
+
+        document.getElementById("building-photo").style.display = "block";
+    }
+
+    // ポップアップ表示
+    document.getElementById("popup-overlay").style.display = "flex";
+}
+
     /* ==========================
        バス判定
     ========================== */
