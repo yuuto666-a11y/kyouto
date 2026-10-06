@@ -58,38 +58,67 @@ function createBuilding(name, x, y) {
     // ボタンクリックで情報表示
     //////////////////////////////////////////////////
 
-    button.addEventListener("click", function (e) {
+   button.addEventListener("click", function (e) {
     e.stopPropagation();
 
-    // 建物をハイライト
     highlightBuilding(building.shortName);
 
-    // buildingData.js から情報取得
-    const info = BUILDING_INFO[building.shortName];
+    // buildingData.js から取得
+    const info = (typeof BUILDING_INFO !== "undefined")
+        ? BUILDING_INFO[building.shortName]
+        : null;
 
     if (!info) {
-        console.log("BUILDING_INFOに情報がありません:", building.shortName);
+        console.error("建物データがありません:", building.shortName);
         return;
     }
 
-    // 名前
-    document.getElementById("building-name").textContent =
-        info.fullName;
+    // 建物名
+    const nameElement = document.getElementById("building-name");
+    if (nameElement) {
+        nameElement.textContent =
+            info.fullName || info.name || building.shortName;
+    }
 
     // 説明
-    document.getElementById("building-description").textContent =
-        info.description;
+    const descriptionElement =
+        document.getElementById("building-description");
+
+    if (descriptionElement) {
+        descriptionElement.textContent =
+            info.description || "説明は登録されていません。";
+    }
 
     // 写真
-    const photo = document.getElementById("building-photo");
+    const photoElement =
+        document.getElementById("building-photo");
 
-    if (info.photo) {
-        photo.src = "static/" + info.photo;
-        photo.style.display = "block";
+    if (photoElement) {
+
+        let photo = info.photo;
+
+        // photo が配列の場合
+        if (Array.isArray(info.photos) && info.photos.length > 0) {
+            photo = info.photos[0];
+        }
+
+        if (photo) {
+            photoElement.src = photo.startsWith("/")
+                ? photo
+                : "static/" + photo;
+        } else {
+            photoElement.removeAttribute("src");
+        }
     }
 
     // ポップアップ表示
-    document.getElementById("popup-overlay").style.display = "flex";
+    const popup =
+        document.getElementById("popup-overlay");
+
+    if (popup) {
+        popup.classList.add("show");
+        popup.style.display = "flex";
+    }
 });
 
     /* ==========================
