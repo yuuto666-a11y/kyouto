@@ -127,12 +127,15 @@
         <!-- トイレ -->
 
         <button
-            class="menu-item"
+            class="menu-item menu-toggle-item"
             id="menu-toilet"
-            type="button">
+            type="button"
+            aria-pressed="false"
+            data-toilet-enabled="false">
 
             <span>🚻</span>
-            <span>トイレ</span>
+            <span class="menu-toggle-label">トイレ表示</span>
+            <span class="menu-toggle-state" aria-hidden="true">OFF</span>
 
         </button>
 
@@ -649,6 +652,35 @@
 
 <script
     src="{{ url_for('static', filename='script.js') }}">
+</script>
+
+<script>
+/* 建物ピンのクリック表示を確実にする補助処理 */
+document.addEventListener("click", function (e) {
+    const pin = e.target.closest(".building");
+    if (!pin) return;
+
+    const code = pin.dataset.buildingName || pin.textContent.trim();
+    const info = window.BUILDING_INFO && window.BUILDING_INFO[code];
+    const overlay = document.getElementById("popup-overlay");
+    const name = document.getElementById("building-name");
+    const desc = document.getElementById("building-description");
+    const image = document.getElementById("building-photo");
+
+    if (!overlay || !name || !desc) return;
+
+    e.stopPropagation();
+
+    name.textContent = info && info.fullName ? info.fullName : code;
+    desc.textContent = info && info.description ? info.description : "情報未登録";
+
+    if (image) {
+        const photos = info && info.photos ? info.photos : (info && info.photo ? [info.photo] : []);
+        image.src = photos.length ? "/static/" + photos[0] : "";
+    }
+
+    overlay.style.display = "flex";
+});
 </script>
 
 
