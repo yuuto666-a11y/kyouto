@@ -25,25 +25,173 @@
     <!-- ==========================
      検索バー
 =========================== -->
+<!-- 検索バー -->
 <div class="search-bar">
-
     <div class="search-row">
 
         <input
-            type="text"
             id="searchInput"
             list="buildingList"
-            placeholder="🔍 建物コードを入力">
+            placeholder="🔍 建物コードを入力"
+        >
 
-        <button
-            id="menu-button"
-            class="menu-button"
-            type="button"
-            aria-label="メニューを開く">
+        <button id="menuButton" class="menu-button">
             ☰
         </button>
 
     </div>
+
+    <datalist id="buildingList"></datalist>
+</div>
+
+
+<!-- メニューを開いたときの背景 -->
+<div id="menuOverlay" class="menu-overlay"></div>
+
+
+<!-- 右側から出てくるメニュー -->
+<div id="sideMenu" class="side-menu">
+
+    <div class="side-menu-header">
+        <h2>メニュー</h2>
+
+        <button id="menuCloseButton" class="menu-close-button">
+            ×
+        </button>
+    </div>
+
+
+    <div class="menu-items">
+
+        <!-- キャンパスマップ -->
+        <button class="menu-item" id="menuMap">
+            <span class="menu-icon">🗺️</span>
+            <span>キャンパスマップ</span>
+        </button>
+
+
+        <!-- 時間割 -->
+        <button class="menu-item" id="menuTimetable">
+            <span class="menu-icon">📅</span>
+            <span>時間割</span>
+        </button>
+
+
+        <!-- 現在地 -->
+        <button class="menu-item" id="menuGPS">
+            <span class="menu-icon">📍</span>
+            <span>現在地</span>
+        </button>
+
+
+        <!-- バス情報 -->
+        <button class="menu-item" id="menuBus">
+            <span class="menu-icon">🚌</span>
+            <span>バス情報</span>
+        </button>
+
+
+        <!-- 今後追加する場所 -->
+        <button class="menu-item" id="menuSettings">
+            <span class="menu-icon">⚙️</span>
+            <span>設定</span>
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- ==============================
+     時間割画面
+============================== -->
+
+<div id="timetableOverlay" class="timetable-overlay">
+
+    <div class="timetable-card">
+
+        <div class="timetable-header">
+
+            <h2>📅 時間割</h2>
+
+            <button id="timetableCloseButton">
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="timetable-content">
+
+            <table class="timetable">
+
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>月</th>
+                        <th>火</th>
+                        <th>水</th>
+                        <th>木</th>
+                        <th>金</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <th>1限</th>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+
+                    <tr>
+                        <th>2限</th>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+
+                    <tr>
+                        <th>3限</th>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+
+                    <tr>
+                        <th>4限</th>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+
+                    <tr>
+                        <th>5限</th>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
 
     <datalist id="buildingList"></datalist>
 
