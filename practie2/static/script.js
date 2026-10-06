@@ -25,6 +25,9 @@ const closePopup =
 let buildings = [];
 
 const EDIT_MODE = false;
+const menuTimetable = document.getElementById("menu-timetable");
+const timetableOverlay = document.getElementById("timetable-overlay");
+const timetableClose = document.getElementById("timetable-close");
 
 //////////////////////////////////////////////////
 // 建物作成
