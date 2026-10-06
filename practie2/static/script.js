@@ -3313,6 +3313,7 @@ function stopBusInformation() {
 }
 
 
+```js
 //////////////////////////////////////////////////
 // 三本線メニュー
 //////////////////////////////////////////////////
@@ -3359,7 +3360,6 @@ function openMenu() {
     }
 
     sideMenu.classList.add("active");
-
     menuOverlay.classList.add("active");
 
     sideMenu.setAttribute(
@@ -3373,7 +3373,6 @@ function openMenu() {
     );
 
     if (menuButton) {
-
         menuButton.setAttribute(
             "aria-expanded",
             "true"
@@ -3393,7 +3392,6 @@ function closeMenu() {
     }
 
     sideMenu.classList.remove("active");
-
     menuOverlay.classList.remove("active");
 
     sideMenu.setAttribute(
@@ -3407,7 +3405,6 @@ function closeMenu() {
     );
 
     if (menuButton) {
-
         menuButton.setAttribute(
             "aria-expanded",
             "false"
@@ -3426,6 +3423,7 @@ if (menuButton) {
         "click",
         openMenu
     );
+
 }
 
 
@@ -3439,11 +3437,12 @@ if (menuClose) {
         "click",
         closeMenu
     );
+
 }
 
 
 //////////////////////////////////////////////////
-// メニュー外側をクリック
+// メニューの外側をクリック
 //////////////////////////////////////////////////
 
 if (menuOverlay) {
@@ -3452,30 +3451,8 @@ if (menuOverlay) {
         "click",
         closeMenu
     );
+
 }
-
-
-//////////////////////////////////////////////////
-// ESCキー
-//////////////////////////////////////////////////
-
-document.addEventListener(
-    "keydown",
-    function (e) {
-
-        if (e.key === "Escape") {
-
-            closeMenu();
-
-            if (timetableOverlay) {
-
-                timetableOverlay.classList.remove(
-                    "active"
-                );
-            }
-        }
-    }
-);
 
 
 //////////////////////////////////////////////////
@@ -3494,8 +3471,10 @@ if (menuMap) {
                 top: 0,
                 behavior: "smooth"
             });
+
         }
     );
+
 }
 
 
@@ -3512,19 +3491,22 @@ if (
         "click",
         function () {
 
-            // まずメニューを閉じる
+            // メニューを閉じる
             closeMenu();
 
-            // そのあと時間割を表示
-            timetableOverlay.hidden = false;
-            timetableOverlay.classList.add("active");
+            // 時間割を表示
+            timetableOverlay.classList.add(
+                "active"
+            );
+
         }
     );
+
 }
 
 
 //////////////////////////////////////////////////
-// 時間割を閉じる
+// 時間割を×で閉じる
 //////////////////////////////////////////////////
 
 if (
@@ -3536,15 +3518,18 @@ if (
         "click",
         function () {
 
-            timetableOverlay.classList.remove("active");
-            timetableOverlay.hidden = true;
+            timetableOverlay.classList.remove(
+                "active"
+            );
+
         }
     );
+
 }
 
 
 //////////////////////////////////////////////////
-// 時間割の黒い部分をクリックして閉じる
+// 時間割の余白をクリックして閉じる
 //////////////////////////////////////////////////
 
 if (timetableOverlay) {
@@ -3553,6 +3538,7 @@ if (timetableOverlay) {
         "click",
         function (e) {
 
+            // 時間割カード以外をクリック
             if (
                 e.target === timetableOverlay
             ) {
@@ -3560,10 +3546,39 @@ if (timetableOverlay) {
                 timetableOverlay.classList.remove(
                     "active"
                 );
+
             }
+
         }
     );
+
 }
+
+
+//////////////////////////////////////////////////
+// ESCキーで閉じる
+//////////////////////////////////////////////////
+
+document.addEventListener(
+    "keydown",
+    function (e) {
+
+        if (e.key === "Escape") {
+
+            closeMenu();
+
+            if (timetableOverlay) {
+
+                timetableOverlay.classList.remove(
+                    "active"
+                );
+
+            }
+
+        }
+
+    }
+);
 
 
 //////////////////////////////////////////////////
@@ -3601,9 +3616,12 @@ if (menuToilet) {
                     nextEnabled
                         ? "ON"
                         : "OFF";
+
             }
+
         }
     );
+
 }
 
 
@@ -3624,7 +3642,12 @@ if (menuGps) {
             ) {
 
                 startGPS();
+
             }
+
         }
     );
+
 }
+```
+
