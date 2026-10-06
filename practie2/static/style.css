@@ -1755,3 +1755,122 @@ body{
         padding-right:82px;
     }
 }
+/* =========================================
+   サイドメニュー
+========================================= */
+
+.menu-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.4);
+    z-index: 30000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .2s ease;
+}
+
+.menu-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.side-menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 320px;
+    max-width: 86vw;
+    height: 100vh;
+    background: #fff;
+    z-index: 30001;
+    box-shadow: -6px 0 24px rgba(0,0,0,.22);
+    transform: translateX(100%);
+    transition: transform .25s ease;
+    box-sizing: border-box;
+}
+
+.side-menu.active {
+    transform: translateX(0);
+}
+
+.side-menu-header {
+    height: 72px;
+    padding: 0 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.side-menu-header h2 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.menu-close {
+    width: 42px;
+    height: 42px;
+    border: none;
+    border-radius: 50%;
+    background: #f2f2f2;
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.menu-items {
+    padding: 14px;
+}
+
+.menu-item {
+    width: 100%;
+    min-height: 58px;
+    margin: 0 0 8px;
+    padding: 12px 14px;
+    border: none;
+    border-radius: 12px;
+    background: #f7f7f7;
+    color: #222;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    text-align: left;
+    font-size: 17px;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.menu-item:hover {
+    background: #eeeaf7;
+}
+
+.menu-item span:first-child {
+    width: 30px;
+    flex: 0 0 30px;
+    text-align: center;
+    font-size: 23px;
+}
+
+.menu-toggle-item {
+    justify-content: flex-start;
+}
+
+.menu-toggle-label {
+    flex: 1;
+}
+
+.menu-toggle-state {
+    min-width: 42px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: #e9e9e9;
+    color: #666;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.menu-toggle-item[aria-pressed="true"] .menu-toggle-state {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
