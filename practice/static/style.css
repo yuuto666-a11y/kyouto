@@ -1839,302 +1839,295 @@ body{
     }
 
 }
+
 /* =========================================
    サイドメニュー
 ========================================= */
 
-.search-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    width: 100%;
-}
+const menuButton =
+    document.getElementById("menu-button");
 
-.search-row #searchInput {
-    flex: 1;
-    width: auto;
-}
+const sideMenu =
+    document.getElementById("side-menu");
+
+const menuClose =
+    document.getElementById("menu-close");
+
+const menuOverlay =
+    document.getElementById("menu-overlay");
 
 
-/* 三本線ボタン */
+/* =========================================
+   メニューを開く
+========================================= */
 
-#menu-button {
-    flex-shrink: 0;
+function openMenu() {
 
-    width: 60px;
-    height: 60px;
+    sideMenu.classList.add("active");
 
-    border: none;
-    border-radius: 15px;
+    menuOverlay.classList.add("active");
 
-    background: #6c4cc5;
-    color: white;
-
-    font-size: 30px;
-
-    cursor: pointer;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 
-/* 背景 */
+/* =========================================
+   メニューを閉じる
+========================================= */
 
-.menu-overlay {
-    position: fixed;
-    inset: 0;
+function closeMenu() {
 
-    background: rgba(0,0,0,0.4);
+    sideMenu.classList.remove("active");
 
-    z-index: 19999;
+    menuOverlay.classList.remove("active");
 
-    opacity: 0;
-    visibility: hidden;
-
-    transition: 0.25s;
-}
-
-.menu-overlay.active {
-    opacity: 1;
-    visibility: visible;
 }
 
 
-/* サイドメニュー */
+/* =========================================
+   三本線ボタン
+========================================= */
 
-.side-menu {
-    position: fixed;
+menuButton.addEventListener(
+    "click",
+    function () {
 
-    top: 0;
-    right: 0;
+        openMenu();
 
-    width: 320px;
-    max-width: 85vw;
-    height: 100vh;
-
-    background: white;
-
-    z-index: 20000;
-
-    box-shadow: -5px 0 20px rgba(0,0,0,0.2);
-
-    transform: translateX(100%);
-
-    transition: transform 0.3s ease;
-
-    overflow-y: auto;
-}
-
-.side-menu.active {
-    transform: translateX(0);
-}
+    }
+);
 
 
-/* ヘッダー */
+/* =========================================
+   ×ボタン
+========================================= */
 
-.side-menu-header {
-    height: 80px;
+menuClose.addEventListener(
+    "click",
+    function () {
 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+        closeMenu();
 
-    padding: 0 20px;
-
-    border-bottom: 1px solid #ddd;
-}
-
-.side-menu-header h2 {
-    margin: 0;
-    font-size: 24px;
-}
-
-.menu-close {
-    width: 45px;
-    height: 45px;
-
-    border: none;
-    background: transparent;
-
-    font-size: 35px;
-
-    cursor: pointer;
-}
+    }
+);
 
 
-/* メニュー項目 */
+/* =========================================
+   背景をクリック
+========================================= */
 
-.menu-items {
-    padding: 15px;
-}
+menuOverlay.addEventListener(
+    "click",
+    function () {
 
-.menu-item {
-    width: 100%;
+        closeMenu();
 
-    display: flex;
-    align-items: center;
+    }
+);
 
-    gap: 15px;
 
-    padding: 18px 15px;
+/* =========================================
+   ESCキー
+========================================= */
 
-    margin-bottom: 8px;
+document.addEventListener(
+    "keydown",
+    function (e) {
 
-    border: none;
-    border-radius: 12px;
+        if (e.key === "Escape") {
 
-    background: white;
+            closeMenu();
 
-    font-size: 18px;
+            const timetable =
+                document.getElementById(
+                    "timetable-overlay"
+                );
 
-    text-align: left;
+            if (timetable) {
 
-    cursor: pointer;
-}
+                timetable.classList.remove("active");
 
-.menu-item:hover {
-    background: #f0ecfa;
-}
+            }
 
-.menu-item span:first-child {
-    width: 35px;
+        }
 
-    font-size: 24px;
+    }
+);
 
-    text-align: center;
-}
+
+/* =========================================
+   キャンパスマップ
+========================================= */
+
+document
+    .getElementById("menu-map")
+    .addEventListener(
+        "click",
+        function () {
+
+            closeMenu();
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+
+        }
+    );
 
 
 /* =========================================
    時間割
 ========================================= */
 
-.timetable-overlay {
-    position: fixed;
-    inset: 0;
+const timetableOverlay =
+    document.getElementById(
+        "timetable-overlay"
+    );
 
-    background: rgba(0,0,0,0.5);
-
-    z-index: 21000;
-
-    display: none;
-
-    align-items: center;
-    justify-content: center;
-
-    padding: 20px;
-}
-
-.timetable-overlay.active {
-    display: flex;
-}
+const timetableClose =
+    document.getElementById(
+        "timetable-close"
+    );
 
 
-.timetable-card {
-    width: 100%;
-    max-width: 1000px;
+document
+    .getElementById("menu-timetable")
+    .addEventListener(
+        "click",
+        function () {
 
-    max-height: 90vh;
+            closeMenu();
 
-    background: white;
+            timetableOverlay.classList.add(
+                "active"
+            );
 
-    border-radius: 20px;
-
-    overflow: hidden;
-
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-}
-
-
-/* 時間割ヘッダー */
-
-.timetable-header {
-    display: flex;
-
-    align-items: center;
-    justify-content: space-between;
-
-    padding: 18px 20px;
-
-    border-bottom: 1px solid #ddd;
-}
-
-.timetable-header h2 {
-    margin: 0;
-    font-size: 24px;
-}
-
-#timetable-close {
-    width: 45px;
-    height: 45px;
-
-    border: none;
-
-    background: transparent;
-
-    font-size: 32px;
-
-    cursor: pointer;
-}
+        }
+    );
 
 
-/* 表 */
+/* =========================================
+   時間割を閉じる
+========================================= */
 
-.timetable-content {
-    padding: 20px;
+timetableClose.addEventListener(
+    "click",
+    function () {
 
-    overflow-x: auto;
-}
+        timetableOverlay.classList.remove(
+            "active"
+        );
 
-.timetable {
-    width: 100%;
-
-    border-collapse: collapse;
-
-    min-width: 650px;
-}
-
-.timetable th,
-.timetable td {
-    border: 1px solid #ccc;
-
-    text-align: center;
-
-    padding: 12px;
-
-    height: 65px;
-}
-
-.timetable thead th {
-    background: #f3f0fa;
-}
-
-.timetable tbody th {
-    background: #f7f7f7;
-
-    width: 70px;
-}
-
-
-/* スマホ */
-
-@media (max-width: 600px) {
-
-    #menu-button {
-        width: 52px;
-        height: 52px;
-
-        font-size: 26px;
     }
+);
 
-    .timetable-overlay {
-        padding: 10px;
+
+/* =========================================
+   時間割の外側をクリック
+========================================= */
+
+timetableOverlay.addEventListener(
+    "click",
+    function (e) {
+
+        if (e.target === timetableOverlay) {
+
+            timetableOverlay.classList.remove(
+                "active"
+            );
+
+        }
+
     }
+);
 
-    .timetable-content {
-        padding: 10px;
-    }
 
-}
+/* =========================================
+   トイレ
+========================================= */
+
+document
+    .getElementById("menu-toilet")
+    .addEventListener(
+        "click",
+        function () {
+
+            closeMenu();
+
+            alert(
+                "トイレの場所を表示する機能は今後追加予定です。"
+            );
+
+        }
+    );
+
+
+/* =========================================
+   現在地
+========================================= */
+
+document
+    .getElementById("menu-gps")
+    .addEventListener(
+        "click",
+        function () {
+
+            closeMenu();
+
+            if (
+                typeof startGPS === "function"
+            ) {
+
+                startGPS();
+
+            }
+
+        }
+    );
+
+
+/* =========================================
+   バス情報
+========================================= */
+
+document
+    .getElementById("menu-bus")
+    .addEventListener(
+        "click",
+        function () {
+
+            closeMenu();
+
+            const bus =
+                buildings.find(
+                    b => b.shortName === "バス"
+                );
+
+            if (bus) {
+
+                bus.element.click();
+
+            }
+
+        }
+    );
+
+
+/* =========================================
+   設定
+========================================= */
+
+document
+    .getElementById("menu-settings")
+    .addEventListener(
+        "click",
+        function () {
+
+            closeMenu();
+
+            alert(
+                "設定機能は今後追加予定です。"
+            );
+
+        }
+    );
