@@ -171,6 +171,9 @@ body{
 
 .building{
     position:absolute;
+    /* 建物ピンは常に地図上に残す */
+    visibility:visible !important;
+    opacity:1 !important;
 
     transform:
         translate(-50%,-50%);
@@ -205,7 +208,7 @@ body{
         background .15s ease,
         box-shadow .15s ease;
 
-    z-index:20;
+    z-index:1000;
 }
 
 
@@ -1751,6 +1754,30 @@ body{
     flex: 0 0 30px;
     text-align: center;
     font-size: 23px;
+}
+
+.menu-toggle-item {
+    justify-content: flex-start;
+}
+
+.menu-toggle-label {
+    flex: 1;
+}
+
+.menu-toggle-state {
+    min-width: 42px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: #e9e9e9;
+    color: #666;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.menu-toggle-item[aria-pressed="true"] .menu-toggle-state {
+    background: #e8f5e9;
+    color: #2e7d32;
 }
 
 /* =========================================
