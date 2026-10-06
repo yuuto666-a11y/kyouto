@@ -3109,7 +3109,7 @@ function updateBusCountdown() {
         return;
     }
 
-    /* =========================================
+/* =========================================
    サイドメニュー
 ========================================= */
 
@@ -3172,7 +3172,7 @@ menuClose.addEventListener(
 );
 
 
-/* 背景をクリック */
+/* 背景 */
 
 menuOverlay.addEventListener(
     "click",
@@ -3184,7 +3184,7 @@ menuOverlay.addEventListener(
 );
 
 
-/* ESCキー */
+/* ESC */
 
 document.addEventListener(
     "keydown",
@@ -3194,6 +3194,10 @@ document.addEventListener(
 
             closeMenu();
 
+            document
+                .getElementById("timetable-overlay")
+                .classList.remove("active");
+
         }
 
     }
@@ -3201,11 +3205,105 @@ document.addEventListener(
 
 
 /* =========================================
-   メニュー項目
+   キャンパスマップ
 ========================================= */
 
+document
+    .getElementById("menu-map")
+    .addEventListener(
+        "click",
+        function(){
 
-/* 現在地 */
+            closeMenu();
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+
+        }
+    );
+
+
+/* =========================================
+   時間割
+========================================= */
+
+const timetableOverlay =
+    document.getElementById("timetable-overlay");
+
+const timetableClose =
+    document.getElementById("timetable-close");
+
+
+document
+    .getElementById("menu-timetable")
+    .addEventListener(
+        "click",
+        function(){
+
+            closeMenu();
+
+            timetableOverlay.classList.add("active");
+
+        }
+    );
+
+
+/* 時間割を閉じる */
+
+timetableClose.addEventListener(
+    "click",
+    function(){
+
+        timetableOverlay.classList.remove("active");
+
+    }
+);
+
+
+/* 時間割の外側 */
+
+timetableOverlay.addEventListener(
+    "click",
+    function(e){
+
+        if(e.target === timetableOverlay){
+
+            timetableOverlay.classList.remove("active");
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   トイレ
+========================================= */
+
+document
+    .getElementById("menu-toilet")
+    .addEventListener(
+        "click",
+        function(){
+
+            closeMenu();
+
+            /*
+             * 今後ここに
+             * トイレの場所を表示する処理を追加
+             */
+
+            alert("トイレの場所を表示する機能は今後追加予定です。");
+
+        }
+    );
+
+
+/* =========================================
+   現在地
+========================================= */
 
 document
     .getElementById("menu-gps")
@@ -3227,7 +3325,9 @@ document
     );
 
 
-/* バス情報 */
+/* =========================================
+   バス情報
+========================================= */
 
 document
     .getElementById("menu-bus")
@@ -3252,222 +3352,21 @@ document
     );
 
 
-/* キャンパスマップ */
+/* =========================================
+   設定
+========================================= */
 
 document
-    .getElementById("menu-map")
+    .getElementById("menu-settings")
     .addEventListener(
         "click",
         function(){
 
             closeMenu();
 
-            window.scrollTo({
-                top:0,
-                behavior:"smooth"
-            });
+            alert(
+                "設定機能は今後追加予定です。"
+            );
 
         }
     );
-    const upcomingBuses =
-        getUpcomingBuses(8);
-
-    if (upcomingBuses.length === 0) {
-
-        nextBusTime.textContent =
-            "--:--";
-
-        clearUpcomingBusSlider();
-
-        const dayType =
-            getBusDayType(now);
-
-        if (
-            selectedBusRoute === "kyoto" &&
-            selectedBusStopMode === "university" &&
-            (
-                dayType === "saturday" ||
-                dayType === "sunday"
-            )
-        ) {
-
-            busCountdown.textContent =
-                "本日は大学発着便がありません";
-
-            busStatus.textContent =
-                "大宅発・大宅着を選ぶと通常便を確認できます";
-
-        } else {
-
-            busCountdown.textContent =
-                "本日の運行は終了しました";
-
-            busStatus.textContent =
-                "";
-        }
-
-        return;
-    }
-
-    const nextBus =
-        upcomingBuses[0];
-
-    nextBusTime.innerHTML =
-        '<span class="bus-main-time-item">' +
-            '<small>発</small>' +
-            nextBus.time +
-        '</span>' +
-        '<span class="bus-main-time-arrow">→</span>' +
-        '<span class="bus-main-time-item">' +
-            '<small>着目安</small>' +
-            nextBus.arrivalTime +
-        '</span>';
-
-    busCountdown.textContent =
-        "発車まで " +
-        getCountdownText(nextBus.date);
-
-    renderUpcomingBusSlider(
-        upcomingBuses
-    );
-
-    if (effectiveRouteKey === "yamashinaOyake") {
-
-        busStatus.textContent =
-            "山科駅 ↔ 大宅（26・26A）の便を表示中 ※到着は目安";
-
-    } else if (effectiveRouteKey === "oyake") {
-
-        busStatus.textContent =
-            "京都駅八条口 ↔ 大宅（311）の便を表示中 ※到着は目安";
-
-    } else if (
-        selectedBusRoute === "kyoto" &&
-        selectedBusStopMode === "university" &&
-        isUniversityRecess(now)
-    ) {
-
-        busStatus.textContent =
-            "学休期は大宅発・大宅着も確認できます ※到着は目安";
-
-    } else {
-
-        busStatus.textContent =
-            "時刻表を自動更新中 ※到着は道路状況により前後します";
-    }
-}
-
-
-//////////////////////////////////////////////////
-// 路線切替：3つのうち1つだけ選択
-//////////////////////////////////////////////////
-
-document
-    .querySelectorAll(".bus-route-btn")
-    .forEach(function (button) {
-
-        button.addEventListener(
-            "click",
-            function () {
-
-                selectedBusRoute =
-                    this.dataset.route;
-
-                /*
-                路線を切り替えたら大学発を初期選択。
-                activeはsync関数で必ず1つだけになる。
-                */
-                selectedBusStopMode =
-                    "university";
-
-                selectedBusDirection =
-                    "fromUniversity";
-
-                busUpcomingSignature = "";
-
-                syncBusRouteButtons();
-                syncBusDirectionButtons();
-                updateBusCountdown();
-            }
-        );
-    });
-
-
-//////////////////////////////////////////////////
-// 発着切替：4つのうち1つだけ選択
-//////////////////////////////////////////////////
-
-busDirectionButtons.forEach(function (button) {
-
-    button.addEventListener(
-        "click",
-        function () {
-
-            /*
-            椥辻では大宅発・大宅着を選択不可
-            */
-            if (
-                selectedBusRoute === "nagitsuji" &&
-                this.dataset.stopMode === "oyake"
-            ) {
-                return;
-            }
-
-            selectedBusStopMode =
-                this.dataset.stopMode;
-
-            selectedBusDirection =
-                this.dataset.direction;
-
-            busUpcomingSignature = "";
-
-            syncBusDirectionButtons();
-            updateBusCountdown();
-        }
-    );
-});
-
-
-//////////////////////////////////////////////////
-// バスポップアップ開始
-//////////////////////////////////////////////////
-
-function startBusInformation() {
-
-    clearInterval(busCountdownTimer);
-
-    busLiveInfo.hidden = false;
-
-    ensureBusUpcomingSlider();
-
-    syncBusRouteButtons();
-    syncBusDirectionButtons();
-    updateBusCountdown();
-
-    /*
-    1秒ごとに更新。
-    発車時刻を過ぎると自動で次便へ切り替わる。
-    */
-
-    busCountdownTimer =
-        setInterval(
-            updateBusCountdown,
-            1000
-        );
-}
-
-
-//////////////////////////////////////////////////
-// バス以外・ポップアップ終了
-//////////////////////////////////////////////////
-
-function stopBusInformation() {
-
-    clearInterval(busCountdownTimer);
-
-    busCountdownTimer = null;
-
-    if (busLiveInfo) {
-        busLiveInfo.hidden = true;
-    }
-}
