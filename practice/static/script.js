@@ -3109,6 +3109,166 @@ function updateBusCountdown() {
         return;
     }
 
+    /* =========================================
+   サイドメニュー
+========================================= */
+
+const menuButton =
+    document.getElementById("menu-button");
+
+const sideMenu =
+    document.getElementById("side-menu");
+
+const menuClose =
+    document.getElementById("menu-close");
+
+const menuOverlay =
+    document.getElementById("menu-overlay");
+
+
+/* メニューを開く */
+
+function openMenu(){
+
+    sideMenu.classList.add("active");
+
+    menuOverlay.classList.add("active");
+
+}
+
+
+/* メニューを閉じる */
+
+function closeMenu(){
+
+    sideMenu.classList.remove("active");
+
+    menuOverlay.classList.remove("active");
+
+}
+
+
+/* 三本線 */
+
+menuButton.addEventListener(
+    "click",
+    function(){
+
+        openMenu();
+
+    }
+);
+
+
+/* × */
+
+menuClose.addEventListener(
+    "click",
+    function(){
+
+        closeMenu();
+
+    }
+);
+
+
+/* 背景をクリック */
+
+menuOverlay.addEventListener(
+    "click",
+    function(){
+
+        closeMenu();
+
+    }
+);
+
+
+/* ESCキー */
+
+document.addEventListener(
+    "keydown",
+    function(e){
+
+        if(e.key === "Escape"){
+
+            closeMenu();
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   メニュー項目
+========================================= */
+
+
+/* 現在地 */
+
+document
+    .getElementById("menu-gps")
+    .addEventListener(
+        "click",
+        function(){
+
+            closeMenu();
+
+            if(
+                typeof startGPS === "function"
+            ){
+
+                startGPS();
+
+            }
+
+        }
+    );
+
+
+/* バス情報 */
+
+document
+    .getElementById("menu-bus")
+    .addEventListener(
+        "click",
+        function(){
+
+            closeMenu();
+
+            const bus =
+                buildings.find(
+                    b => b.shortName === "バス"
+                );
+
+            if(bus){
+
+                bus.element.click();
+
+            }
+
+        }
+    );
+
+
+/* キャンパスマップ */
+
+document
+    .getElementById("menu-map")
+    .addEventListener(
+        "click",
+        function(){
+
+            closeMenu();
+
+            window.scrollTo({
+                top:0,
+                behavior:"smooth"
+            });
+
+        }
+    );
     const upcomingBuses =
         getUpcomingBuses(8);
 
