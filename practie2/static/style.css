@@ -1874,3 +1874,122 @@ body{
     background: #e8f5e9;
     color: #2e7d32;
 }
+
+/* =========================================
+   時間割
+========================================= */
+
+.timetable-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 31000;
+    background: rgba(0,0,0,.45);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    box-sizing: border-box;
+}
+
+.timetable-overlay.active {
+    display: flex;
+}
+
+.timetable-card {
+    width: min(900px, 100%);
+    max-height: 88vh;
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 12px 40px rgba(0,0,0,.25);
+}
+
+.timetable-header {
+    height: 64px;
+    padding: 0 18px 0 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #e5e5e5;
+    box-sizing: border-box;
+}
+
+.timetable-header h2 {
+    margin: 0;
+    font-size: 21px;
+}
+
+#timetable-close {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: #f2f2f2;
+    font-size: 26px;
+    cursor: pointer;
+}
+
+.timetable-content {
+    padding: 16px;
+    overflow: auto;
+}
+
+.timetable {
+    width: 100%;
+    min-width: 620px;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+}
+
+.timetable th,
+.timetable td {
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    padding: 8px;
+    height: 62px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.timetable tr:first-child th {
+    border-top: 1px solid #ddd;
+}
+
+.timetable th:first-child,
+.timetable td:first-child {
+    border-left: 1px solid #ddd;
+}
+
+.timetable thead th {
+    height: 44px;
+    background: #f5f2fa;
+    font-weight: 700;
+}
+
+.timetable tbody th {
+    width: 64px;
+    background: #fafafa;
+    font-weight: 600;
+}
+
+.timetable tbody td {
+    background: #fff;
+}
+
+@media (max-width: 600px) {
+    .menu-button {
+        flex-basis: 52px;
+        width: 52px;
+        height: 52px;
+        font-size: 26px;
+    }
+
+    .timetable-overlay {
+        padding: 10px;
+    }
+
+    .timetable-content {
+        padding: 10px;
+    }
+}
