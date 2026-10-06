@@ -22,15 +22,84 @@
     <!-- ==========================
          検索バー
     =========================== -->
-    <div class="search-bar">
+    <!-- ==========================
+     検索バー
+=========================== -->
+<div class="search-bar">
+
+    <div class="search-row">
+
         <input
             type="text"
             id="searchInput"
             list="buildingList"
-            placeholder="🔍建物コードを入力">
+            placeholder="🔍 建物コードを入力">
 
-        <datalist id="buildingList"></datalist>
+        <button
+            id="menu-button"
+            class="menu-button"
+            type="button"
+            aria-label="メニューを開く">
+            ☰
+        </button>
+
     </div>
+
+    <datalist id="buildingList"></datalist>
+
+</div>
+
+
+<!-- ==========================
+     メニュー
+=========================== -->
+<div
+    id="side-menu"
+    class="side-menu">
+
+    <div class="side-menu-header">
+        <h2>メニュー</h2>
+
+        <button
+            id="menu-close"
+            class="menu-close"
+            type="button">
+            ×
+        </button>
+    </div>
+
+    <div class="menu-content">
+
+        <button
+            class="menu-item"
+            type="button"
+            id="menu-gps">
+            📍 現在地
+        </button>
+
+        <button
+            class="menu-item"
+            type="button"
+            id="menu-bus">
+            🚌 バス情報
+        </button>
+
+        <button
+            class="menu-item"
+            type="button"
+            id="menu-map">
+            🗺️ キャンパスマップ
+        </button>
+
+    </div>
+
+</div>
+
+<!-- メニューを開いたときの背景 -->
+<div
+    id="menu-overlay"
+    class="menu-overlay">
+</div>
 
     <!-- ==========================
          メインコンテンツ
