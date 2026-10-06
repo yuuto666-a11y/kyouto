@@ -58,67 +58,55 @@ function createBuilding(name, x, y) {
     // ボタンクリックで情報表示
     //////////////////////////////////////////////////
 
-   button.addEventListener("click", function (e) {
-    e.stopPropagation();
+   button.addEventListener("click", () => {
+    event.stopPropagation();
 
     highlightBuilding(building.shortName);
 
-    // buildingData.js から取得
-    const info = (typeof BUILDING_INFO !== "undefined")
-        ? BUILDING_INFO[building.shortName]
-        : null;
+    const info = BUILDING_INFO[building.shortName];
 
     if (!info) {
-        console.error("建物データがありません:", building.shortName);
+        console.warn("BUILDING_INFO に情報がありません:", building.shortName);
         return;
     }
 
-    // 建物名
-    const nameElement = document.getElementById("building-name");
-    if (nameElement) {
-        nameElement.textContent =
-            info.fullName || info.name || building.shortName;
+    document.getElementById("building-name").textContent =
+        info.fullName || building.shortName;
+
+    document.getElementById("building-description").textContent =
+        info.description || "";
+
+    if (info.photos) {
+        currentPhotos = info.photos;
+    } else if (info.photo) {
+        currentPhotos = [info.photo];
+    } else {
+        currentPhotos = [];
     }
 
-    // 説明
-    const descriptionElement =
-        document.getElementById("building-description");
+    currentIndex = 0;
 
-    if (descriptionElement) {
-        descriptionElement.textContent =
-            info.description || "説明は登録されていません。";
+    if (currentPhotos.length > 0) {
+        photo.src = "/static/" + currentPhotos[0];
+    } else {
+        photo.removeAttribute("src");
     }
 
-    // 写真
-    const photoElement =
-        document.getElementById("building-photo");
-
-    if (photoElement) {
-
-        let photo = info.photo;
-
-        // photo が配列の場合
-        if (Array.isArray(info.photos) && info.photos.length > 0) {
-            photo = info.photos[0];
-        }
-
-        if (photo) {
-            photoElement.src = photo.startsWith("/")
-                ? photo
-                : "static/" + photo;
+    if (
+        typeof startBusInfo === "function" &&
+        typeof stopBusInfo === "function"
+    ) {
+        if (
+            building.shortName === "バス" ||
+            (info.fullName && info.fullName.includes("バス"))
+        ) {
+            startBusInfo();
         } else {
-            photoElement.removeAttribute("src");
+            stopBusInfo();
         }
     }
 
-    // ポップアップ表示
-    const popup =
-        document.getElementById("popup-overlay");
-
-    if (popup) {
-        popup.classList.add("show");
-        popup.style.display = "flex";
-    }
+    popupOverlay.style.display = "flex";
 });
 
     /* ==========================
