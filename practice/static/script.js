@@ -58,7 +58,7 @@ function createBuilding(name, x, y) {
     // ボタンクリックで情報表示
     //////////////////////////////////////////////////
 
-   button.addEventListener("click", () => {
+    button.addEventListener("click", (event) => {
     event.stopPropagation();
 
     highlightBuilding(building.shortName);
