@@ -59,46 +59,38 @@ function createBuilding(name, x, y) {
     //////////////////////////////////////////////////
 
     button.addEventListener("click", function (e) {
-
     e.stopPropagation();
 
-    // クリックまたは検索されたピンだけ色を変更
+    // 建物をハイライト
     highlightBuilding(building.shortName);
 
-    const info = (typeof BUILDING_INFO !== "undefined")
-    ? BUILDING_INFO[building.shortName]
-    : null;
+    // buildingData.js から情報取得
+    const info = BUILDING_INFO[building.shortName];
 
-if (info) {
-    // 建物名
+    if (!info) {
+        console.log("BUILDING_INFOに情報がありません:", building.shortName);
+        return;
+    }
+
+    // 名前
     document.getElementById("building-name").textContent =
-        info.fullName || building.name || building.shortName;
+        info.fullName;
 
     // 説明
     document.getElementById("building-description").textContent =
-        info.description || "";
+        info.description;
 
-    // 写真を配列化
-    const photos = Array.isArray(info.photos)
-        ? info.photos
-        : info.photo
-            ? [info.photo]
-            : [];
+    // 写真
+    const photo = document.getElementById("building-photo");
 
-    // 写真表示
-    if (photos.length > 0) {
-        currentPhotoIndex = 0;
-        currentPhotos = photos;
-
-        document.getElementById("building-photo").src =
-            "/static/" + photos[0];
-
-        document.getElementById("building-photo").style.display = "block";
+    if (info.photo) {
+        photo.src = "static/" + info.photo;
+        photo.style.display = "block";
     }
 
     // ポップアップ表示
     document.getElementById("popup-overlay").style.display = "flex";
-}
+});
 
     /* ==========================
        バス判定
