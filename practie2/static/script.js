@@ -3315,85 +3315,172 @@ function stopBusInformation() {
 
 //////////////////////////////////////////////////
 // 三本線メニュー
-//
-// この処理は「メニューを開く・閉じる」だけです。
-// 建物ピン、写真、検索、バスの処理は変更しません。
 //////////////////////////////////////////////////
 
-(function () {
+const menuButton =
+    document.getElementById("menu-button");
 
-    const menuButton =
-        document.getElementById("menu-button");
+const sideMenu =
+    document.getElementById("side-menu");
 
-    const sideMenu =
-        document.getElementById("side-menu");
+const menuClose =
+    document.getElementById("menu-close");
 
-    const menuClose =
-        document.getElementById("menu-close");
-
-    const menuOverlay =
-        document.getElementById("menu-overlay");
-
-    function openMenu() {
-
-        if (!sideMenu || !menuOverlay) {
-            return;
-        }
-
-        sideMenu.classList.add("active");
-        menuOverlay.classList.add("active");
-
-        sideMenu.setAttribute("aria-hidden", "false");
-        menuOverlay.setAttribute("aria-hidden", "false");
-
-        if (menuButton) {
-            menuButton.setAttribute("aria-expanded", "true");
-        }
-    }
-
-    function closeMenu() {
-
-        if (!sideMenu || !menuOverlay) {
-            return;
-        }
-
-        sideMenu.classList.remove("active");
-        menuOverlay.classList.remove("active");
-
-        sideMenu.setAttribute("aria-hidden", "true");
-        menuOverlay.setAttribute("aria-hidden", "true");
-
-        if (menuButton) {
-            menuButton.setAttribute("aria-expanded", "false");
-        }
-    }
-
-    if (menuButton) {
-        menuButton.addEventListener("click", openMenu);
-    }
-
-    if (menuClose) {
-        menuClose.addEventListener("click", closeMenu);
-    }
-
-    if (menuOverlay) {
-        menuOverlay.addEventListener("click", closeMenu);
-    }
-
-    document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape") {
-            closeMenu();
-        }
-    });
-
-})();
-
-/* =========================================
-   キャンパスマップ
-========================================= */
+const menuOverlay =
+    document.getElementById("menu-overlay");
 
 const menuMap =
     document.getElementById("menu-map");
+
+const menuTimetable =
+    document.getElementById("menu-timetable");
+
+const timetableOverlay =
+    document.getElementById("timetable-overlay");
+
+const timetableClose =
+    document.getElementById("timetable-close");
+
+const menuToilet =
+    document.getElementById("menu-toilet");
+
+const menuGps =
+    document.getElementById("menu-gps");
+
+
+//////////////////////////////////////////////////
+// メニューを開く
+//////////////////////////////////////////////////
+
+function openMenu() {
+
+    if (!sideMenu || !menuOverlay) {
+        return;
+    }
+
+    sideMenu.classList.add("active");
+
+    menuOverlay.classList.add("active");
+
+    sideMenu.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+    menuOverlay.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+    if (menuButton) {
+
+        menuButton.setAttribute(
+            "aria-expanded",
+            "true"
+        );
+    }
+}
+
+
+//////////////////////////////////////////////////
+// メニューを閉じる
+//////////////////////////////////////////////////
+
+function closeMenu() {
+
+    if (!sideMenu || !menuOverlay) {
+        return;
+    }
+
+    sideMenu.classList.remove("active");
+
+    menuOverlay.classList.remove("active");
+
+    sideMenu.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+    menuOverlay.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+    if (menuButton) {
+
+        menuButton.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+    }
+}
+
+
+//////////////////////////////////////////////////
+// 三本線ボタン
+//////////////////////////////////////////////////
+
+if (menuButton) {
+
+    menuButton.addEventListener(
+        "click",
+        openMenu
+    );
+}
+
+
+//////////////////////////////////////////////////
+// ×ボタン
+//////////////////////////////////////////////////
+
+if (menuClose) {
+
+    menuClose.addEventListener(
+        "click",
+        closeMenu
+    );
+}
+
+
+//////////////////////////////////////////////////
+// メニュー外側をクリック
+//////////////////////////////////////////////////
+
+if (menuOverlay) {
+
+    menuOverlay.addEventListener(
+        "click",
+        closeMenu
+    );
+}
+
+
+//////////////////////////////////////////////////
+// ESCキー
+//////////////////////////////////////////////////
+
+document.addEventListener(
+    "keydown",
+    function (e) {
+
+        if (e.key === "Escape") {
+
+            closeMenu();
+
+            if (timetableOverlay) {
+
+                timetableOverlay.classList.remove(
+                    "active"
+                );
+            }
+        }
+    }
+);
+
+
+//////////////////////////////////////////////////
+// キャンパスマップ
+//////////////////////////////////////////////////
 
 if (menuMap) {
 
@@ -3407,28 +3494,14 @@ if (menuMap) {
                 top: 0,
                 behavior: "smooth"
             });
-
         }
     );
-
 }
 
 
-/* =========================================
-   時間割
-========================================= */
-
-const menuTimetable =
-    document.getElementById("menu-timetable");
-
-const timetableOverlay =
-    document.getElementById("timetable-overlay");
-
-const timetableClose =
-    document.getElementById("timetable-close");
-
-
-/* 時間割を開く */
+//////////////////////////////////////////////////
+// 時間割を開く
+//////////////////////////////////////////////////
 
 if (
     menuTimetable &&
@@ -3439,19 +3512,21 @@ if (
         "click",
         function () {
 
+            // まずメニューを閉じる
             closeMenu();
 
+            // そのあと時間割を表示
             timetableOverlay.classList.add(
                 "active"
             );
-
         }
     );
-
 }
 
 
-/* 時間割を閉じる */
+//////////////////////////////////////////////////
+// 時間割を閉じる
+//////////////////////////////////////////////////
 
 if (
     timetableClose &&
@@ -3465,16 +3540,14 @@ if (
             timetableOverlay.classList.remove(
                 "active"
             );
-
         }
     );
-
 }
 
 
-/* =========================================
-   時間割の外側をクリック
-========================================= */
+//////////////////////////////////////////////////
+// 時間割の黒い部分をクリックして閉じる
+//////////////////////////////////////////////////
 
 if (timetableOverlay) {
 
@@ -3483,33 +3556,24 @@ if (timetableOverlay) {
         function (e) {
 
             if (
-                e.target ===
-                timetableOverlay
+                e.target === timetableOverlay
             ) {
 
                 timetableOverlay.classList.remove(
                     "active"
                 );
-
             }
-
         }
     );
-
 }
 
 
-/* =========================================
-   トイレ
-========================================= */
-
-const menuToilet =
-    document.getElementById("menu-toilet");
+//////////////////////////////////////////////////
+// トイレ
+//////////////////////////////////////////////////
 
 if (menuToilet) {
 
-    // 現時点ではトイレのピンは実装せず、
-    // 将来のトイレデータ追加に備えてON/OFF状態だけ保持する。
     menuToilet.addEventListener(
         "click",
         function () {
@@ -3517,7 +3581,8 @@ if (menuToilet) {
             const enabled =
                 menuToilet.dataset.toiletEnabled === "true";
 
-            const nextEnabled = !enabled;
+            const nextEnabled =
+                !enabled;
 
             menuToilet.dataset.toiletEnabled =
                 String(nextEnabled);
@@ -3528,27 +3593,25 @@ if (menuToilet) {
             );
 
             const state =
-                menuToilet.querySelector(".menu-toggle-state");
+                menuToilet.querySelector(
+                    ".menu-toggle-state"
+                );
 
             if (state) {
-                state.textContent =
-                    nextEnabled ? "ON" : "OFF";
-            }
 
-            // トイレピンの表示処理は、
-            // トイレデータを追加した後ここへ実装する。
+                state.textContent =
+                    nextEnabled
+                        ? "ON"
+                        : "OFF";
+            }
         }
     );
-
 }
 
 
-/* =========================================
-   現在地
-========================================= */
-
-const menuGps =
-    document.getElementById("menu-gps");
+//////////////////////////////////////////////////
+// 現在地
+//////////////////////////////////////////////////
 
 if (menuGps) {
 
@@ -3563,10 +3626,7 @@ if (menuGps) {
             ) {
 
                 startGPS();
-
             }
-
         }
     );
-
 }
