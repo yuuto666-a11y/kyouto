@@ -224,8 +224,13 @@ if (EDIT_MODE) {
 // 起動時自動読込
 //////////////////////////////////////////////////
 
-fetch("/static/buildings.json")
-    .then(response => response.json())
+fetch("/static/buildings.json", { cache: "no-store" })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("buildings.json の読み込みに失敗しました: " + response.status);
+        }
+        return response.json();
+    })
     .then(data => {
 
         data.forEach(item => {
@@ -3108,6 +3113,11 @@ function updateBusCountdown() {
 
         return;
     }
+
+    // 通常時のバス表示処理はここまでの既存ロジックを維持し、
+    // サイドメニューは updateBusCountdown の外側で初期化する。
+}
+
 /* =========================================
    サイドメニュー
 ========================================= */
@@ -3362,16 +3372,35 @@ const menuToilet =
 
 if (menuToilet) {
 
+    // 現時点ではトイレのピンは実装せず、
+    // 将来のトイレデータ追加に備えてON/OFF状態だけ保持する。
     menuToilet.addEventListener(
         "click",
         function () {
 
-            closeMenu();
+            const enabled =
+                menuToilet.dataset.toiletEnabled === "true";
 
-            alert(
-                "トイレの場所を表示する機能は今後追加予定です。"
+            const nextEnabled = !enabled;
+
+            menuToilet.dataset.toiletEnabled =
+                String(nextEnabled);
+
+            menuToilet.setAttribute(
+                "aria-pressed",
+                String(nextEnabled)
             );
 
+            const state =
+                menuToilet.querySelector(".menu-toggle-state");
+
+            if (state) {
+                state.textContent =
+                    nextEnabled ? "ON" : "OFF";
+            }
+
+            // トイレピンの表示処理は、
+            // トイレデータを追加した後ここへ実装する。
         }
     );
 
