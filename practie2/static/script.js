@@ -3359,6 +3359,7 @@ function openMenu() {
     }
 
     sideMenu.classList.add("active");
+
     menuOverlay.classList.add("active");
 
     sideMenu.setAttribute(
@@ -3372,6 +3373,7 @@ function openMenu() {
     );
 
     if (menuButton) {
+
         menuButton.setAttribute(
             "aria-expanded",
             "true"
@@ -3391,6 +3393,7 @@ function closeMenu() {
     }
 
     sideMenu.classList.remove("active");
+
     menuOverlay.classList.remove("active");
 
     sideMenu.setAttribute(
@@ -3404,6 +3407,7 @@ function closeMenu() {
     );
 
     if (menuButton) {
+
         menuButton.setAttribute(
             "aria-expanded",
             "false"
@@ -3422,7 +3426,6 @@ if (menuButton) {
         "click",
         openMenu
     );
-
 }
 
 
@@ -3436,12 +3439,11 @@ if (menuClose) {
         "click",
         closeMenu
     );
-
 }
 
 
 //////////////////////////////////////////////////
-// メニューの外側をクリック
+// メニュー外側をクリック
 //////////////////////////////////////////////////
 
 if (menuOverlay) {
@@ -3450,8 +3452,30 @@ if (menuOverlay) {
         "click",
         closeMenu
     );
-
 }
+
+
+//////////////////////////////////////////////////
+// ESCキー
+//////////////////////////////////////////////////
+
+document.addEventListener(
+    "keydown",
+    function (e) {
+
+        if (e.key === "Escape") {
+
+            closeMenu();
+
+            if (timetableOverlay) {
+
+                timetableOverlay.classList.remove(
+                    "active"
+                );
+            }
+        }
+    }
+);
 
 
 //////////////////////////////////////////////////
@@ -3470,10 +3494,8 @@ if (menuMap) {
                 top: 0,
                 behavior: "smooth"
             });
-
         }
     );
-
 }
 
 
@@ -3490,22 +3512,19 @@ if (
         "click",
         function () {
 
-            // メニューを閉じる
+            // まずメニューを閉じる
             closeMenu();
 
-            // 時間割を表示
-            timetableOverlay.classList.add(
-                "active"
-            );
-
+            // そのあと時間割を表示
+            timetableOverlay.hidden = false;
+            timetableOverlay.classList.add("active");
         }
     );
-
 }
 
 
 //////////////////////////////////////////////////
-// 時間割を×で閉じる
+// 時間割を閉じる
 //////////////////////////////////////////////////
 
 if (
@@ -3517,18 +3536,15 @@ if (
         "click",
         function () {
 
-            timetableOverlay.classList.remove(
-                "active"
-            );
-
+            timetableOverlay.classList.remove("active");
+            timetableOverlay.hidden = true;
         }
     );
-
 }
 
 
 //////////////////////////////////////////////////
-// 時間割の余白をクリックして閉じる
+// 時間割の黒い部分をクリックして閉じる
 //////////////////////////////////////////////////
 
 if (timetableOverlay) {
@@ -3537,7 +3553,6 @@ if (timetableOverlay) {
         "click",
         function (e) {
 
-            // 時間割カード以外をクリック
             if (
                 e.target === timetableOverlay
             ) {
@@ -3545,39 +3560,10 @@ if (timetableOverlay) {
                 timetableOverlay.classList.remove(
                     "active"
                 );
-
             }
-
         }
     );
-
 }
-
-
-//////////////////////////////////////////////////
-// ESCキーで閉じる
-//////////////////////////////////////////////////
-
-document.addEventListener(
-    "keydown",
-    function (e) {
-
-        if (e.key === "Escape") {
-
-            closeMenu();
-
-            if (timetableOverlay) {
-
-                timetableOverlay.classList.remove(
-                    "active"
-                );
-
-            }
-
-        }
-
-    }
-);
 
 
 //////////////////////////////////////////////////
@@ -3615,12 +3601,9 @@ if (menuToilet) {
                     nextEnabled
                         ? "ON"
                         : "OFF";
-
             }
-
         }
     );
-
 }
 
 
@@ -3641,12 +3624,7 @@ if (menuGps) {
             ) {
 
                 startGPS();
-
             }
-
         }
     );
-
 }
-```
-
