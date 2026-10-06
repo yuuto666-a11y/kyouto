@@ -65,8 +65,9 @@ function createBuilding(name, x, y) {
     // クリックまたは検索されたピンだけ色を変更
     highlightBuilding(building.shortName);
 
-    const info = BUILDING_INFO[building.shortName];
-
+    const info = (typeof BUILDING_INFO !== "undefined")
+    ? BUILDING_INFO[building.shortName]
+    : null;
 
     /* ==========================
        バス判定
