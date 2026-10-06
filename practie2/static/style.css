@@ -1875,6 +1875,7 @@ body{
     color: #2e7d32;
 }
 
+```css
 /* =========================================
    時間割
 ========================================= */
@@ -1882,125 +1883,253 @@ body{
 .timetable-overlay {
     position: fixed;
     inset: 0;
+
+    /* メニューより前、マップより確実に前 */
     z-index: 31000;
-    background: rgba(0,0,0,.45);
+
+    background: rgba(0, 0, 0, .45);
+
+    /* 普段は非表示 */
     display: none;
+
     align-items: center;
     justify-content: center;
+
     padding: 18px;
     box-sizing: border-box;
 }
 
+
+/* 時間割を開いたとき */
 .timetable-overlay.active {
     display: flex;
 }
 
+
+/* =========================================
+   時間割カード
+========================================= */
+
 .timetable-card {
     width: min(900px, 100%);
     max-height: 88vh;
+
     background: #fff;
+
     border-radius: 16px;
+
     overflow: hidden;
-    box-shadow: 0 12px 40px rgba(0,0,0,.25);
+
+    box-shadow:
+        0 12px 40px
+        rgba(0, 0, 0, .25);
 }
+
+
+/* =========================================
+   時間割ヘッダー
+========================================= */
 
 .timetable-header {
     height: 64px;
-    padding: 0 18px 0 22px;
+
+    padding:
+        0 18px
+        0 22px;
+
     display: flex;
+
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid #e5e5e5;
+
+    border-bottom:
+        1px solid #e5e5e5;
+
     box-sizing: border-box;
 }
 
+
 .timetable-header h2 {
     margin: 0;
+
     font-size: 21px;
 }
+
+
+/* =========================================
+   時間割閉じるボタン
+========================================= */
 
 #timetable-close {
     width: 40px;
     height: 40px;
+
     border: none;
+
     border-radius: 50%;
+
     background: #f2f2f2;
+
     font-size: 26px;
+
     cursor: pointer;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
 }
+
+
+/* =========================================
+   時間割コンテンツ
+========================================= */
 
 .timetable-content {
     padding: 16px;
+
     overflow: auto;
-}
 
-.timetable {
-    width: 100%;
-    min-width: 620px;
-    border-collapse: separate;
-    border-spacing: 0;
-    table-layout: fixed;
-}
-
-.timetable th,
-.timetable td {
-    border-right: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
-    padding: 8px;
-    height: 62px;
-    text-align: center;
     box-sizing: border-box;
 }
 
-.timetable tr:first-child th {
-    border-top: 1px solid #ddd;
+
+/* =========================================
+   時間割テーブル
+========================================= */
+
+.timetable {
+    width: 100%;
+
+    min-width: 620px;
+
+    border-collapse: separate;
+
+    border-spacing: 0;
+
+    table-layout: fixed;
 }
+
+
+/* セル */
+
+.timetable th,
+.timetable td {
+    border-right:
+        1px solid #ddd;
+
+    border-bottom:
+        1px solid #ddd;
+
+    padding: 8px;
+
+    height: 62px;
+
+    text-align: center;
+
+    box-sizing: border-box;
+}
+
+
+/* 上端の線 */
+
+.timetable tr:first-child th {
+    border-top:
+        1px solid #ddd;
+}
+
+
+/* 左端の線 */
 
 .timetable th:first-child,
 .timetable td:first-child {
-    border-left: 1px solid #ddd;
+    border-left:
+        1px solid #ddd;
 }
+
+
+/* =========================================
+   曜日ヘッダー
+========================================= */
 
 .timetable thead th {
     height: 44px;
+
     background: #f5f2fa;
+
     font-weight: 700;
 }
 
+
+/* =========================================
+   時限
+========================================= */
+
 .timetable tbody th {
     width: 64px;
+
     background: #fafafa;
+
     font-weight: 600;
 }
+
+
+/* =========================================
+   授業セル
+========================================= */
 
 .timetable tbody td {
     background: #fff;
 }
 
+
+/* =========================================
+   スマホ
+========================================= */
+
 @media (max-width: 600px) {
-    .menu-button {
-        flex-basis: 52px;
-        width: 52px;
-        height: 52px;
-        font-size: 26px;
-    }
 
     .timetable-overlay {
         padding: 10px;
     }
 
+
+    .timetable-card {
+        width: 100%;
+
+        max-height: 90vh;
+
+        border-radius: 14px;
+    }
+
+
+    .timetable-header {
+        height: 58px;
+
+        padding:
+            0 12px
+            0 16px;
+    }
+
+
+    .timetable-header h2 {
+        font-size: 19px;
+    }
+
+
+    #timetable-close {
+        width: 38px;
+        height: 38px;
+
+        font-size: 24px;
+    }
+
+
     .timetable-content {
         padding: 10px;
     }
 }
+```
 
 
 
-
-.timetable-overlay {
-    display: none !important;
-}
-
-.timetable-overlay.active {
-    display: flex !important;
-}
