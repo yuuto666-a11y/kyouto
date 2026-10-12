@@ -1370,6 +1370,14 @@ function updateUserLocation(position) {
 
 function gpsError(error) {
 
+    // 取得エラー時は監視を停止し、メニュー表示もOFFに戻す
+    if (gpsWatchId !== null && navigator.geolocation) {
+        navigator.geolocation.clearWatch(gpsWatchId);
+        gpsWatchId = null;
+    }
+
+    updateMenuGPSState(false);
+
     gpsButton.classList.remove(
         "loading"
     );
@@ -1438,6 +1446,7 @@ function startGPS() {
             "この端末では位置情報を利用できません"
         );
 
+        updateMenuGPSState(false);
         return;
     }
 
@@ -1483,6 +1492,8 @@ function startGPS() {
                 }
 
             );
+
+    updateMenuGPSState(gpsWatchId !== null);
 }
 
 
@@ -1496,6 +1507,7 @@ function stopGPS() {
         gpsWatchId === null
     ) {
 
+        updateMenuGPSState(false);
         return;
     }
 
@@ -1508,6 +1520,7 @@ function stopGPS() {
 
     gpsWatchId = null;
 
+    updateMenuGPSState(false);
 
     userLocationMarker.style.display =
         "none";
@@ -1556,18 +1569,7 @@ gpsButton.addEventListener(
 );
 
 
-/* =========================================
-   ページを開いたら自動でGPS開始
-========================================= */
-
-window.addEventListener(
-    "load",
-    function () {
-
-        startGPS();
-
-    }
-);
+/* GPSは初期OFF。メニューまたは地図上のボタンから開始 */
 
 //////////////////////////////////////////////////
 // バス時刻・カウントダウン
@@ -3344,6 +3346,9 @@ const timetableClose =
 const menuToilet =
     document.getElementById("menu-toilet");
 
+const menuAED =
+    document.getElementById("menu-aed");
+
 const menuGps =
     document.getElementById("menu-gps");
 
@@ -3611,60 +3616,54 @@ if (menuToilet) {
 // 現在地
 //////////////////////////////////////////////////
 
-if (menuGps) {
-
-    menuGps.addEventListener(
-        "click",
-        function () {
-
-            closeMenu();
-
-            if (
-                typeof startGPS === "function"
-            ) {
-
-                startGPS();
-            }
-        }
-    );
-}
-
 //////////////////////////////////////////////////
-// AED
+// AED ON / OFF（現段階では表示切替のみ）
 //////////////////////////////////////////////////
 
 if (menuAED) {
+    menuAED.addEventListener("click", function () {
+        const enabled = menuAED.dataset.aedEnabled === "true";
+        const nextEnabled = !enabled;
 
-    menuAED.addEventListener(
-        "click",
-        function () {
+        menuAED.dataset.aedEnabled = String(nextEnabled);
+        menuAED.setAttribute("aria-pressed", String(nextEnabled));
 
-            const enabled =
-                menuAED.dataset.aedEnabled === "true";
-
-            const nextEnabled =
-                !enabled;
-
-            menuAED.dataset.aedEnabled =
-                String(nextEnabled);
-
-            menuAED.setAttribute(
-                "aria-pressed",
-                String(nextEnabled)
-            );
-
-            const state =
-                menuAED.querySelector(
-                    ".menu-toggle-state"
-                );
-
-            if (state) {
-
-                state.textContent =
-                    nextEnabled
-                        ? "ON"
-                        : "OFF";
-            }
-        }
-    );
+        const state = menuAED.querySelector(".menu-toggle-state");
+        if (state) state.textContent = nextEnabled ? "ON" : "OFF";
+    });
 }
+
+
+//////////////////////////////////////////////////
+// GPSメニュー表示の同期
+//////////////////////////////////////////////////
+
+function updateMenuGPSState(enabled) {
+    if (!menuGps) return;
+
+    menuGps.dataset.gpsEnabled = String(enabled);
+    menuGps.setAttribute("aria-pressed", String(enabled));
+
+    const state = menuGps.querySelector(".menu-toggle-state");
+    if (state) state.textContent = enabled ? "ON" : "OFF";
+}
+
+
+//////////////////////////////////////////////////
+// 現在地 ON / OFF
+//////////////////////////////////////////////////
+
+if (menuGps) {
+    menuGps.addEventListener("click", function () {
+        closeMenu();
+
+        if (gpsWatchId === null) {
+            startGPS();
+        } else {
+            stopGPS();
+        }
+    });
+}
+
+// ページ読み込み時はGPSを起動せず、OFF表示に統一
+updateMenuGPSState(false);
