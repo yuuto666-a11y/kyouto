@@ -27,7 +27,7 @@
             type="text"
             id="searchInput"
             list="buildingList"
-            placeholder="🔍建物コードを入力">
+            placeholder="🔍建物名・略称・🚻・♿・AEDを検索">
 
         <!-- 右上の三本線メニュー（既存機能とは独立） -->
         <button
@@ -40,6 +40,7 @@
         </button>
 
         <datalist id="buildingList"></datalist>
+        <p id="search-status" class="search-status" role="status" aria-live="polite" hidden></p>
     </div>
 
     <!-- ==========================
@@ -96,29 +97,30 @@
 
 
 
-        <!-- トイレ -->
-
-        <button
-            class="menu-item menu-toggle-item"
-            id="menu-toilet"
-            type="button"
-            aria-pressed="false"
-            data-toilet-enabled="false">
-
+        <!-- 一般トイレの確認済み施設だけを表示（未確認のCSV行は非表示） -->
+        <button class="menu-item menu-toggle-item" id="menu-toilet-general"
+            type="button" aria-pressed="false" data-enabled="false">
             <span>🚻</span>
-            <span class="menu-toggle-label">トイレ表示</span>
+            <span class="menu-toggle-label">一般トイレ表示</span>
             <span class="menu-toggle-state" aria-hidden="true">OFF</span>
-
         </button>
 
-        <!-- AED -->
+        <!-- バリアフリートイレ：公式資料で位置確認済み -->
+        <button class="menu-item menu-toggle-item" id="menu-toilet"
+            type="button" aria-pressed="false" data-enabled="false">
+            <span>♿</span>
+            <span class="menu-toggle-label">バリアフリートイレ表示</span>
+            <span class="menu-toggle-state" aria-hidden="true">OFF</span>
+        </button>
+
+        <!-- AED：大学公開マップを参考に位置表示 -->
 
         <button
             class="menu-item menu-toggle-item"
             id="menu-aed"
             type="button"
             aria-pressed="false"
-            data-toilet-enabled="false">
+            data-enabled="false">
 
             <span>❤️🚑</span>
             <span class="menu-toggle-label">AED表示</span>
@@ -348,7 +350,8 @@
                     alt="京都橘大学キャンパスマップ">
             </div>
         </div>
-
+        <p class="facility-map-note">🚻 一般トイレ（確認済みの情報のみ）　♿ バリアフリートイレ　🔴 AED<br>
+          📍 設備ピンは建物単位の概略位置です。一般トイレは正確な設置場所・階数の確認後に表示します。</p>
     </div>
 
     <!-- ==========================
@@ -453,6 +456,9 @@
 
     </div>
 
+
+    <div class="bus-source-note" id="bus-source-note">※サイト登録済みの時刻表から表示。自動で次便に切り替わりますが、最新ダイヤ・遅延情報の取得ではありません。</div>
+    <a class="bus-source-link" href="https://www.tachibana-u.ac.jp/about/campus/access.html" target="_blank" rel="noopener noreferrer">🚌 大学公式の最新時刻表を確認 ↗</a>
 
     <!-- 選択中の路線 -->
 

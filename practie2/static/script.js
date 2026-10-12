@@ -63,6 +63,7 @@ function createBuilding(name, x, y) {
     e.stopPropagation();
 
     // クリックまたは検索されたピンだけ色を変更
+    popupOverlay.classList.remove("facility-open");
     highlightBuilding(building.shortName);
 
     const info = BUILDING_INFO[building.shortName];
@@ -221,150 +222,323 @@ if (EDIT_MODE) {
 }
 
 //////////////////////////////////////////////////
-// 起動時自動読込
+// CSVの読み込み（引用符付きのカンマ・改行にも対応）
 //////////////////////////////////////////////////
 
-fetch("/static/buildings.json")
-    .then(response => response.json())
-    .then(data => {
+let campusRecords = [];
+let facilityMarkers = [];
+const SOURCE_MAP_NOTICE =
+    "ピンは建物の代表位置です。詳しい設置場所・階数・利用可否は現地の案内を確認してください。";
 
-        data.forEach(item => {
+function parseCampusCsv(text) {
+    const records = [];
+    let row = [], cell = "", inQuotes = false;
+    text = text.replace(/^\uFEFF/, "");
 
-            createBuilding(
-                item.name,
-                item.x,
-                item.y
-            );
-        });
+    for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        if (char === '"') {
+            if (inQuotes && text[i + 1] === '"') { cell += '"'; i++; }
+            else { inQuotes = !inQuotes; }
+        } else if (char === "," && !inQuotes) {
+            row.push(cell); cell = "";
+        } else if ((char === "\n" || char === "\r") && !inQuotes) {
+            if (char === "\r" && text[i + 1] === "\n") i++;
+            row.push(cell); cell = "";
+            if (row.some(value => value.trim())) records.push(row);
+            row = [];
+        } else { cell += char; }
+    }
+    row.push(cell);
+    if (row.some(value => value.trim())) records.push(row);
+    const [headers, ...data] = records;
+    if (!headers) return [];
+    return data.map(values => Object.fromEntries(
+        headers.map((header, index) => [header.trim(), values[index] || ""])
+    ));
+}
 
-        updateSearchList();
-    })
-    .catch(error => {
+function normalizeSearch(value) {
+    return String(value || "").normalize("NFKC").toLowerCase()
+        .replace(/[\s　・･_\-]+/g, "")
+        .replace(/[ぁ-ゖ]/g, c => String.fromCharCode(c.charCodeAt(0) + 0x60));
+}
 
-        console.log("buildings.jsonが見つかりません");
+function recordAliases(record) {
+    return [record["建物ID"], record["正式名称"], record["略称"],
+        ...(record["検索ワード"] || "").split(/[、,，]/)]
+        .filter(Boolean);
+}
 
+function recordType(record) {
+    // 旧CSVの「トイレ」はバリアフリートイレとして扱う
+    const type = record["種別"] || "建物";
+    return type === "トイレ" ? "バリアフリートイレ" : type;
+}
+
+function isPublicFacility(record) {
+    const type = recordType(record);
+    if (type === "建物" || !record["対象建物ID"]) return false;
+    if (type === "一般トイレ") {
+        return ["確認済み", "公式マップ確認済み", "現地確認済み"].includes(record["確認状況"]);
+    }
+    return record["確認状況"] !== "未確認";
+}
+
+function facilityName(type) {
+    return type === "AED" ? "AED" :
+        type === "一般トイレ" ? "一般トイレ" :
+        type === "バリアフリートイレ" ? "バリアフリートイレ" : "トイレ";
+}
+
+function showSearchStatus(message) {
+    const el = document.getElementById("search-status");
+    if (el) {
+        el.textContent = message;
+        el.hidden = !message;
+    }
+}
+
+function setFacilityVisible(type, visible) {
+    const menus = {
+        "AED": menuAED,
+        "バリアフリートイレ": menuToilet,
+        "一般トイレ": menuGeneralToilet
+    };
+    const menu = menus[type];
+    if (!menu) return;
+    menu.dataset.enabled = String(visible);
+    menu.setAttribute("aria-pressed", String(visible));
+    const state = menu.querySelector(".menu-toggle-state");
+    if (state) state.textContent = visible ? "ON" : "OFF";
+    facilityMarkers.filter(item => item.type === type).forEach(item => {
+        item.element.hidden = !visible;
     });
+    if (visible && !facilityMarkers.some(item => item.type === type)) {
+        showSearchStatus(`${facilityName(type)}の場所はまだ確認できていません。設置場所・階数を確認したらCSVの「確認状況」を「確認済み」にすると表示できます。`);
+    } else {
+        showSearchStatus(visible ? `${facilityName(type)}を表示しています。${SOURCE_MAP_NOTICE}` : "");
+    }
+}
+
+function openFacilityInfo(record) {
+    stopBusInformation();
+    const code = record["対象建物ID"];
+    const host = buildings.find(b => b.shortName === code);
+    if (host) highlightBuilding(code);
+    popupOverlay.classList.add("facility-open");
+    document.getElementById("building-name").textContent =
+        record["正式名称"];
+    const floor = record["設置階"] ? `設置階：${record["設置階"]}。\n` :
+        "設置階：公式地図に詳細記載なし。\n";
+    document.getElementById("building-description").textContent =
+        floor + (record["補足"] || SOURCE_MAP_NOTICE);
+    popupOverlay.style.display = "flex";
+}
+
+function createFacilityMarkers() {
+    facilityMarkers.forEach(item => item.element.remove());
+    facilityMarkers = [];
+    campusRecords.filter(isPublicFacility).forEach(record => {
+        const host = buildings.find(b => b.shortName === record["対象建物ID"]);
+        if (!host) return;
+        const type = recordType(record);
+        if (!["AED", "一般トイレ", "バリアフリートイレ"].includes(type)) return;
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "facility-marker " +
+            (type === "AED" ? "facility-marker--aed" :
+             type === "一般トイレ" ? "facility-marker--general" :
+             "facility-marker--accessible");
+        button.textContent = type === "AED" ? "AED" :
+            type === "一般トイレ" ? "🚻" : "♿";
+        button.title = record["正式名称"] +
+            (record["設置階"] ? " / " + record["設置階"] : "");
+        button.setAttribute("aria-label", button.title);
+        const offsets = {
+            "AED": [32, -32],
+            "一般トイレ": [-32, 29],
+            "バリアフリートイレ": [-32, -32]
+        };
+        const [dx, dy] = offsets[type];
+        button.style.left = (host.x + dx) + "px";
+        button.style.top = (host.y + dy) + "px";
+        button.hidden = true;
+        button.addEventListener("click", (event) => {
+            event.stopPropagation();
+            openFacilityInfo(record);
+        });
+        mapContainer.appendChild(button);
+        facilityMarkers.push({ record, type, element: button });
+    });
+}
+
+//////////////////////////////////////////////////
+// 起動時自動読込：建物座標とCSVは別々に管理
+//////////////////////////////////////////////////
+
+Promise.all([
+    fetch("/static/buildings.json").then(response => {
+        if (!response.ok) throw new Error("建物ピンを読み込めません");
+        return response.json();
+    }),
+    fetch("/static/campus_info.csv").then(response => {
+        if (!response.ok) throw new Error("キャンパスCSVを読み込めません");
+        return response.text();
+    }).then(parseCampusCsv).catch(error => {
+        console.warn("CSVが読み込めません。建物コード検索のみ有効です", error);
+        return [];
+    })
+]).then(([pins, records]) => {
+    pins.forEach(item => createBuilding(item.name, item.x, item.y));
+    campusRecords = records;
+    createFacilityMarkers();
+    updateSearchList();
+    resizeCampusMap();
+}).catch(error => {
+    console.error("キャンパスマップの読み込みに失敗", error);
+    showSearchStatus("地図データを読み込めませんでした。再読み込みしてください。");
+});
 
 //////////////////////////////////////////////////
 // ポップアップを閉じる
 //////////////////////////////////////////////////
 
 closePopup.addEventListener("click", function () {
-
     popupOverlay.style.display = "none";
-
+    popupOverlay.classList.remove("facility-open");
     stopBusInformation();
-
 });
 
 popupOverlay.addEventListener("click", function (e) {
-
     if (e.target === popupOverlay) {
-
         popupOverlay.style.display = "none";
-
+        popupOverlay.classList.remove("facility-open");
         stopBusInformation();
     }
 });
 
 //////////////////////////////////////////////////
-// 検索候補を作成
+// CSVの正式名称、略称、検索ワードを候補に反映
 //////////////////////////////////////////////////
 
 function updateSearchList() {
-
-    const datalist =
-        document.getElementById("buildingList");
-
+    const datalist = document.getElementById("buildingList");
     datalist.innerHTML = "";
-
-    Object.keys(BUILDING_INFO).forEach(code => {
-
-        const option =
-            document.createElement("option");
-
-        const name =
-            BUILDING_INFO[code].fullName;
-
-        option.value =
-            code + " (" + name + ")";
-
+    const alreadyAdded = new Set();
+    campusRecords.forEach(record => {
+        if (recordType(record) !== "建物") return;
+        recordAliases(record).forEach(alias => {
+            const key = normalizeSearch(alias);
+            if (!key || alreadyAdded.has(key)) return;
+            alreadyAdded.add(key);
+            const option = document.createElement("option");
+            option.value = alias.trim();
+            option.label = `${record["正式名称"]}（${record["建物ID"]}）`;
+            datalist.appendChild(option);
+        });
+    });
+    // 特定施設の検索にも対応（例: AED 清和館、トイレ H）
+    campusRecords.filter(isPublicFacility).forEach(record => {
+        const option = document.createElement("option");
+        option.value = `${facilityName(recordType(record))} ${record["対象建物ID"]}`;
+        option.label = record["正式名称"];
+        datalist.appendChild(option);
+    });
+    ["AED", "トイレ", "一般トイレ", "バリアフリートイレ"].forEach(value => {
+        const option = document.createElement("option");
+        option.value = value;
+        option.label = value === "トイレ" ? "トイレの場所を表示" : `${value}の場所を表示`;
         datalist.appendChild(option);
     });
 }
 
-//////////////////////////////////////////////////
-// 検索文字から建物コードを取り出す
-//////////////////////////////////////////////////
+function findSearchMatches(value) {
+    const keyword = normalizeSearch(value);
+    if (!keyword) return [];
+    const searchableRecords = campusRecords.filter(record =>
+        recordType(record) === "建物" || isPublicFacility(record));
+    const exact = searchableRecords.filter(record =>
+        recordAliases(record).some(alias => normalizeSearch(alias) === keyword)
+    );
+    if (exact.length) return exact;
+    // 入力途中は前方一致を優先。部分一致は複数候補がある場合は確定しない
+    const prefix = searchableRecords.filter(record =>
+        recordAliases(record).some(alias => normalizeSearch(alias).startsWith(keyword))
+    );
+    if (prefix.length) return prefix;
+    return searchableRecords.filter(record =>
+        recordAliases(record).some(alias => normalizeSearch(alias).includes(keyword))
+    );
+}
 
-function getBuildingCode(value) {
-
-    let keyword = value.trim();
-
-    keyword =
-        keyword.split(" ")[0];
-
-    keyword =
-        keyword.split("(")[0];
-
-    return keyword.trim();
+function lookupSearch(value) {
+    const keyword = normalizeSearch(value);
+    if (!keyword) return {type: "none"};
+    if (["aed", "エーイーディー", "除細動器"].includes(keyword)) {
+        return {type: "category", category: "AED"};
+    }
+    if (["トイレ", "お手洗い", "御手洗", "便所"].includes(keyword)) {
+        return {type: "category", category: "トイレ"};
+    }
+    if (["一般トイレ", "一般", "🚻"].includes(keyword)) {
+        return {type: "category", category: "一般トイレ"};
+    }
+    if (["バリアフリートイレ", "多目的トイレ", "車いすトイレ", "♿"].includes(keyword)) {
+        return {type: "category", category: "バリアフリートイレ"};
+    }
+    // 元の「1 (清和館)」形式の入力も使える
+    const legacyCode = value.trim().match(/^([A-Za-z0-9]+)\s*[(（]/);
+    if (legacyCode && buildings.some(b => b.shortName === legacyCode[1])) {
+        return {type: "building", code: legacyCode[1]};
+    }
+    const matches = findSearchMatches(value);
+    if (matches.length !== 1) return {type: matches.length ? "multiple" : "none"};
+    const record = matches[0];
+    return recordType(record) === "建物" ?
+        {type: "building", code: record["建物ID"]} :
+        {type: "facility", record};
 }
 
 //////////////////////////////////////////////////
 // 検索バー
 //////////////////////////////////////////////////
 
-const searchInput =
-    document.getElementById("searchInput");
-
-//////////////////////////////////////////////////
-// 検索候補を選んだ時点でピンの色を変更
-//////////////////////////////////////////////////
+const searchInput = document.getElementById("searchInput");
 
 searchInput.addEventListener("input", function () {
-
-    const keyword =
-        getBuildingCode(this.value);
-
-    const building =
-        buildings.find(
-            b => b.shortName === keyword
-        );
-
-    if (building) {
-
-        highlightBuilding(building.shortName);
-
-    } else {
-
-        // 入力途中や検索欄が空の場合は選択を解除
-        clearBuildingHighlight();
-    }
+    const found = lookupSearch(this.value);
+    showSearchStatus("");
+    if (found.type === "building") highlightBuilding(found.code);
+    else if (found.type === "facility") highlightBuilding(found.record["対象建物ID"]);
+    else clearBuildingHighlight();
 });
 
-//////////////////////////////////////////////////
-// Enterを押したら建物情報を表示
-//////////////////////////////////////////////////
-
 searchInput.addEventListener("keydown", function (e) {
-
     if (e.key !== "Enter") return;
-
-    const keyword =
-        getBuildingCode(this.value);
-
-    const building =
-        buildings.find(
-            b => b.shortName === keyword
-        );
-
-    if (!building) {
-
-        alert("見つかりません");
+    e.preventDefault();
+    const found = lookupSearch(this.value);
+    if (found.type === "category") {
+        if (found.category === "トイレ") {
+            setFacilityVisible("一般トイレ", true);
+            setFacilityVisible("バリアフリートイレ", true);
+        } else {
+            setFacilityVisible(found.category, true);
+        }
         return;
     }
-
-    building.element.click();
+    if (found.type === "facility") {
+        setFacilityVisible(recordType(found.record), true);
+        openFacilityInfo(found.record);
+        return;
+    }
+    if (found.type === "building") {
+        const building = buildings.find(b => b.shortName === found.code);
+        if (building) { building.element.click(); return; }
+    }
+    showSearchStatus(found.type === "multiple" ?
+        "候補が複数あります。もう少し入力するか候補から選択してください。" :
+        "見つかりません。正式名称・略称・建物番号で検索してください。");
 });
 
 //////////////////////////////////////////////////
@@ -3195,7 +3369,7 @@ function updateBusCountdown() {
     } else {
 
         busStatus.textContent =
-            "時刻表を自動更新中 ※到着は道路状況により前後します";
+            "登録済み時刻表から計算中（最新ダイヤ・遅延情報は公式サイトを確認）";
     }
 }
 
@@ -3345,6 +3519,9 @@ const timetableClose =
 
 const menuToilet =
     document.getElementById("menu-toilet");
+
+const menuGeneralToilet =
+    document.getElementById("menu-toilet-general");
 
 const menuAED =
     document.getElementById("menu-aed");
@@ -3594,67 +3771,29 @@ if (timetableOverlay) {
 
 
 //////////////////////////////////////////////////
-// トイレ
+// トイレ・AEDの表示切替（表示場所はCSVで管理）
 //////////////////////////////////////////////////
 
 if (menuToilet) {
-
-    menuToilet.addEventListener(
-        "click",
-        function () {
-
-            const enabled =
-                menuToilet.dataset.toiletEnabled === "true";
-
-            const nextEnabled =
-                !enabled;
-
-            menuToilet.dataset.toiletEnabled =
-                String(nextEnabled);
-
-            menuToilet.setAttribute(
-                "aria-pressed",
-                String(nextEnabled)
-            );
-
-            const state =
-                menuToilet.querySelector(
-                    ".menu-toggle-state"
-                );
-
-            if (state) {
-
-                state.textContent =
-                    nextEnabled
-                        ? "ON"
-                        : "OFF";
-            }
-        }
-    );
-}
-
-
-//////////////////////////////////////////////////
-// 現在地
-//////////////////////////////////////////////////
-
-//////////////////////////////////////////////////
-// AED ON / OFF（現段階では表示切替のみ）
-//////////////////////////////////////////////////
-
-if (menuAED) {
-    menuAED.addEventListener("click", function () {
-        const enabled = menuAED.dataset.aedEnabled === "true";
-        const nextEnabled = !enabled;
-
-        menuAED.dataset.aedEnabled = String(nextEnabled);
-        menuAED.setAttribute("aria-pressed", String(nextEnabled));
-
-        const state = menuAED.querySelector(".menu-toggle-state");
-        if (state) state.textContent = nextEnabled ? "ON" : "OFF";
+    menuToilet.addEventListener("click", () => {
+        setFacilityVisible("バリアフリートイレ", menuToilet.dataset.enabled !== "true");
+        closeMenu();
     });
 }
 
+if (menuGeneralToilet) {
+    menuGeneralToilet.addEventListener("click", () => {
+        setFacilityVisible("一般トイレ", menuGeneralToilet.dataset.enabled !== "true");
+        closeMenu();
+    });
+}
+
+if (menuAED) {
+    menuAED.addEventListener("click", () => {
+        setFacilityVisible("AED", menuAED.dataset.enabled !== "true");
+        closeMenu();
+    });
+}
 
 //////////////////////////////////////////////////
 // GPSメニュー表示の同期

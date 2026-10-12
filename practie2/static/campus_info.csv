@@ -1,0 +1,74 @@
+﻿建物ID,正式名称,略称,検索ワード,種別,設置階,対象建物ID,補足,情報源,確認状況
+1,清和館,1号館,"1号館,清和,清和館",建物,,,,,建物
+2,mican,ミカン,"ミカン,みかん,2号館",建物,,,,,建物
+7,清心館,7号館,"清心,7号館",建物,,,,,建物
+8,清史館,8号館,"清史,8号館",建物,,,,,建物
+9,清風館,9号館,"清風,9号館",建物,,,,,建物
+10,図書館,図書,"図書室,本,図書館",建物,,,,,建物
+11,中央体育館,体育館,"中央体育館,トレーニング",建物,,,,,建物
+12,第2体育館,第二体育館,"2体育館,第二体育館",建物,,,,,建物
+13,リバティホール（学生会館）,リバティ,"学生会館,タチバル,食堂",建物,,,,,建物
+14,クリスタルカフェ,クリカ,"クリカコモンズ,カフェ",建物,,,,,建物
+A,清優館,A棟,"A館,清優",建物,,,,,建物
+B,清香館,B棟,"B館,清香",建物,,,,,建物
+C,児優館,C棟,"C館,児優",建物,,,,,建物
+D,明優館,D棟,"D館,明優",建物,,,,,建物
+E,優心館,E棟,"E館,優心",建物,,,,,建物
+F,響友館,F棟,"F館,響友",建物,,,,,建物
+G,啓成館,G棟,"G館,啓成",建物,,,,,建物
+H,アカデミックリンクス,リンクス,"アカリンク,リンクス,アカリン",建物,,,,,建物
+J,アカデミックテラス,テラス,"アカデミックテラス,テラスダイニングコモンズ",建物,,,,,建物
+15,グラウンド,運動場,"総合グラウンド,グラウンド,15",建物,,,,,建物
+18,弓道場,弓道,"弓道部,18",建物,,,,,建物
+19,KYOTO TACHIBANA スタジアム,スタジアム,"橘スタジアム,サッカー,19",建物,,,,,建物
+バス,バスのりば,バス,"バス乗り場,バスロータリー,バス停,スクールバス",建物,,,,,建物
+AED-12,AED（第2体育館）,AED 12,"AED 第2体育館,第2体育館 AED,12 AED,AED12,エーイーディー 第2体育館",AED,1階,12,建物ピンの位置を表示。実際の設置箇所・利用可否は現地の案内で確認してください。,https://www.tachibana-u.ac.jp/admission/cms/wp-content/themes/tachibana-u/assets/pdf/26orientation_intl_robotics.pdf,公式マップ確認済み
+AED-C,AED（児優館）,AED C,"AED 児優館,児優館 AED,C AED,AEDC,エーイーディー 児優館",AED,2階,C,建物ピンの位置を表示。実際の設置箇所・利用可否は現地の案内で確認してください。,https://www.tachibana-u.ac.jp/admission/cms/wp-content/themes/tachibana-u/assets/pdf/26orientation_intl_robotics.pdf,公式マップ確認済み
+AED-10,AED（図書館）,AED 10,"AED 図書館,図書館 AED,10 AED,AED10,エーイーディー 図書館",AED,2階,10,建物ピンの位置を表示。実際の設置箇所・利用可否は現地の案内で確認してください。,https://www.tachibana-u.ac.jp/admission/cms/wp-content/themes/tachibana-u/assets/pdf/26orientation_intl_robotics.pdf,公式マップ確認済み
+AED-2,AED（mican）,AED 2,"AED mican,mican AED,2 AED,AED2,エーイーディー mican",AED,2階,2,建物ピンの位置を表示。実際の設置箇所・利用可否は現地の案内で確認してください。,https://www.tachibana-u.ac.jp/admission/cms/wp-content/themes/tachibana-u/assets/pdf/26orientation_intl_robotics.pdf,公式マップ確認済み
+AED-1,AED（清和館）,AED 1,"AED 清和館,清和館 AED,1 AED,AED1,エーイーディー 清和館",AED,2階,1,建物ピンの位置を表示。実際の設置箇所・利用可否は現地の案内で確認してください。,https://www.tachibana-u.ac.jp/admission/cms/wp-content/themes/tachibana-u/assets/pdf/26orientation_intl_robotics.pdf,公式マップ確認済み
+AED-F,AED（響友館）,AED F,"AED 響友館,響友館 AED,F AED,AEDF,エーイーディー 響友館",AED,1階,F,建物ピンの位置を表示。実際の設置箇所・利用可否は現地の案内で確認してください。,https://www.tachibana-u.ac.jp/admission/cms/wp-content/themes/tachibana-u/assets/pdf/26orientation_intl_robotics.pdf,公式マップ確認済み
+AED-G,AED（啓成館）,AED G,"AED 啓成館,啓成館 AED,G AED,AEDG,エーイーディー 啓成館",AED,1階,G,建物ピンの位置を表示。実際の設置箇所・利用可否は現地の案内で確認してください。,https://www.tachibana-u.ac.jp/admission/cms/wp-content/themes/tachibana-u/assets/pdf/26orientation_intl_robotics.pdf,公式マップ確認済み
+AED-A,AED（清優館）,AED A,"AED 清優館,清優館 AED,A AED,AEDA,エーイーディー 清優館",AED,2階,A,建物ピンの位置を表示。実際の設置箇所・利用可否は現地の案内で確認してください。,https://www.tachibana-u.ac.jp/admission/cms/wp-content/themes/tachibana-u/assets/pdf/26orientation_intl_robotics.pdf,公式マップ確認済み
+AED-D,AED（明優館）,AED D,"AED 明優館,明優館 AED,D AED,AEDD,エーイーディー 明優館",AED,2階,D,建物ピンの位置を表示。実際の設置箇所・利用可否は現地の案内で確認してください。,https://www.tachibana-u.ac.jp/admission/cms/wp-content/themes/tachibana-u/assets/pdf/26orientation_intl_robotics.pdf,公式マップ確認済み
+AED-H,AED（アカデミックリンクス）,AED H,"AED アカデミックリンクス,アカデミックリンクス AED,H AED,AEDH,エーイーディー アカデミックリンクス",AED,地下1階～3階,H,建物ピンの位置を表示。実際の設置箇所・利用可否は現地の案内で確認してください。,https://www.tachibana-u.ac.jp/admission/cms/wp-content/themes/tachibana-u/assets/pdf/26orientation_intl_robotics.pdf,公式マップ確認済み
+AED-E,AED（優心館）,AED E,"AED 優心館,優心館 AED,E AED,AEDE,エーイーディー 優心館",AED,2階,E,建物ピンの位置を表示。実際の設置箇所・利用可否は現地の案内で確認してください。,https://www.tachibana-u.ac.jp/admission/cms/wp-content/themes/tachibana-u/assets/pdf/26orientation_intl_robotics.pdf,公式マップ確認済み
+AED-11,AED（中央体育館）,AED 11,"AED 中央体育館,中央体育館 AED,11 AED,AED11,エーイーディー 中央体育館",AED,1～3階,11,建物ピンの位置を表示。実際の設置箇所・利用可否は現地の案内で確認してください。,https://www.tachibana-u.ac.jp/admission/cms/wp-content/themes/tachibana-u/assets/pdf/26orientation_intl_robotics.pdf,公式マップ確認済み
+AED-J,AED（アカデミックテラス）,AED J,"AED アカデミックテラス,アカデミックテラス AED,J AED,AEDJ,エーイーディー アカデミックテラス",AED,,J,建物ピンの位置を表示。実際の設置箇所・利用可否は現地の案内で確認してください。,https://www.tachibana-u.ac.jp/admission/cms/wp-content/themes/tachibana-u/assets/pdf/26orientation_intl_robotics.pdf,公式マップ確認済み
+AED-9,AED（清風館）,AED 9,"AED 清風館,清風館 AED,9 AED,AED9,エーイーディー 清風館",AED,2階,9,建物ピンの位置を表示。実際の設置箇所・利用可否は現地の案内で確認してください。,https://www.tachibana-u.ac.jp/admission/cms/wp-content/themes/tachibana-u/assets/pdf/26orientation_intl_robotics.pdf,公式マップ確認済み
+AED-19,AED（KYOTO TACHIBANA スタジアム）,AED 19,"AED KYOTO TACHIBANA スタジアム,KYOTO TACHIBANA スタジアム AED,19 AED,AED19,エーイーディー KYOTO TACHIBANA スタジアム",AED,クラブハウス1階,19,建物ピンの位置を表示。実際の設置箇所・利用可否は現地の案内で確認してください。,https://www.tachibana-u.ac.jp/admission/cms/wp-content/themes/tachibana-u/assets/pdf/26orientation_intl_robotics.pdf,公式マップ確認済み
+AED-15,AED（グラウンド）,AED 15,"AED グラウンド,グラウンド AED,15 AED,AED15,エーイーディー グラウンド",AED,,15,建物ピンの位置を表示。実際の設置箇所・利用可否は現地の案内で確認してください。,https://www.tachibana-u.ac.jp/admission/cms/wp-content/themes/tachibana-u/assets/pdf/26orientation_intl_robotics.pdf,公式マップ確認済み
+AED-8,AED（清史館）,AED 8,"AED 清史館,清史館 AED,8 AED,AED8,エーイーディー 清史館",AED,2階,8,建物ピンの位置を表示。実際の設置箇所・利用可否は現地の案内で確認してください。,https://www.tachibana-u.ac.jp/admission/cms/wp-content/themes/tachibana-u/assets/pdf/26orientation_intl_robotics.pdf,公式マップ確認済み
+TOILET-12,バリアフリートイレ（第2体育館）,♿ 12,"トイレ 第2体育館,第2体育館 トイレ,12 トイレ,トイレ12,多目的トイレ 第2体育館,バリアフリートイレ 第2体育館,バリアフリー,多目的トイレ,車いすトイレ,♿",バリアフリートイレ,,12,公開案内図のバリアフリートイレ表示に基づく建物単位の概略位置。階・入口位置は現地で確認してください。,https://www.tachibana-u.ac.jp/admission/cms/wp-content/themes/tachibana-u/assets/pdf/26orientation_intl_robotics.pdf,公式マップ確認済み
+TOILET-C,バリアフリートイレ（児優館）,♿ C,"トイレ 児優館,児優館 トイレ,C トイレ,トイレC,多目的トイレ 児優館,バリアフリートイレ 児優館,バリアフリー,多目的トイレ,車いすトイレ,♿",バリアフリートイレ,,C,公開案内図のバリアフリートイレ表示に基づく建物単位の概略位置。階・入口位置は現地で確認してください。,https://www.tachibana-u.ac.jp/admission/cms/wp-content/themes/tachibana-u/assets/pdf/26orientation_intl_robotics.pdf,公式マップ確認済み
+TOILET-2,バリアフリートイレ（mican）,♿ 2,"トイレ mican,mican トイレ,2 トイレ,トイレ2,多目的トイレ mican,バリアフリートイレ mican,バリアフリー,多目的トイレ,車いすトイレ,♿",バリアフリートイレ,,2,公開案内図のバリアフリートイレ表示に基づく建物単位の概略位置。階・入口位置は現地で確認してください。,https://www.tachibana-u.ac.jp/admission/cms/wp-content/themes/tachibana-u/assets/pdf/26orientation_intl_robotics.pdf,公式マップ確認済み
+TOILET-1,バリアフリートイレ（清和館）,♿ 1,"トイレ 清和館,清和館 トイレ,1 トイレ,トイレ1,多目的トイレ 清和館,バリアフリートイレ 清和館,バリアフリー,多目的トイレ,車いすトイレ,♿",バリアフリートイレ,,1,公開案内図のバリアフリートイレ表示に基づく建物単位の概略位置。階・入口位置は現地で確認してください。,https://www.tachibana-u.ac.jp/admission/cms/wp-content/themes/tachibana-u/assets/pdf/26orientation_intl_robotics.pdf,公式マップ確認済み
+TOILET-8,バリアフリートイレ（清史館）,♿ 8,"トイレ 清史館,清史館 トイレ,8 トイレ,トイレ8,多目的トイレ 清史館,バリアフリートイレ 清史館,バリアフリー,多目的トイレ,車いすトイレ,♿",バリアフリートイレ,,8,公開案内図のバリアフリートイレ表示に基づく建物単位の概略位置。階・入口位置は現地で確認してください。,https://www.tachibana-u.ac.jp/admission/cms/wp-content/themes/tachibana-u/assets/pdf/26orientation_intl_robotics.pdf,公式マップ確認済み
+TOILET-A,バリアフリートイレ（清優館）,♿ A,"トイレ 清優館,清優館 トイレ,A トイレ,トイレA,多目的トイレ 清優館,バリアフリートイレ 清優館,バリアフリー,多目的トイレ,車いすトイレ,♿",バリアフリートイレ,,A,公開案内図のバリアフリートイレ表示に基づく建物単位の概略位置。階・入口位置は現地で確認してください。,https://www.tachibana-u.ac.jp/admission/cms/wp-content/themes/tachibana-u/assets/pdf/26orientation_intl_robotics.pdf,公式マップ確認済み
+TOILET-D,バリアフリートイレ（明優館）,♿ D,"トイレ 明優館,明優館 トイレ,D トイレ,トイレD,多目的トイレ 明優館,バリアフリートイレ 明優館,バリアフリー,多目的トイレ,車いすトイレ,♿",バリアフリートイレ,,D,公開案内図のバリアフリートイレ表示に基づく建物単位の概略位置。階・入口位置は現地で確認してください。,https://www.tachibana-u.ac.jp/admission/cms/wp-content/themes/tachibana-u/assets/pdf/26orientation_intl_robotics.pdf,公式マップ確認済み
+TOILET-H,バリアフリートイレ（アカデミックリンクス）,♿ H,"トイレ アカデミックリンクス,アカデミックリンクス トイレ,H トイレ,トイレH,多目的トイレ アカデミックリンクス,バリアフリートイレ アカデミックリンクス,バリアフリー,多目的トイレ,車いすトイレ,♿",バリアフリートイレ,,H,公開案内図のバリアフリートイレ表示に基づく建物単位の概略位置。階・入口位置は現地で確認してください。,https://www.tachibana-u.ac.jp/admission/cms/wp-content/themes/tachibana-u/assets/pdf/26orientation_intl_robotics.pdf,公式マップ確認済み
+TOILET-E,バリアフリートイレ（優心館）,♿ E,"トイレ 優心館,優心館 トイレ,E トイレ,トイレE,多目的トイレ 優心館,バリアフリートイレ 優心館,バリアフリー,多目的トイレ,車いすトイレ,♿",バリアフリートイレ,,E,公開案内図のバリアフリートイレ表示に基づく建物単位の概略位置。階・入口位置は現地で確認してください。,https://www.tachibana-u.ac.jp/admission/cms/wp-content/themes/tachibana-u/assets/pdf/26orientation_intl_robotics.pdf,公式マップ確認済み
+TOILET-11,バリアフリートイレ（中央体育館）,♿ 11,"トイレ 中央体育館,中央体育館 トイレ,11 トイレ,トイレ11,多目的トイレ 中央体育館,バリアフリートイレ 中央体育館,バリアフリー,多目的トイレ,車いすトイレ,♿",バリアフリートイレ,,11,公開案内図のバリアフリートイレ表示に基づく建物単位の概略位置。階・入口位置は現地で確認してください。,https://www.tachibana-u.ac.jp/admission/cms/wp-content/themes/tachibana-u/assets/pdf/26orientation_intl_robotics.pdf,公式マップ確認済み
+TOILET-19,バリアフリートイレ（KYOTO TACHIBANA スタジアム）,♿ 19,"トイレ KYOTO TACHIBANA スタジアム,KYOTO TACHIBANA スタジアム トイレ,19 トイレ,トイレ19,多目的トイレ KYOTO TACHIBANA スタジアム,バリアフリートイレ KYOTO TACHIBANA スタジアム,バリアフリー,多目的トイレ,車いすトイレ,♿",バリアフリートイレ,,19,公開案内図のバリアフリートイレ表示に基づく建物単位の概略位置。階・入口位置は現地で確認してください。,https://www.tachibana-u.ac.jp/admission/cms/wp-content/themes/tachibana-u/assets/pdf/26orientation_intl_robotics.pdf,公式マップ確認済み
+GENERAL-1,一般トイレ（清和館）,🚻 1,"一般トイレ,1,🚻",一般トイレ,,1,【未確認・非表示】一般トイレの位置・階数は公式資料で未確認です。設置場所を現地などで確認したら確認状況を「確認済み」にしてください。,,未確認
+GENERAL-2,一般トイレ（mican）,🚻 2,"一般トイレ,2,🚻",一般トイレ,,2,【未確認・非表示】一般トイレの位置・階数は公式資料で未確認です。設置場所を現地などで確認したら確認状況を「確認済み」にしてください。,,未確認
+GENERAL-7,一般トイレ（清心館）,🚻 7,"一般トイレ,7,🚻",一般トイレ,,7,【未確認・非表示】一般トイレの位置・階数は公式資料で未確認です。設置場所を現地などで確認したら確認状況を「確認済み」にしてください。,,未確認
+GENERAL-8,一般トイレ（清史館）,🚻 8,"一般トイレ,8,🚻",一般トイレ,,8,【未確認・非表示】一般トイレの位置・階数は公式資料で未確認です。設置場所を現地などで確認したら確認状況を「確認済み」にしてください。,,未確認
+GENERAL-9,一般トイレ（清風館）,🚻 9,"一般トイレ,9,🚻",一般トイレ,,9,【未確認・非表示】一般トイレの位置・階数は公式資料で未確認です。設置場所を現地などで確認したら確認状況を「確認済み」にしてください。,,未確認
+GENERAL-10,一般トイレ（図書館）,🚻 10,"一般トイレ,10,🚻",一般トイレ,,10,【未確認・非表示】一般トイレの位置・階数は公式資料で未確認です。設置場所を現地などで確認したら確認状況を「確認済み」にしてください。,,未確認
+GENERAL-11,一般トイレ（中央体育館）,🚻 11,"一般トイレ,11,🚻",一般トイレ,,11,【未確認・非表示】一般トイレの位置・階数は公式資料で未確認です。設置場所を現地などで確認したら確認状況を「確認済み」にしてください。,,未確認
+GENERAL-12,一般トイレ（第2体育館）,🚻 12,"一般トイレ,12,🚻",一般トイレ,,12,【未確認・非表示】一般トイレの位置・階数は公式資料で未確認です。設置場所を現地などで確認したら確認状況を「確認済み」にしてください。,,未確認
+GENERAL-13,一般トイレ（リバティホール（学生会館））,🚻 13,"一般トイレ,13,🚻",一般トイレ,,13,【未確認・非表示】一般トイレの位置・階数は公式資料で未確認です。設置場所を現地などで確認したら確認状況を「確認済み」にしてください。,,未確認
+GENERAL-14,一般トイレ（クリスタルカフェ）,🚻 14,"一般トイレ,14,🚻",一般トイレ,,14,【未確認・非表示】一般トイレの位置・階数は公式資料で未確認です。設置場所を現地などで確認したら確認状況を「確認済み」にしてください。,,未確認
+GENERAL-A,一般トイレ（清優館）,🚻 A,"一般トイレ,A,🚻",一般トイレ,,A,【未確認・非表示】一般トイレの位置・階数は公式資料で未確認です。設置場所を現地などで確認したら確認状況を「確認済み」にしてください。,,未確認
+GENERAL-B,一般トイレ（清香館）,🚻 B,"一般トイレ,B,🚻",一般トイレ,,B,【未確認・非表示】一般トイレの位置・階数は公式資料で未確認です。設置場所を現地などで確認したら確認状況を「確認済み」にしてください。,,未確認
+GENERAL-C,一般トイレ（児優館）,🚻 C,"一般トイレ,C,🚻",一般トイレ,,C,【未確認・非表示】一般トイレの位置・階数は公式資料で未確認です。設置場所を現地などで確認したら確認状況を「確認済み」にしてください。,,未確認
+GENERAL-D,一般トイレ（明優館）,🚻 D,"一般トイレ,D,🚻",一般トイレ,,D,【未確認・非表示】一般トイレの位置・階数は公式資料で未確認です。設置場所を現地などで確認したら確認状況を「確認済み」にしてください。,,未確認
+GENERAL-E,一般トイレ（優心館）,🚻 E,"一般トイレ,E,🚻",一般トイレ,,E,【未確認・非表示】一般トイレの位置・階数は公式資料で未確認です。設置場所を現地などで確認したら確認状況を「確認済み」にしてください。,,未確認
+GENERAL-F,一般トイレ（響友館）,🚻 F,"一般トイレ,F,🚻",一般トイレ,,F,【未確認・非表示】一般トイレの位置・階数は公式資料で未確認です。設置場所を現地などで確認したら確認状況を「確認済み」にしてください。,,未確認
+GENERAL-G,一般トイレ（啓成館）,🚻 G,"一般トイレ,G,🚻",一般トイレ,,G,【未確認・非表示】一般トイレの位置・階数は公式資料で未確認です。設置場所を現地などで確認したら確認状況を「確認済み」にしてください。,,未確認
+GENERAL-H,一般トイレ（アカデミックリンクス）,🚻 H,"一般トイレ,H,🚻",一般トイレ,,H,【未確認・非表示】一般トイレの位置・階数は公式資料で未確認です。設置場所を現地などで確認したら確認状況を「確認済み」にしてください。,,未確認
+GENERAL-J,一般トイレ（アカデミックテラス）,🚻 J,"一般トイレ,J,🚻",一般トイレ,,J,【未確認・非表示】一般トイレの位置・階数は公式資料で未確認です。設置場所を現地などで確認したら確認状況を「確認済み」にしてください。,,未確認
+GENERAL-15,一般トイレ（グラウンド）,🚻 15,"一般トイレ,15,🚻",一般トイレ,,15,【未確認・非表示】一般トイレの位置・階数は公式資料で未確認です。設置場所を現地などで確認したら確認状況を「確認済み」にしてください。,,未確認
+GENERAL-18,一般トイレ（弓道場）,🚻 18,"一般トイレ,18,🚻",一般トイレ,,18,【未確認・非表示】一般トイレの位置・階数は公式資料で未確認です。設置場所を現地などで確認したら確認状況を「確認済み」にしてください。,,未確認
+GENERAL-19,一般トイレ（KYOTO TACHIBANA スタジアム）,🚻 19,"一般トイレ,19,🚻",一般トイレ,,19,【未確認・非表示】一般トイレの位置・階数は公式資料で未確認です。設置場所を現地などで確認したら確認状況を「確認済み」にしてください。,,未確認
