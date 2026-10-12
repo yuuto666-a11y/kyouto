@@ -3628,3 +3628,43 @@ if (menuGps) {
         }
     );
 }
+
+//////////////////////////////////////////////////
+// AED
+//////////////////////////////////////////////////
+
+if (menuAED) {
+
+    menuAED.addEventListener(
+        "click",
+        function () {
+
+            const enabled =
+                menuAED.dataset.aedEnabled === "true";
+
+            const nextEnabled =
+                !enabled;
+
+            menuAED.dataset.aedEnabled =
+                String(nextEnabled);
+
+            menuAED.setAttribute(
+                "aria-pressed",
+                String(nextEnabled)
+            );
+
+            const state =
+                menuAED.querySelector(
+                    ".menu-toggle-state"
+                );
+
+            if (state) {
+
+                state.textContent =
+                    nextEnabled
+                        ? "ON"
+                        : "OFF";
+            }
+        }
+    );
+}
