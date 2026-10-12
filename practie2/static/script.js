@@ -3505,6 +3505,28 @@ if (menuMap) {
 
 
 //////////////////////////////////////////////////
+// メニューからバス情報を開く
+//////////////////////////////////////////////////
+
+const menuBus =
+    document.getElementById("menu-bus");
+
+if (menuBus) {
+    menuBus.addEventListener("click", function () {
+
+        closeMenu();
+
+        // バス情報の表示を開始
+        startBusInformation();
+
+        // 建物のポップアップを開く
+        if (popupOverlay) {
+            popupOverlay.style.display = "flex";
+        }
+    });
+}
+
+//////////////////////////////////////////////////
 // 時間割を開く
 //////////////////////////////////////////////////
 
