@@ -3696,8 +3696,7 @@ updateMenuGPSState(false);
 // メニューのバス情報ボタン
 //////////////////////////////////////////////////
 
-const menuBus =
-    document.getElementById("menu-bus");
+
 
 if (menuBus) {
     menuBus.addEventListener("click", function () {
@@ -3705,20 +3704,13 @@ if (menuBus) {
         // メニューを閉じる
         closeMenu();
 
-        // 既存のバス情報表示処理を呼び出す
-        const busInfo =
-            document.getElementById("bus-live-info");
+        // バス情報を表示・更新
+        startBusInformation();
 
-        if (busInfo) {
-            busInfo.hidden = false;
-
-            // バス情報を含むポップアップを表示
-            const popup =
-                document.getElementById("popup-overlay");
-
-            if (popup) {
-                popup.classList.add("active");
-            }
+        // ポップアップを表示
+        if (popupOverlay) {
+            popupOverlay.style.display = "flex";
         }
+
     });
 }
